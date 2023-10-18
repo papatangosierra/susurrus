@@ -1,6 +1,5 @@
-import { SHA256 } from "bun";
 import { IUser } from "./userInterface";
-import { IHasher } from "./userLabel";
+import { UserLabel } from "./userLabel";
 
 export class User implements IUser {
   id: string;
@@ -16,5 +15,4 @@ export class User implements IUser {
   joinTimer(timerId: string): void {
     this.timerId = timerId;
   }
-
 }

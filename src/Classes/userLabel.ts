@@ -1,20 +1,20 @@
-import { IHasher } from "./userIdHasherInterface";
+import { IUserLabel } from "./userLabelInterface";
 
 export class UserLabel implements IUserLabel {
-    // Generate a hash for a user ID
-    userName: string;
-    userId: string;
+  // Generate a hash for a user ID
+  userName: string;
+  userId: string;
 
-    constructor(userId: string) {
-      this.userName = this.createName();
-      this.userId = this.hashUserId(this.userName);;
-    }
+  constructor() {
+    this.userName = this.createName();
+    this.userId = this.hashUserId(this.userName);
+  }
 
-    private hashUserId(userName: string): string {
-      const hasher = new Bun.CryptoHasher("sha256");
-      hasher.update(userName + Date.now().toString());
-      return hasher.digest("hex");
-    }
+  private hashUserId(userName: string): string {
+    const hasher = new Bun.CryptoHasher("sha256");
+    hasher.update(userName + Date.now().toString());
+    return hasher.digest("hex");
+  }
 
   // Generate a new phonetically plausible name
   private createName(): string {
@@ -33,7 +33,4 @@ export class UserLabel implements IUserLabel {
     }
     return name;
   }
-
 }
-
-export { UserIdHasher };
