@@ -1,5 +1,4 @@
 import { IUser } from "./userInterface";
-import { UserLabel } from "./userLabel";
 
 export class User implements IUser {
   id: string;

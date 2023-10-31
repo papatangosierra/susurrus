@@ -1,6 +1,7 @@
 // Timer class
 
 import { ITimer } from "./timerInterface";
+import { TimerEntity } from "./timerEntity";  
 
 export class Timer implements ITimer {
   id: string;

@@ -1,6 +1,6 @@
-import { IUserLabel } from "./userLabelInterface";
+import { IUserData } from "./userDataInterface";
 
-export class UserLabel implements IUserLabel {
+export class UserData implements IUserLabel {
   // Generate a hash for a user ID
   userName: string;
   userId: string;
