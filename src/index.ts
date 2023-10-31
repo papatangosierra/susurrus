@@ -1,10 +1,47 @@
+// Library Imports
+import { Sequelize } from "sequelize";
 import { Elysia } from "elysia";
+
+// My Imports
 import { Timer } from "./Classes/timer";
 import { User } from "./Classes/user";
 import { UserLabel } from "./Classes/userLabel";
+import { TimerEntity } from "./Classes/timerEntity";  
+import { UserEntity } from "./Classes/userEntity";  
 
 const app = new Elysia().get("/", index).listen(3000);
 
+// const db = new Database("data/mydb.sqlite");
+const sequelize = new Sequelize({
+  dialect: "sqlite",
+  storage: "data/mydb.sqlite"
+});
+
+try {
+  await sequelize.authenticate();
+  console.log('Connection has been established successfully.');
+} catch (error) {
+  console.error('Unable to connect to the database:', error);
+}
+
+// Force our UserEntity table to sync, creating it if it doesn't already exist
+await UserEntity.sync({ force: true });
+
+const newUserLabel = new UserLabel();
+const user = new User(newUserLabel);
+const newUserEntity = UserEntity.build({
+  id: user.id,
+  name: user.name
+});
+await newUserEntity.save();
+
+/**
+ * 
+ * @returns string
+ * index() is the function that will be called when the / route is hit.
+ * The return value is a string that will be sent to the client.
+ * (i.e., the HTML source we're sending to the browser)
+ */
 function index(): string {
   const newUserLabel = new UserLabel();
   const user = new User(newUserLabel);
