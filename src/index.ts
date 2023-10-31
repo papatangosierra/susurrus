@@ -5,7 +5,7 @@ import { Elysia } from "elysia";
 // My Imports
 import { Timer } from "./Classes/timer";
 import { User } from "./Classes/user";
-import { UserData } from "./Classes/userLabel";
+import { UserData } from "./Classes/userData";
 import { TimerEntity } from "./Classes/timerEntity";  
 import { UserEntity } from "./Classes/userEntity";  
 
