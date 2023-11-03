@@ -11,6 +11,7 @@ import { UserEntity } from "./Classes/userEntity";
 
 const app = new Elysia().get("/", index).listen(3000);
 
+
 // const db = new Database("data/mydb.sqlite");
 const sequelize = new Sequelize({
   dialect: "sqlite",
@@ -24,8 +25,9 @@ try {
   console.error('Unable to connect to the database:', error);
 }
 
-// Force our UserEntity table to sync, creating it if it doesn't already exist
+// Force our UserEntity and TimerEntity tables to sync, creating them if they don't already exist
 await UserEntity.sync({ force: true });
+await TimerEntity.sync({ force: true });
 
 // UserData is a class that generates a random user name and ID.
 // It doesn't do anything else; it's just a username and ID pair.
@@ -33,11 +35,7 @@ await UserEntity.sync({ force: true });
 // takes a UserLabel as an argument. This lets us separate the 
 // name and ID generation code from the user object itself.
 
-
-
-
 /**
- * 
  * @returns string
  * index() is the function that will be called when the / route is hit.
  * The return value is a string that will be sent to the client.
@@ -56,9 +54,9 @@ async function index(): Promise<string> {
     name: user.name
   });
   await newUserEntity.save();
-  const newTimer = new Timer(Date.now().toString(), "Test Timer", 10, user.id);
+  const newTimer = new Timer(user.id);
+  newTimer.setDuration(10);
   newTimer.start();
-
   return `Hello, user ${user.name}.`;
 }
 
@@ -67,11 +65,11 @@ const allUsers = await UserEntity.findAll();
 console.log("All users:", JSON.stringify(allUsers, null, 2));
 
 // print count of users in the database every second
-let pollcount = 0;
-setInterval(async () => {
-  const userCount = await UserEntity.count();
-  console.log(`There are ${userCount} users in the database. poll: ${pollcount++}`);
-}, 1000);
+// let pollcount = 0;
+// setInterval(async () => {
+//   const userCount = await UserEntity.count();
+//   console.log(`There are ${userCount} users in the database. poll: ${pollcount++}`);
+// }, 1000);
 
 
 console.log(

@@ -16,7 +16,7 @@ TimerEntity.init(
       type: DataTypes.STRING,
       primaryKey: true,
     },
-    title: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -31,12 +31,7 @@ TimerEntity.init(
     duration: {
       type: DataTypes.DATE,
       allowNull: false,
-    },
-    viewers: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
-      allowNull: false,
-      defaultValue: [],
-    },
+    }
   },
   {
     sequelize,

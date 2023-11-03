@@ -7,11 +7,11 @@
 // - an array of user IDs representing the users who have joined the timer
 // - a boolean indicating whether the timer is running or not
 
-export interface ITimer {
+export interface TimerInterface {
   id: string;
   name: string;
   duration: number;
-  startTime: number;
-  isRunning: boolean;
+  startTime?: number;
+  isRunning?: boolean;
   users: string[];
 }
