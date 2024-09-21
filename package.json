@@ -6,10 +6,7 @@
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
-    "elysia": "latest",
-    "reflect-metadata": "^0.1.13",
-    "sequelize": "^6.33.0",
-    "sqlite3": "^5.1.6"
+    "elysia": "latest"
   },
   "devDependencies": {
     "bun-types": "^1.0.6"

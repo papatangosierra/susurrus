@@ -1,27 +1,32 @@
 // Timer class
 
 import { TimerInterface } from "./timerInterface";
-import { TimerEntity } from "./timerEntity";  
+import { Database } from 'bun:sqlite';
 
 export class Timer implements TimerInterface {
   id: string;
   name: string;
   duration: number;
-  startTime?: number;
+  startTime: number;
   isRunning: boolean;
   users: string[];
   owner: string;
-  entity: Promise<TimerEntity>;
 
-  constructor(owner: string) {
+  private timerDb: Database;
+
+  constructor(owner: string, db: Database) {
     this.id = this.createId();
     this.name = "Your timer";
     this.startTime = 0;
     this.duration = 0;
     this.isRunning = false;
-    this.users = [];
+    this.users = [owner];
     this.owner = owner;
-    this.entity = this.create();
+    this.timerDb = db;
+    const hasher = new Bun.CryptoHasher("sha256");
+    hasher.update(Date.now().toString() + Math.random().toString());
+    this.id = hasher.digest("hex");
+    this.create(); // Create the timer in the database
   }
 
   setName(name: string): void {
@@ -42,34 +47,20 @@ export class Timer implements TimerInterface {
     this.users = this.users.filter((user) => user !== userId);
   }
 
-  async start() {
-    if (!this.isRunning) {
-      this.startTime = Date.now();
-      const endTime = this.startTime + this.duration * 1000;
-      this.duration = Math.floor((endTime - this.startTime) / 1000);
-      this.isRunning = true;
-      console.log(`Timer ${this.id}, owned by ${this.owner} started`);
-      setTimeout(() => {
-        this.stop();
-      }, this.duration * 1000);
-      // update Timer entity's start time
-      this.startTime = Date.now();
-      this.entity.isRunning = true;
-      this.entity.startTime = this.startTime;
-      (await this.entity).save();
-      console.log(`Value of timer DB entity isRunning: ${this.entity.isRunning}`);
-      // TODO: send timer start event to all users in timer
-    }
+  start() {
+    this.startTime = Date.now();
+    this.isRunning = true;
+    this.save();
+    console.log(`Timer ${this.id} started at ${this.startTime}`);
   }
 
-  async stop() {
-    if (this.isRunning) {
+  stop() {
+    if (this.startTime) {
+      this.duration = Date.now() - this.startTime;
       this.isRunning = false;
-      this.entity.isRunning = false;
-      (await this.entity).save();
-      console.log(`Timer ${this.id} stopped`);
-      console.log(`Value of timer DB entity isRunning: ${this.entity.isRunning}`);
-      // TODO: send timer stop event to all users in timer
+      this.save();
+    } else {
+      console.error('Timer was not started');
     }
   }
 
@@ -77,26 +68,55 @@ export class Timer implements TimerInterface {
     this.duration = 0;
     this.startTime = 0;
     this.isRunning = false;
+    this.save();
+  }
+
+  isFinished(): boolean {
+    if (!this.isRunning) return false;
+    const currentTime = Date.now();
+    // if the difference between 
+    // the current time and the start time is greater than 
+    // or equal to the duration, the timer is finished
+    return currentTime - this.startTime >= this.duration; 
   }
 
   private createId(): string {
     const hasher = new Bun.CryptoHasher("sha256");
-    hasher.update(Date.now().toString() + Math.random().toString());
+    hasher.update(Date.now().toString() + Math.random().toString() + this.owner);
     return hasher.digest("hex");
   }
 
-  private async create(): Promise<TimerEntity> {
-    const timerEntity = TimerEntity.build({
-      id: this.id,
-      name: this.name,
-      duration: this.duration,
-      startTime: this.startTime,
-      isRunning: this.isRunning,
-      users: this.users,
-      ownerId: this.owner,
-    });
-    await timerEntity.save();
-    return timerEntity;
+  private create() {
+    const usersJson = JSON.stringify(this.users);
+    const query = this.timerDb.query(`INSERT INTO timers (id, name, duration, startTime, isRunning, owner, users) VALUES ($id, $name, $duration, $startTime, $isRunning, $owner, $users)`);
+    try {
+      query.all({
+        $id: this.id,
+        $name: this.name,
+        $duration: this.duration,
+        $startTime: this.startTime,
+        $isRunning: this.isRunning,
+        $users: usersJson
+      });
+    } catch (error) {
+      console.error('Error creating timer in database: ', error);
+    }
   }
 
+  private save() {
+    const usersJson = JSON.stringify(this.users);
+    const query = this.timerDb.query(`UPDATE timers SET name = $name, duration = $duration, startTime = $startTime, isRunning = $isRunning, users = $users WHERE id = $id`);
+    try {
+      query.run({
+        $id: this.id,
+        $name: this.name,
+        $duration: this.duration,
+        $startTime: this.startTime,
+        $isRunning: this.isRunning,
+        $users: usersJson
+      });
+    } catch (error) {
+      console.error('Error saving timer to database: ', error);
+    }
+  }
 }

@@ -6,6 +6,9 @@
 // - a start time in seconds
 // - an array of user IDs representing the users who have joined the timer
 // - a boolean indicating whether the timer is running or not
+// - an owner ID representing the user who created the timer
+// - a users string representing a JSON array of user IDs, which are people
+// who have joined the timer
 
 export interface TimerInterface {
   id: string;
@@ -13,5 +16,6 @@ export interface TimerInterface {
   duration: number;
   startTime?: number;
   isRunning?: boolean;
+  owner: string;
   users: string[];
 }
