@@ -18,24 +18,38 @@ export class TimerManager implements TimerManagerInterface {
     this.timers.set(timer.id, timer);
     return timer;
   }
+
   getTimer(id: string): TimerInterface | null {
-    throw new Error("getTimer not implemented.");
+    return this.timers.get(id) || null;
   }
+
   updateTimer(id: string, name: string, duration: number, owner: string, users: string[]): void {
-    throw new Error("updateTimer not implemented.");
+    const timer = this.getTimer(id);
+    if (timer) {
+      timer.setName(name);
+      timer.setDuration(duration);
+      timer.addUser("Another New User");
+    } else {
+      throw new Error("Timer not found");
+    }
   }
+
   deleteTimer(id: string): void {
     throw new Error("deleteTimer not implemented.");
   }
+
   startTimer(id: string): void {
     throw new Error("startTimer not implemented.");
   }
+
   stopTimer(id: string): void {
     throw new Error("stopTimer not implemented.");
   }
+
   resetTimer(id: string): void {
     throw new Error("resetTimer not implemented.");
   }
+
   isFinished(id: string): boolean {
     throw new Error("isFinished not implemented.");
   }

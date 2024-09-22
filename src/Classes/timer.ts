@@ -31,20 +31,29 @@ export class Timer implements TimerInterface {
 
   setName(name: string): void {
     this.name = name;
+    this.save();
   }
 
   setDuration(duration: number): void { 
     this.duration = duration;
+    this.save();
+  }
+
+  setOwner(owner: string): void {
+    this.owner = owner;
+    this.save();
   }
 
   // Add a user to the timer
   addUser(userId: string): void {
     this.users.push(userId);
+    this.save();
   }
 
   // Remove a user from the timer
   removeUser(userId: string): void {
     this.users = this.users.filter((user) => user !== userId);
+    this.save();
   }
 
   start() {
@@ -55,7 +64,7 @@ export class Timer implements TimerInterface {
   }
 
   stop() {
-    if (this.startTime) {
+    if (this.isRunning) {
       this.duration = Date.now() - this.startTime;
       this.isRunning = false;
       this.save();
@@ -78,6 +87,10 @@ export class Timer implements TimerInterface {
     // the current time and the start time is greater than 
     // or equal to the duration, the timer is finished
     return currentTime - this.startTime >= this.duration; 
+  }
+
+  delete() {
+    this.remove();
   }
 
   private createId(): string {
@@ -117,6 +130,17 @@ export class Timer implements TimerInterface {
       });
     } catch (error) {
       console.error('Error saving timer to database: ', error);
+    }
+  }
+
+  private remove() {
+    const query = this.timerDb.query(`DELETE FROM timers WHERE id = $id`);
+    try {
+      query.run({
+        $id: this.id
+      });
+    } catch (error) {
+      console.error('Error removing timer from database: ', error);
     }
   }
 }

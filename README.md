@@ -1,10 +1,12 @@
 # Elysia with Bun runtime
 
-## Getting Started
-To get started with this template, simply paste this command into your terminal:
-```bash
-bun create elysia ./elysia-example
-```
+## To do
+
+- Finish TimerManager & its tests
+- Build API
+- Build rough frontend
+- Integrate frontend with backend using WebSocket
+
 
 ## Development
 To start the development server run:
@@ -17,6 +19,7 @@ Open http://localhost:3000/ with your browser to see the result.
 # App Name Ideas
 
 Tomodoro (taken multiple times over, alas)
+Pomodachi (likewise)
 TMDR
 Delta Tango
 TD-1

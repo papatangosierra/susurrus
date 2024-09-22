@@ -18,4 +18,15 @@ export interface TimerInterface {
   isRunning?: boolean;
   owner: string;
   users: string[];
+  setName(name: string): void;
+  setDuration(duration: number): void;
+  setOwner(id: string): void;
+  addUser(userId: string): void;
+  removeUser(userId: string): void;
+  delete(): void;
+  start(): void;
+  stop(): void;
+  reset(): void;
+  isFinished(): boolean;
 }
+
