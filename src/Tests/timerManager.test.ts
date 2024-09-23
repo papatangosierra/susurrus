@@ -28,14 +28,49 @@ describe('TimerManager', () => {
     expect(timer).toBeNull();
   });
 
-  test("should update a timer", () => {
+
+  test("should start a timer", () => {
     const timer = timerManager.createTimer("testOwner");
-    timerManager.updateTimer(timer.id, "New Timer Name", 20, "New Owner", ["New User"]);
-    const updatedTimer = timerManager.getTimer(timer.id);
-    expect(updatedTimer).toBeDefined();
-    expect(updatedTimer!.name).toBe("New Timer Name");
-    expect(updatedTimer!.duration).toBe(20);
-    expect(updatedTimer!.owner).toBe("New Owner");
-    expect(updatedTimer!.users).toEqual(["New User"]);
+    timerManager.startTimer(timer.id);
+    const startedTimer = timerManager.getTimer(timer.id);
+    expect(startedTimer).toBeDefined();
+    expect(startedTimer!.isRunning).toBe(true);
   });
+
+  test("should stop a timer", () => {
+    const timer = timerManager.createTimer("testOwner");
+    timerManager.startTimer(timer.id);
+    timerManager.stopTimer(timer.id);
+    const stoppedTimer = timerManager.getTimer(timer.id);
+    expect(stoppedTimer).toBeDefined();
+    expect(stoppedTimer!.isRunning).toBe(false);
+  });
+
+  test("should reset a timer", () => {
+    const timer = timerManager.createTimer("testOwner");
+    timerManager.startTimer(timer.id);
+    timerManager.resetTimer(timer.id);
+    const resetTimer = timerManager.getTimer(timer.id);
+    expect(resetTimer).toBeDefined();
+    expect(resetTimer!.isRunning).toBe(false);
+    expect(resetTimer!.duration).toBe(0);
+  });
+
+  test("should add a user to a timer", () => {
+    const timer = timerManager.createTimer("testOwner");
+    timerManager.addUserToTimer(timer.id, "testUser");
+    const timerWithUser = timerManager.getTimer(timer.id);
+    expect(timerWithUser).toBeDefined();
+    expect(timerWithUser!.users).toEqual(["testOwner","testUser"]);
+  });
+
+  test("should remove a user from a timer", () => {
+    const timer = timerManager.createTimer("testOwner");
+    timerManager.addUserToTimer(timer.id, "testUser");
+    timerManager.removeUserFromTimer(timer.id, "testUser");
+    const timerWithoutUser = timerManager.getTimer(timer.id);
+    expect(timerWithoutUser).toBeDefined();
+    expect(timerWithoutUser!.users).toEqual(["testOwner"]);
+  });
+
 });

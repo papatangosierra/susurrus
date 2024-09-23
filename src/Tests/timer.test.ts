@@ -65,5 +65,7 @@ describe("Timer", () => {
   });
 
   test("should delete the timer", () => {
-
+    timer.delete();
+    expect(timer.deleted).toBe(true);
+  });
 });

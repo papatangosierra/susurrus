@@ -11,6 +11,7 @@ export class Timer implements TimerInterface {
   isRunning: boolean;
   users: string[];
   owner: string;
+  deleted: boolean;
 
   private timerDb: Database;
 
@@ -26,6 +27,7 @@ export class Timer implements TimerInterface {
     const hasher = new Bun.CryptoHasher("sha256");
     hasher.update(Date.now().toString() + Math.random().toString());
     this.id = hasher.digest("hex");
+    this.deleted = false;
     this.create(); // Create the timer in the database
   }
 
@@ -91,6 +93,7 @@ export class Timer implements TimerInterface {
 
   delete() {
     this.remove();
+    this.deleted = true;
   }
 
   private createId(): string {

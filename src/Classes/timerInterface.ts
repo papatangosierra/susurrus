@@ -18,6 +18,7 @@ export interface TimerInterface {
   isRunning?: boolean;
   owner: string;
   users: string[];
+  deleted: boolean;
   setName(name: string): void;
   setDuration(duration: number): void;
   setOwner(id: string): void;

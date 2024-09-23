@@ -5,10 +5,11 @@ import { TimerInterface } from "./timerInterface";
 export interface TimerManagerInterface {
   createTimer(owner: string, ): TimerInterface;
   getTimer(id: string): TimerInterface | null;
-  updateTimer(id: string, name: string, duration: number, owner: string, users: string[]): void;
   deleteTimer(id: string): void;
   startTimer(id: string): void;
   stopTimer(id: string): void;
-  resetTimer(id: string): void;
+  resetTimer(id: string, duration?: number): void;
+  addUserToTimer(id: string, userId: string): void;
+  removeUserFromTimer(id: string, userId: string): void;
   isFinished(id: string): boolean;
 }

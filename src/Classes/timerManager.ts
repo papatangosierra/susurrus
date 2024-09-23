@@ -23,38 +23,68 @@ export class TimerManager implements TimerManagerInterface {
     return this.timers.get(id) || null;
   }
 
-  updateTimer(id: string, name: string, duration: number, owner: string, users: string[]): void {
+
+  deleteTimer(id: string): void {
     const timer = this.getTimer(id);
     if (timer) {
-      timer.setName(name);
-      timer.setDuration(duration);
-      timer.addUser("Another New User");
+      timer.delete();
+      this.timers.delete(id);
     } else {
       throw new Error("Timer not found");
     }
   }
 
-  deleteTimer(id: string): void {
-    throw new Error("deleteTimer not implemented.");
-  }
-
   startTimer(id: string): void {
-    throw new Error("startTimer not implemented.");
+    const timer = this.getTimer(id);
+    if (timer) {
+      timer.start();
+    } else {
+      throw new Error("Timer not found");
+    }
   }
 
   stopTimer(id: string): void {
-    throw new Error("stopTimer not implemented.");
+    const timer = this.getTimer(id);
+    if (timer) {
+      timer.stop();
+    } else {
+      throw new Error("Timer not found");
+    }
   }
 
-  resetTimer(id: string): void {
-    throw new Error("resetTimer not implemented.");
+  resetTimer(id: string, duration?: number): void {
+    const timer = this.getTimer(id);
+    if (timer) {
+      timer.reset();
+    } else {
+      throw new Error("Timer not found");
+    }
   }
 
   isFinished(id: string): boolean {
-    throw new Error("isFinished not implemented.");
+    const timer = this.getTimer(id);
+    if (timer) {
+      return timer.isFinished();
+    } else {
+      throw new Error("Timer not found");
+    }
   }
 
   addUserToTimer(timerId: string, userId: string): void {
-    throw new Error("addUserToTimer not implemented.");
+    const timer = this.getTimer(timerId);
+    if (timer) {
+      timer.addUser(userId);
+    } else {
+      throw new Error("Timer not found");
+    }
+  }
+
+  removeUserFromTimer(timerId: string, userId: string): void {
+    const timer = this.getTimer(timerId);
+    if (timer) {
+      timer.removeUser(userId);
+    } else {
+      throw new Error("Timer not found");
+    }
   }
 }
