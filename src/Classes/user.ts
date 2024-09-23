@@ -5,23 +5,28 @@ export class User implements UserInterface {
   id: string;
   name: string;
   deleted: boolean;
-    
+
   private userDb: Database;
 
   constructor(db: Database, userName?: string) {
+    this.userDb = db;
+
     if (userName) {
       this.name = userName;
     } else {
       this.name = this.createName();
     }
     this.id = this.hashUserId(this.name);
-
-    this.userDb = db;
-
+    this.deleted = false;
+    this.create();
   }
 
   updateName(name: string): void {
     this.name = name;
+  }
+
+  delete(): void {
+    this.deleted = true;
   }
 
   private hashUserId(userName: string): string {
@@ -47,4 +52,29 @@ export class User implements UserInterface {
     }
     return name;
   }
+
+  private create(): void {
+    const query = this.userDb.query(`INSERT INTO users (id, name) VALUES ($id, $name)`);
+    try {
+      query.all({
+        $id: this.id,
+        $name: this.name,
+      });
+    } catch (error) {
+      console.error('Error creating user in database: ', error);
+    }
+  }
+
+  private save(): void {
+    const query = this.userDb.query(`UPDATE users SET name = $name WHERE id = $id`);
+    try {
+      query.all({
+        $id: this.id,
+        $name: this.name,
+      });
+    } catch (error) {
+      console.error('Error saving user in database: ', error);
+    }
+  }
+
 }
