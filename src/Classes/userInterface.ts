@@ -7,7 +7,9 @@
 export interface UserInterface {
   id: string;
   name: string;
-  timerId: string | null;
+  deleted: boolean;
+  updateName(name: string): void;
+  delete(): void;
 }
 
 

@@ -1,22 +1,27 @@
 import { UserInterface } from "./userInterface";
+import { Database } from 'bun:sqlite';
 
 export class User implements UserInterface {
   id: string;
   name: string;
-  timerId!: string | null;
+  deleted: boolean;
+    
+  private userDb: Database;
 
-  constructor(userName?: string) {
+  constructor(db: Database, userName?: string) {
     if (userName) {
       this.name = userName;
     } else {
       this.name = this.createName();
     }
     this.id = this.hashUserId(this.name);
+
+    this.userDb = db;
+
   }
 
-  // attach user to a timer
-  joinTimer(timerId: string): void {
-    this.timerId = timerId;
+  updateName(name: string): void {
+    this.name = name;
   }
 
   private hashUserId(userName: string): string {
