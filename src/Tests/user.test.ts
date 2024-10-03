@@ -21,7 +21,12 @@ describe("User", () => {
 
   test("should delete the user", () => {
     user.delete();
+    const query = testDb.query(`SELECT * FROM users WHERE id = $id`);
+    const result = query.all({
+      $id: user.id
+    });
     expect(user.deleted).toBe(true);
+    expect(result.length).toBe(0);
   });
 
 });

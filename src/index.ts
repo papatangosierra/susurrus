@@ -6,12 +6,19 @@ import { swagger } from '@elysiajs/swagger'
 import { Timer } from "./Classes/timer";
 import { TimerManager } from "./Classes/timerManager";
 import { User } from "./Classes/user";
+import { UserManager } from "./Classes/userManager";
 import db from "./database";
 
 
 const app = new Elysia()
   .use(swagger())
   .get("/", index)
+  .post("/users", createUser)
+  .get("/users/:id", getUser)
+  .post("/timers", createTimer)
+  .get("/timers/:id", getTimer)
+  .put("/timers/:id/start", startTimer)
+  .put("/timers/:id/stop", stopTimer)
   .listen(3000);
 
 /**
@@ -22,7 +29,7 @@ const app = new Elysia()
  */
 
 async function index(): Promise<string> {
-  const user = new User();
+  const user = new User(db);
   console.log(
     `We made a user. Their name is: ${user.name}. Their ID is ${user.id}`
   );

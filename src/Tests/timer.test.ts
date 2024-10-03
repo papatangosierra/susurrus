@@ -66,6 +66,11 @@ describe("Timer", () => {
 
   test("should delete the timer", () => {
     timer.delete();
+    const query = testDb.query(`SELECT * FROM timers WHERE id = $id`);
+    const result = query.all({
+      $id: timer.id
+    });
     expect(timer.deleted).toBe(true);
+    expect(result.length).toBe(0);
   });
 });
