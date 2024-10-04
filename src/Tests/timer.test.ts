@@ -22,7 +22,7 @@ describe("Timer", () => {
   });
 
   test("should set the duration of the timer", () => {
-    timer.setDuration(1000);
+    timer.setDurationInMinutes(1000);
     expect(timer.duration).toBe(1000);
   });
 
@@ -43,7 +43,7 @@ describe("Timer", () => {
   });
 
   test("should stop the timer", () => {
-    timer.setDuration(5000);
+    timer.setDurationInMinutes(5000);
     timer.start();
     timer.stop();
     expect(timer.isRunning).toBe(false);
@@ -59,7 +59,7 @@ describe("Timer", () => {
   });
 
   test("should check if the timer is finished", () => {
-    timer.setDuration(0);
+    timer.setDurationInMinutes(0);
     timer.start();
     expect(timer.isFinished()).toBe(true);
   });

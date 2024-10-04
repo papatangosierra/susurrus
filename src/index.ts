@@ -2,45 +2,31 @@
 import { Elysia } from "elysia";
 import { swagger } from '@elysiajs/swagger'
 
-// My Imports
+// Class Imports
 import { Timer } from "./Classes/timer";
 import { TimerManager } from "./Classes/timerManager";
 import { User } from "./Classes/user";
 import { UserManager } from "./Classes/userManager";
+
+// Handler Imports
+import { createTimerAsOwner } from "./handlers/createTimerAsOwner";
+import { joinTimer } from "./handlers/joinTimer";
 import db from "./database";
 
 
 const app = new Elysia()
   .use(swagger())
-  .get("/", index)
-  .post("/users", createUser)
-  .get("/users/:id", getUser)
-  .post("/timers", createTimer)
-  .get("/timers/:id", getTimer)
-  .put("/timers/:id/start", startTimer)
-  .put("/timers/:id/stop", stopTimer)
+   /* 
+    We create a user for anyone visiting the site.
+   */
+  .get("/", createTimerAsOwner) 
+  // .get("/user/:id", getUser)
+  // .post("/timers", createTimer)
+  .get("/timers/:timerId", joinTimer)
+  // .get("/timers/:id/users", getUsersForTimer)
+  // .put("/timers/:id/start", startTimer)
+  // .put("/timers/:id/stop", stopTimer)
   .listen(3000);
-
-/**
- * @returns string
- * index() is the function that will be called when the / route is hit.
- * The return value is a string that will be sent to the client.
- * (i.e., the HTML source we're sending to the browser)
- */
-
-async function index(): Promise<string> {
-  const user = new User(db);
-  console.log(
-    `We made a user. Their name is: ${user.name}. Their ID is ${user.id}`
-  );
-
-  const timerManager = new TimerManager(db);
-  const newTimer = timerManager.createTimer(user.id);
-
-  newTimer.setDuration(10);
-  newTimer.start();
-  return `Hello, user ${user.name}.`;
-}
 
 
 console.log(

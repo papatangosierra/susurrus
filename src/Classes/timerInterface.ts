@@ -20,7 +20,7 @@ export interface TimerInterface {
   users: string[];
   deleted: boolean;
   setName(name: string): void;
-  setDuration(duration: number): void;
+  setDurationInMinutes(duration: number): void;
   setOwner(id: string): void;
   addUser(userId: string): void;
   removeUser(userId: string): void;

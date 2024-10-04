@@ -36,8 +36,8 @@ export class Timer implements TimerInterface {
     this.save();
   }
 
-  setDuration(duration: number): void { 
-    this.duration = duration;
+  setDurationInMinutes(duration: number): void { 
+    this.duration = duration * 60 * 1000;
     this.save();
   }
 
