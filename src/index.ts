@@ -5,17 +5,20 @@ import { swagger } from '@elysiajs/swagger'
 // Class Imports
 import { Timer } from "./Classes/timer";
 import { TimerManager } from "./Classes/timerManager";
-import { User } from "./Classes/user";
-import { UserManager } from "./Classes/userManager";
+
 
 // Handler Imports
 import { createTimerAsOwner } from "./handlers/createTimerAsOwner";
 import { joinTimer } from "./handlers/joinTimer";
 import db from "./database";
 
+// Instantiate the timer manager
+const timerManager = new TimerManager(db);
 
 const app = new Elysia()
   .use(swagger())
+  // load the timer manager into the app state
+  .decorate("timerManager", timerManager)
    /* 
     We create a user for anyone visiting the site.
    */

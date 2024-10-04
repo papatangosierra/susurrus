@@ -11,6 +11,12 @@ export class TimerManager implements TimerManagerInterface {
   constructor(db: Database) {
     this.timers = new Map();
     this.timerDb = db;
+    // Load all timers from the database
+    // const timers = this.timerDb.query("SELECT * FROM timers").all();
+    // console.log(timers);
+    // for (const timer of timers) {
+    //   this.timers.set(timer.id, timer);
+    // }
   }
 
   createTimer(owner: string): TimerInterface {

@@ -22,8 +22,8 @@ describe("Timer", () => {
   });
 
   test("should set the duration of the timer", () => {
-    timer.setDurationInMinutes(1000);
-    expect(timer.duration).toBe(1000);
+    timer.setDurationInMinutes(10);
+    expect(timer.duration).toBe(600000);
   });
 
   test("should add a user to the timer", () => {
