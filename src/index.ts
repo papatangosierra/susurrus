@@ -6,7 +6,6 @@ import { swagger } from '@elysiajs/swagger'
 import { Timer } from "./Classes/timer";
 import { TimerManager } from "./Classes/timerManager";
 
-
 // Handler Imports
 import { createTimerAsOwner } from "./handlers/createTimerAsOwner";
 import { joinTimer } from "./handlers/joinTimer";
@@ -20,9 +19,16 @@ const app = new Elysia()
   // load the timer manager into the app state
   .decorate("timerManager", timerManager)
    /* 
-    We create a user for anyone visiting the site.
+    Anyone visiting the site gets the frontend
    */
-  .get("/", createTimerAsOwner) 
+  .get("/", () => {
+    console.log('index.html requested');
+    return Bun.file('/Users/pstarr/dev/timer/frontend/dist/index.html');
+  }) 
+  .get("/js/App.js", () => {
+    console.log('App.js requested');
+    return Bun.file('/Users/pstarr/dev/timer/frontend/public/js/App.js');
+  })
   // .get("/user/:id", getUser)
   // .post("/timers", createTimer)
   .get("/timers/:timerId", joinTimer)
