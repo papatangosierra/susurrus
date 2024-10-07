@@ -23,15 +23,15 @@ const app = new Elysia()
    */
   .get("/", () => {
     console.log('index.html requested');
-    return Bun.file('/Users/pstarr/dev/timer/frontend/dist/index.html');
+    return Bun.file('./frontend/dist/index.html');
   }) 
   .get("/js/App.js", () => {
     console.log('App.js requested');
-    return Bun.file('/Users/pstarr/dev/timer/frontend/public/js/App.js');
+    return Bun.file('./frontend/public/js/App.js');
   })
   .get("/styles.css", () => {
     console.log('styles.css requested');
-    return Bun.file('/Users/pstarr/dev/timer/frontend/public/styles.css');
+    return Bun.file('./frontend/public/styles.css');
   })
   // .get("/user/:id", getUser)
   // .post("/timers", createTimer)
