@@ -7,14 +7,14 @@ const getTimerState = () => {
   // hardcoded dummy data
   const dummyData = {
     userId: '1',
-    userName: 'Paul Starr',
+    userName: 'Paul',
     timerId: 'abc',
     timerName: 'Juppun Souji',
-    duration: 60000,
+    duration: 600000,
     startTime: 0,
     isRunning: false,
     owner: '1',
-    users: ['1', '2', '3'],
+    users: ['Paul', 'Whit'],
     pingQueue: [],
   };
   return dummyData;
@@ -27,8 +27,8 @@ const App: React.FC = () => {
   return (
     <div>
       <h1>{timerState.timerName}</h1>
-      <Timer />
-      <Participants />
+      <Timer duration={timerState.duration} />
+      <Participants users={timerState.users} />
     </div>
   );
 }

@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 
-const Timer: React.FC = () => {
-  const [duration, setDuration] = useState(0);
+const Timer: React.FC = ( { duration } ) => {
+  const minutes = Math.floor(duration / 60000);
+  const seconds = Math.floor((duration % 60000) / 1000);
   return (
     <div>
-      <h1>Timer</h1>
+      <h1>Time Remaining</h1>
       <div id="countdown">
-        <span id="countdown-minutes">00</span>:<span id="countdown-seconds">00</span>
+        <span id="countdown-minutes"> {minutes} </span>:<span id="countdown-seconds"> {seconds} </span>
       </div>
     </div>
   );
 };
+
+export default Timer;
