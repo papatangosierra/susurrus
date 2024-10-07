@@ -10,14 +10,15 @@ const getTimerState = () => {
     userName: 'Paul',
     timerId: 'abc',
     timerName: 'Juppun Souji',
-    duration: 600000,
+    remainingTime: 10000,
     startTime: 0,
     isRunning: false,
     owner: '1',
-    users: ['Paul', 'Whit'],
+    users: ['Paul', 'Whit', 'Christine', 'Angela', 'Molly'],
     pingQueue: [],
   };
   return dummyData;
+
 };
 
 
@@ -25,9 +26,9 @@ const getTimerState = () => {
 const App: React.FC = () => {
   const [timerState, setTimerState] = useState(getTimerState());
   return (
-    <div>
+    <div className="app-container">
       <h1>{timerState.timerName}</h1>
-      <Timer duration={timerState.duration} />
+      <Timer initialTime={timerState.remainingTime} isRunning={timerState.isRunning} />
       <Participants users={timerState.users} />
     </div>
   );

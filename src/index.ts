@@ -29,6 +29,10 @@ const app = new Elysia()
     console.log('App.js requested');
     return Bun.file('/Users/pstarr/dev/timer/frontend/public/js/App.js');
   })
+  .get("/styles.css", () => {
+    console.log('styles.css requested');
+    return Bun.file('/Users/pstarr/dev/timer/frontend/public/styles.css');
+  })
   // .get("/user/:id", getUser)
   // .post("/timers", createTimer)
   .get("/timers/:timerId", joinTimer)
