@@ -42,7 +42,7 @@ const Timer: React.FC<TimerProps> = ( { initialTime, isRunning } ) => {
 
   return (
     <div className="remaining-time-display" >
-      <h2>Time Remaining:</h2>
+      <h2>Time Remaining</h2>
       <div className="countdown">
         <span id="countdown-minutes"> {minutes} </span>:<span id="countdown-seconds"> {paddedSeconds} </span>
       </div>
