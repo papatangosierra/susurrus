@@ -5,9 +5,6 @@
 /.pnp
 .pnp.js
 
-# frontend build files
-/frontend/public/js/*
-
 # testing
 /coverage
 
@@ -17,6 +14,7 @@
 
 # production
 /build
+frontend/public/js
 
 # misc
 .DS_Store
