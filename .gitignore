@@ -6,7 +6,7 @@
 .pnp.js
 
 # frontend build files
-/frontend/public/js/*
+frontend/public/js/*
 
 # testing
 /coverage
