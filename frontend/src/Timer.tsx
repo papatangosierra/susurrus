@@ -19,6 +19,7 @@ const Timer: React.FC<TimerProps> = ( { initialTime, isRunning } ) => {
           if (prevTime <= 1000) {
             clearInterval(intervalId);
             setIsTimerRunning(false);
+            setRemainingTime(10000);
             return 0;
           }
           return prevTime - 1000;
@@ -40,9 +41,9 @@ const Timer: React.FC<TimerProps> = ( { initialTime, isRunning } ) => {
   const paddedSeconds = seconds < 10 ? `0${seconds}` : seconds;
 
   return (
-    <div className="remaining-time-display">
+    <div className="remaining-time-display" >
       <h2>Time Remaining:</h2>
-      <div id="countdown">
+      <div className="countdown">
         <span id="countdown-minutes"> {minutes} </span>:<span id="countdown-seconds"> {paddedSeconds} </span>
       </div>
       <StartButton onStart={handleStart} disabled={isTimerRunning} />
