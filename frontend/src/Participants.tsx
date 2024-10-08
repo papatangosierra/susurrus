@@ -8,7 +8,7 @@ const Participants: React.FC<ParticipantsProps> = ({ users }) => {
   return (
     <div className="participants-container">
       <h2>Participants</h2>
-      <ul>
+      <ul className="user-list">
         {users.map((user) => (
           <User key={user.id} id={user.id} name={user.name} />
         ))}
