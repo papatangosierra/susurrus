@@ -34,6 +34,7 @@ const Timer: React.FC<TimerProps> = ( { initialTime, isRunning } ) => {
     setIsTimerRunning(true);
     // Add any other logic needed to start the timer
   };
+
   const minutes = Math.floor(remainingTime / 60000);
   const seconds = Math.floor((remainingTime % 60000) / 1000);
 
