@@ -11,5 +11,3 @@ export interface UserInterface {
   updateName(name: string): void;
   delete(): void;
 }
-
-

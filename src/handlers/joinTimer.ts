@@ -3,7 +3,9 @@ import { UserManager } from "../Classes/userManager";
 import { TimerManager } from "../Classes/timerManager";
 import db from "../database";
 
-export async function joinTimer(context: { params: { timerId: string; }; }): Promise<string> {
+export async function joinTimer(context: {
+  params: { timerId: string };
+}): Promise<string> {
   const user = new User(db);
   const userManager = new UserManager(db);
   userManager.addUser(user);
@@ -17,5 +19,4 @@ export async function joinTimer(context: { params: { timerId: string; }; }): Pro
     // TODO: if timer not found, create a new timer
     return `Timer ${context.params.timerId} not found`;
   }
-
 }

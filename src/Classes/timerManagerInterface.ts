@@ -1,6 +1,5 @@
 import { TimerInterface } from "./timerInterface";
 
-
 // Define the interface for the timer class.
 export interface TimerManagerInterface {
   createTimer(owner: string): TimerInterface;

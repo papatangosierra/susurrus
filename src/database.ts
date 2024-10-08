@@ -1,5 +1,5 @@
 // Initialize the database and create the tables
-import { Database } from 'bun:sqlite';
+import { Database } from "bun:sqlite";
 
 const db = new Database("data/mydb.sqlite");
 

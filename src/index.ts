@@ -1,6 +1,6 @@
 // Library Imports
 import { Elysia } from "elysia";
-import { swagger } from '@elysiajs/swagger'
+import { swagger } from "@elysiajs/swagger";
 
 // Class Imports
 import { Timer } from "./Classes/timer";
@@ -18,20 +18,20 @@ const app = new Elysia()
   .use(swagger())
   // load the timer manager into the app state
   .decorate("timerManager", timerManager)
-   /* 
+  /* 
     Anyone visiting the site gets the frontend
    */
   .get("/", () => {
-    console.log('index.html requested');
-    return Bun.file('./frontend/dist/index.html');
-  }) 
+    console.log("index.html requested");
+    return Bun.file("./frontend/dist/index.html");
+  })
   .get("/js/App.js", () => {
-    console.log('App.js requested');
-    return Bun.file('./frontend/public/js/App.js');
+    console.log("App.js requested");
+    return Bun.file("./frontend/public/js/App.js");
   })
   .get("/styles.css", () => {
-    console.log('styles.css requested');
-    return Bun.file('./frontend/public/styles.css');
+    console.log("styles.css requested");
+    return Bun.file("./frontend/public/styles.css");
   })
   // .get("/user/:id", getUser)
   // .post("/timers", createTimer)
@@ -41,7 +41,6 @@ const app = new Elysia()
   // .put("/timers/:id/stop", stopTimer)
   .listen(3000);
 
-
 console.log(
-  `🦊 Timer server is running at ${app.server?.hostname}:${app.server?.port}`
+  `🦊 Timer server is running at ${app.server?.hostname}:${app.server?.port}`,
 );

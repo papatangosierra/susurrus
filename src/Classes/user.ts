@@ -1,5 +1,5 @@
 import { UserInterface } from "./userInterface";
-import { Database } from 'bun:sqlite';
+import { Database } from "bun:sqlite";
 
 export class User implements UserInterface {
   id: string;
@@ -55,26 +55,30 @@ export class User implements UserInterface {
   }
 
   private create(): void {
-    const query = this.userDb.query(`INSERT INTO users (id, name) VALUES ($id, $name)`);
+    const query = this.userDb.query(
+      `INSERT INTO users (id, name) VALUES ($id, $name)`,
+    );
     try {
       query.all({
         $id: this.id,
         $name: this.name,
       });
     } catch (error) {
-      console.error('Error creating user in database: ', error);
+      console.error("Error creating user in database: ", error);
     }
   }
 
   private save(): void {
-    const query = this.userDb.query(`UPDATE users SET name = $name WHERE id = $id`);
+    const query = this.userDb.query(
+      `UPDATE users SET name = $name WHERE id = $id`,
+    );
     try {
       query.all({
         $id: this.id,
         $name: this.name,
       });
     } catch (error) {
-      console.error('Error saving user in database: ', error);
+      console.error("Error saving user in database: ", error);
     }
   }
 
@@ -85,7 +89,7 @@ export class User implements UserInterface {
         $id: this.id,
       });
     } catch (error) {
-      console.error('Error removing user in database: ', error);
+      console.error("Error removing user in database: ", error);
     }
   }
 }

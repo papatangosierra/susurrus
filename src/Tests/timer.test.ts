@@ -68,7 +68,7 @@ describe("Timer", () => {
     timer.delete();
     const query = testDb.query(`SELECT * FROM timers WHERE id = $id`);
     const result = query.all({
-      $id: timer.id
+      $id: timer.id,
     });
     expect(timer.deleted).toBe(true);
     expect(result.length).toBe(0);

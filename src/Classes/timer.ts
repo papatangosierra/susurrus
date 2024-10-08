@@ -1,7 +1,7 @@
 // Timer class
 
 import { TimerInterface } from "./timerInterface";
-import { Database } from 'bun:sqlite';
+import { Database } from "bun:sqlite";
 
 export class Timer implements TimerInterface {
   id: string;
@@ -40,7 +40,7 @@ export class Timer implements TimerInterface {
     this.save();
   }
 
-  setDurationInMinutes(duration: number): void { 
+  setDurationInMinutes(duration: number): void {
     this.duration = duration * 60 * 1000;
     this.save();
   }
@@ -75,7 +75,7 @@ export class Timer implements TimerInterface {
       this.isRunning = false;
       this.save();
     } else {
-      console.error('Timer was not started');
+      console.error("Timer was not started");
     }
   }
 
@@ -89,10 +89,10 @@ export class Timer implements TimerInterface {
   isFinished(): boolean {
     if (!this.isRunning) return false;
     const currentTime = Date.now();
-    // if the difference between 
-    // the current time and the start time is greater than 
+    // if the difference between
+    // the current time and the start time is greater than
     // or equal to the duration, the timer is finished
-    return currentTime - this.startTime >= this.duration; 
+    return currentTime - this.startTime >= this.duration;
   }
 
   delete() {
@@ -102,13 +102,17 @@ export class Timer implements TimerInterface {
 
   private createId(): string {
     const hasher = new Bun.CryptoHasher("sha256");
-    hasher.update(Date.now().toString() + Math.random().toString() + this.owner);
+    hasher.update(
+      Date.now().toString() + Math.random().toString() + this.owner,
+    );
     return hasher.digest("hex");
   }
 
   private create() {
     const usersJson = JSON.stringify(this.users);
-    const query = this.timerDb.query(`INSERT INTO timers (id, name, duration, startTime, isRunning, owner, users) VALUES ($id, $name, $duration, $startTime, $isRunning, $owner, $users)`);
+    const query = this.timerDb.query(
+      `INSERT INTO timers (id, name, duration, startTime, isRunning, owner, users) VALUES ($id, $name, $duration, $startTime, $isRunning, $owner, $users)`,
+    );
     try {
       query.all({
         $id: this.id,
@@ -116,39 +120,44 @@ export class Timer implements TimerInterface {
         $duration: this.duration,
         $startTime: this.startTime,
         $isRunning: this.isRunning,
-        $users: usersJson
+        $users: usersJson,
       });
     } catch (error) {
-      console.error('Error creating timer in database: ', error);
+      console.error("Error creating timer in database: ", error);
     }
   }
 
-  private load () {
+  private load() {
     const query = this.timerDb.query(`SELECT * FROM timers WHERE id = $id`);
     const result = query.get({
-      $id: this.id
-    }) as Omit<TimerInterface, 'users'> & { users: string }; // TypeScript is now satisfied that it's okay if users is a string (which it is, since it's the JSON stringified array of us)
+      $id: this.id,
+    }) as Omit<TimerInterface, "users"> & { users: string }; // TypeScript is now satisfied that it's okay if users is a string (which it is, since it's the JSON stringified array of us)
     if (result) {
       console.log(`loading timer ${this.id} from database`);
       this.name = result.name;
       this.duration = result.duration;
       this.startTime = result.startTime || 0;
       this.isRunning = result.isRunning || false;
-      
+
       // Parse the users string into an array and do some basic validation
       try {
         this.users = JSON.parse(result.users);
         if (!Array.isArray(this.users)) {
-          console.warn('Parsed users is not an array, defaulting to empty array');
+          console.warn(
+            "Parsed users is not an array, defaulting to empty array",
+          );
           this.users = [];
         }
       } catch (error) {
-        console.error('Failed to parse users JSON, defaulting to empty array', error);
+        console.error(
+          "Failed to parse users JSON, defaulting to empty array",
+          error,
+        );
         this.users = [];
       }
-      
+
       this.owner = result.owner;
-      
+
       console.log(`typeof result.users: ${typeof result.users}`);
       console.log(`typeof this.users: ${typeof this.users}`);
       console.log(`number of users: ${this.users.length}`);
@@ -158,18 +167,20 @@ export class Timer implements TimerInterface {
 
   private save() {
     const usersJson = JSON.stringify(this.users);
-    const query = this.timerDb.query(`UPDATE timers SET name = $name, duration = $duration, startTime = $startTime, isRunning = $isRunning, users = $users WHERE id = $id`);
+    const query = this.timerDb.query(
+      `UPDATE timers SET name = $name, duration = $duration, startTime = $startTime, isRunning = $isRunning, users = $users WHERE id = $id`,
+    );
     try {
       query.run({
         $id: this.id,
         $name: this.name,
-        $duration: this.duration, 
+        $duration: this.duration,
         $startTime: this.startTime,
         $isRunning: this.isRunning,
-        $users: usersJson
+        $users: usersJson,
       });
     } catch (error) {
-      console.error('Error saving timer to database: ', error);
+      console.error("Error saving timer to database: ", error);
     }
   }
 
@@ -177,10 +188,10 @@ export class Timer implements TimerInterface {
     const query = this.timerDb.query(`DELETE FROM timers WHERE id = $id`);
     try {
       query.run({
-        $id: this.id
+        $id: this.id,
       });
     } catch (error) {
-      console.error('Error removing timer from database: ', error);
+      console.error("Error removing timer from database: ", error);
     }
   }
 }

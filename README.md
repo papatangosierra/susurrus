@@ -24,7 +24,7 @@ Open http://localhost:3000/ in your browser to see the result.
 - Time Together
 - Solidarity
 - Parallel Dispatch Console Mk. I
-- Chronoencabulator
+- Chronoencabulatorde
 - Countdown Coop
 - Double Time
 - Multitime

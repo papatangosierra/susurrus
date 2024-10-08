@@ -6,7 +6,7 @@ describe("User", () => {
   let user: User;
 
   beforeEach(() => {
-    user = new User(testDb,"Test User");
+    user = new User(testDb, "Test User");
   });
 
   test("should create a new user", () => {
@@ -23,10 +23,9 @@ describe("User", () => {
     user.delete();
     const query = testDb.query(`SELECT * FROM users WHERE id = $id`);
     const result = query.all({
-      $id: user.id
+      $id: user.id,
     });
     expect(user.deleted).toBe(true);
     expect(result.length).toBe(0);
   });
-
 });

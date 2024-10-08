@@ -2,7 +2,7 @@ import { TimerManager } from "../Classes/timerManager";
 import { expect, test, describe, beforeEach } from "bun:test";
 import testDb from "../databaseTest";
 
-describe('TimerManager', () => {
+describe("TimerManager", () => {
   let timerManager: TimerManager;
 
   beforeEach(() => {
@@ -27,7 +27,6 @@ describe('TimerManager', () => {
     const timer = timerManager.getTimer("nonExistentId");
     expect(timer).toBeNull();
   });
-
 
   test("should start a timer", () => {
     const timer = timerManager.createTimer("testOwner");
@@ -61,7 +60,7 @@ describe('TimerManager', () => {
     timerManager.addUserToTimer(timer.id, "testUser");
     const timerWithUser = timerManager.getTimer(timer.id);
     expect(timerWithUser).toBeDefined();
-    expect(timerWithUser!.users).toEqual(["testOwner","testUser"]);
+    expect(timerWithUser!.users).toEqual(["testOwner", "testUser"]);
   });
 
   test("should remove a user from a timer", () => {
@@ -72,5 +71,4 @@ describe('TimerManager', () => {
     expect(timerWithoutUser).toBeDefined();
     expect(timerWithoutUser!.users).toEqual(["testOwner"]);
   });
-
 });

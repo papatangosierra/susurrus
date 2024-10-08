@@ -17,7 +17,7 @@ export interface TimerInterface {
   startTime?: number;
   isRunning?: boolean;
   owner: string;
-  users: string[]; 
+  users: string[];
   pingQueue: number[]; // array of indices of this.users who have sent a ping
   // TODO: change "deleted" to "deletedAt" and make it a date
   deleted: boolean;
@@ -32,4 +32,3 @@ export interface TimerInterface {
   reset(): void;
   isFinished(): boolean;
 }
-
