@@ -14,23 +14,23 @@ Open http://localhost:3000/ in your browser to see the result.
 
 # App Name Ideas
 
-Tomodoro (taken multiple times over, alas)
-Pomodachi (likewise)
-TMDR
-Tango Delta
-TD-1
-Juppun Soji
-Juliet Sierra
-Time Together
-Solidarity
-Parallel Dispatch Console Mk. I
-Chronoencabulator
-Countdown Coop
-Double Time
-Multitime
-Minitt
-Pacecar
-Hapenator
-Volition
-Agency
-Let's Timer
+- Tomodoro (taken multiple times over, alas)
+- Pomodachi (likewise)
+- TMDR
+- Tango Delta
+- TD-1
+- Juppun Soji
+- Juliet Sierra
+- Time Together
+- Solidarity
+- Parallel Dispatch Console Mk. I
+- Chronoencabulator
+- Countdown Coop
+- Double Time
+- Multitime
+- Minitt
+- Pacecar
+- Hapenator
+- Volition
+- Agency
+- Let's Timer
