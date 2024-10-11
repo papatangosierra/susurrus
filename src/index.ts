@@ -11,7 +11,7 @@ import { UserManager } from "./Classes/userManager";
 // Handler Imports
 import { joinTimer } from "./handlers/joinTimer";
 import { getUser } from "./handlers/getUser";
-//import { makeTimer } from "./handlers/makeTimer";
+import { makeTimer } from "./handlers/makeTimer";
 
 // SQLite Database
 import db from "./database";
@@ -42,8 +42,9 @@ const app = new Elysia()
   })
   /* When the client requests a user identity, we should give them one */
   .get("/get-user", getUser)
-  // .post("/timers", createTimer)
-  // .get("/make-timer/:userId", makeTimer)
+  /* When the client requests to make a timer, they give us their user id 
+  and we make a timer for them and tell them its id*/
+  .get("/make-timer/:userId", makeTimer)
   // .get("/timers/:timerId", joinTimer)
   // .get("/timers/:id/users", getUsersForTimer)
   // .put("/timers/:id/start", startTimer)

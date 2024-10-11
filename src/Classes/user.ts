@@ -10,19 +10,20 @@ export class User implements UserInterface {
 
   constructor(db: Database, id?: string) {
     this.userDb = db;
-
     this.name = this.createName();
+
     // if we got an id, that mean the user already exists in the database, so load instead of create
     if (id) {
       this.id = id;
+      console.log(`Loading user ${this.id} from database`);
       this.load();
     } else {
       this.id = this.hashUserId(this.name);
+      console.log(`Creating user ${this.id} in database`);
       this.create();
     }
     this.id = this.hashUserId(this.name);
     this.deleted = false;
-    this.create();
   }
 
   updateName(name: string): void {
@@ -35,9 +36,7 @@ export class User implements UserInterface {
   }
 
   private hashUserId(userName: string): string {
-    const hasher = new Bun.CryptoHasher("sha256");
-    hasher.update(userName + Date.now().toString());
-    return hasher.digest("hex");
+    return Bun.hash(userName, Date.now()).toString();
   }
 
   // Generate a new phonetically plausible name

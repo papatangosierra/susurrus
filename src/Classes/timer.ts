@@ -101,11 +101,7 @@ export class Timer implements TimerInterface {
   }
 
   private createId(): string {
-    const hasher = new Bun.CryptoHasher("sha256");
-    hasher.update(
-      Date.now().toString() + Math.random().toString() + this.owner,
-    );
-    return hasher.digest("hex");
+    return Bun.hash(this.owner, Date.now()).toString();
   }
 
   private create() {

@@ -27,7 +27,7 @@ export class UserManager implements UserManagerInterface {
 
   private loadUsersFromDatabase(): void {
     const users = this.userDb.query("SELECT * FROM users").all();
-    console.log(users);
+    // console.log(users);
     for (const user of users as UserInterface[]) {
       const newUser = new User(this.userDb, user.id);
       this.users.set(user.id, newUser);
