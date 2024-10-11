@@ -8,13 +8,17 @@ export class User implements UserInterface {
 
   private userDb: Database;
 
-  constructor(db: Database, userName?: string) {
+  constructor(db: Database, id?: string) {
     this.userDb = db;
 
-    if (userName) {
-      this.name = userName;
+    this.name = this.createName();
+    // if we got an id, that mean the user already exists in the database, so load instead of create
+    if (id) {
+      this.id = id;
+      this.load();
     } else {
-      this.name = this.createName();
+      this.id = this.hashUserId(this.name);
+      this.create();
     }
     this.id = this.hashUserId(this.name);
     this.deleted = false;
@@ -66,6 +70,14 @@ export class User implements UserInterface {
     } catch (error) {
       console.error("Error creating user in database: ", error);
     }
+  }
+
+  private load(): void {
+    const query = this.userDb.query(`SELECT * FROM users WHERE id = $id`);
+    const result = query.get({
+      $id: this.id,
+    }) as UserInterface;
+    this.name = result.name;
   }
 
   private save(): void {

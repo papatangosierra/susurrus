@@ -2,7 +2,6 @@ import { TimerManagerInterface } from "./timerManagerInterface";
 import { TimerInterface } from "./timerInterface";
 import { Timer } from "./timer";
 import { Database } from "bun:sqlite";
-import db from "../database";
 
 export class TimerManager implements TimerManagerInterface {
   private timers: Map<string, TimerInterface>;

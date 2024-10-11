@@ -9,9 +9,11 @@ import { TimerManager } from "./Classes/timerManager";
 import { UserManager } from "./Classes/userManager";
 
 // Handler Imports
-import { createTimerAsOwner } from "./handlers/createTimerAsOwner";
 import { joinTimer } from "./handlers/joinTimer";
 import { getUser } from "./handlers/getUser";
+//import { makeTimer } from "./handlers/makeTimer";
+
+// SQLite Database
 import db from "./database";
 
 // Instantiate the timer and user managers
@@ -40,9 +42,9 @@ const app = new Elysia()
   })
   /* When the client requests a user identity, we should give them one */
   .get("/get-user", getUser)
-  // .get("/user/:id", getUser)
   // .post("/timers", createTimer)
-  .get("/timers/:timerId", joinTimer)
+  // .get("/make-timer/:userId", makeTimer)
+  // .get("/timers/:timerId", joinTimer)
   // .get("/timers/:id/users", getUsersForTimer)
   // .put("/timers/:id/start", startTimer)
   // .put("/timers/:id/stop", stopTimer)
