@@ -17,12 +17,12 @@ h2 {
   align-items: center;
   justify-content: space-between;
   height: 100vh;
-  border: 2px solid black;
 }
 
 .remaining-time-display {
   display: flex;
   flex-direction: column;
+  width: 100%;
   align-items: center;
   justify-content: center;
   border: 2px solid black;
@@ -50,8 +50,6 @@ h2 {
   /* don't indent the list items */
   margin: 0;
   padding: 0;
-  border: 2px solid black;
-  padding: 1rem;
 }
 
 .user-list {

@@ -1,7 +1,7 @@
 import React from "react";
 import User from "./User";
 interface ParticipantsProps {
-  users: string[];
+  users: User[];
 }
 
 const Participants: React.FC<ParticipantsProps> = ({ users }) => {

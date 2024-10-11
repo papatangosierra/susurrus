@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import StartButton from "./StartButton";
-
+import Dial from "./Dial";
 interface TimerProps {
   initialTime: number;
   isRunning: boolean;
@@ -44,6 +44,7 @@ const Timer: React.FC<TimerProps> = ({ initialTime, isRunning }) => {
   return (
     <div className="remaining-time-display">
       <h2>Time Remaining</h2>
+      <Dial value={remainingTime} onChange={setRemainingTime} />
       <div className="countdown">
         <span id="countdown-minutes"> {minutes} </span>:
         <span id="countdown-seconds"> {paddedSeconds} </span>

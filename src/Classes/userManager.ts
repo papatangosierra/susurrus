@@ -10,9 +10,10 @@ export class UserManager implements UserManagerInterface {
   constructor(db: Database) {
     this.users = new Map();
     this.userDb = db;
+    this.loadUsersFromDatabase();
   }
 
-  addUser(user: UserInterface): void {
+  createUser(user: UserInterface): void {
     this.users.set(user.id, user);
   }
 
@@ -22,5 +23,14 @@ export class UserManager implements UserManagerInterface {
 
   getUser(id: string): UserInterface | null {
     return this.users.get(id) || null;
+  }
+
+  private loadUsersFromDatabase(): void {
+    const users = this.userDb.query("SELECT * FROM users").all();
+    console.log(users);
+    for (const user of users as UserInterface[]) {
+      const newUser = new User(this.userDb, user.id);
+      this.users.set(user.id, newUser);
+    }
   }
 }
