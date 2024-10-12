@@ -1,3 +1,5 @@
+import { UserInterface } from "./userInterface";
+
 // Define the interface for the timer class.
 // A timer will have:
 // - an id
@@ -17,16 +19,16 @@ export interface TimerInterface {
   startTime: number;
   // We don't need isRunning because we can calculate it from startTime and duration  
   // isRunning?: boolean;
-  owner: string;
-  users: string[];
+  owner: UserInterface;
+  users: UserInterface[];
   pingQueue: number[]; // array of indices of this.users who have sent a ping
   // TODO: change "deleted" to "deletedAt" and make it a date
   deleted: boolean;
   setName(name: string): void;
   setDurationInMinutes(duration: number): void;
-  setOwner(id: string): void;
-  addUser(userId: string): void;
-  removeUser(userId: string): void;
+  setOwner(owner: UserInterface): void;
+  addUser(user: UserInterface): void;
+  removeUser(user: UserInterface): void;
   delete(): void;
   start(): void;
   stop(): void;

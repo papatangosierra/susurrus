@@ -1,5 +1,6 @@
 import { TimerManagerInterface } from "./timerManagerInterface";
 import { TimerInterface } from "./timerInterface";
+import { UserInterface } from "./userInterface";
 import { Timer } from "./timer";
 import { Database } from "bun:sqlite";
 
@@ -13,8 +14,8 @@ export class TimerManager implements TimerManagerInterface {
     this.loadTimersFromDatabase();
   }
 
-  createTimer(owner: string): TimerInterface {
-    const timer = new Timer(owner, this.timerDb);
+  createTimer(owner: UserInterface): TimerInterface {
+    const timer = new Timer(this.timerDb, owner);
     this.timers.set(timer.id, timer);
     return timer;
   }
@@ -115,7 +116,7 @@ export class TimerManager implements TimerManagerInterface {
     const timers = this.timerDb.query("SELECT * FROM timers").all();
     // console.log(timers);
     for (const timer of timers as TimerInterface[]) {
-      const newTimer = new Timer(timer.owner, this.timerDb, timer.id);
+      const newTimer = new Timer(this.timerDb, timer.owner, timer.id);
       this.timers.set(timer.id, newTimer);
     }
   }

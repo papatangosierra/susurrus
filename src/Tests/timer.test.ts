@@ -1,19 +1,26 @@
 // Unit tests for the Timer class
 
 import { Timer } from "../Classes/timer";
-import { expect, test, describe, beforeEach } from "bun:test";
+import { User } from "../Classes/user";
+import { expect, test, describe, beforeEach, afterEach, beforeAll, afterAll } from "bun:test";
 import testDb from "../databaseTest";
 
 describe("Timer", () => {
   let timer: Timer;
+  let owner: User;
 
-  beforeEach(() => {
-    timer = new Timer("testOwner", testDb);
+  beforeAll(() => {
+    owner = new User(testDb);
+    timer = new Timer(testDb, owner);
+  });
+
+  afterAll(() => {
+    owner.delete();
   });
 
   test("should create a new timer", () => {
     expect(timer).toBeDefined();
-    expect(timer.owner).toBe("testOwner");
+    expect(timer.owner.id).toBe(owner.id);
   });
 
   test("should set the name of the timer", () => {
@@ -27,27 +34,31 @@ describe("Timer", () => {
   });
 
   test("should add a user to the timer", () => {
-    timer.addUser("testUser");
-    expect(timer.users).toContain("testUser");
+    const user = new User(testDb);
+    timer.addUser(user);
+    expect(timer.users.length).toBe(2);
+    expect(timer.users[timer.users.length - 1].id).toBe(user.id);
   });
 
   test("should remove a user from the timer", () => {
-    timer.addUser("testUser");
-    timer.removeUser("testUser");
-    expect(timer.users).not.toContain("testUser");
+    const user = new User(testDb);
+    timer.addUser(user);
+    expect(timer.users[timer.users.length - 1].id).toBe(user.id);
+    timer.removeUser(user);
+    expect(timer.users[timer.users.length - 1].id).not.toBe(user.id);
   });
 
   test("should start the timer", () => {
     timer.start();
+    expect(timer.startTime).toBeGreaterThan(0);
     expect(timer.isRunning).toBe(true);
   });
 
   test("should stop the timer", () => {
-    timer.setDurationInMinutes(5000);
+    timer.setDurationInMinutes(10);
     timer.start();
     timer.stop();
     expect(timer.isRunning).toBe(false);
-    expect(timer.duration).toBeLessThan(5000);
   });
 
   test("should reset the timer", () => {

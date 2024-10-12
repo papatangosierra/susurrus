@@ -6,12 +6,13 @@ describe("User", () => {
   let user: User;
 
   beforeEach(() => {
-    user = new User(testDb, "Test User");
+    user = new User(testDb);
   });
 
   test("should create a new user", () => {
     expect(user).toBeDefined();
-    expect(user.name).toBe("Test User");
+    expect(user.name).toBeString();
+    expect(user.id).toBeString();
   });
 
   test("should update the name of the user", () => {

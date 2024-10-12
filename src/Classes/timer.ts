@@ -10,13 +10,13 @@ export class Timer implements TimerInterface {
   duration: number;
   startTime: number;
   isRunning: boolean;
-  users: string[];
-  owner: string;
+  users: UserInterface[];
+  owner: UserInterface;
   deleted: boolean;
   pingQueue: number[];
   private timerDb: Database;
 
-  constructor(owner: string, db: Database, id?: string) {
+  constructor(db: Database, owner: UserInterface, id?: string) {
     this.name = "Your timer";
     this.startTime = 0;
     this.duration = 0;
@@ -46,20 +46,20 @@ export class Timer implements TimerInterface {
     this.save();
   }
 
-  setOwner(owner: string): void {
+  setOwner(owner: UserInterface): void {
     this.owner = owner;
     this.save();
   }
 
   // Add a user to the timer
-  addUser(userId: string): void {
-    this.users.push(userId);
+  addUser(user: UserInterface): void {
+    this.users.push(user);
     this.save();
   }
 
   // Remove a user from the timer
-  removeUser(userId: string): void {
-    this.users = this.users.filter((user) => user !== userId);
+  removeUser(user: UserInterface): void {
+    this.users = this.users.filter((u) => u.id !== user.id);
     this.save();
   }
 
@@ -72,11 +72,10 @@ export class Timer implements TimerInterface {
 
   stop() {
     if (this.isRunning) {
-      this.duration = Date.now() - this.startTime;
       this.isRunning = false;
       this.save();
     } else {
-      console.error("Timer was not started");
+      console.error("Timer is not running and thus cannot be stopped");
     }
   }
 
