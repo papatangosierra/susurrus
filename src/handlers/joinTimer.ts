@@ -1,27 +1,23 @@
-import { User } from "../Classes/user";
 import { UserManager } from "../Classes/userManager";
 import { TimerManager } from "../Classes/timerManager";
-import db from "../database";
+import { ClientState } from "../Classes/clientState";
 
 export async function joinTimer(context: {
-  params: { timerId: string };
+  timerManager: TimerManager,
+  userManager: UserManager,
+  params: { timerId: string, userId: string  };
 }): Promise<object> {
-  const user = new User(db);
-  const userManager = new UserManager(db);
-  userManager.createUser(user);
-  const timerManager = new TimerManager(db);
-  const timer = timerManager.getTimer(context.params.timerId);
-  console.log(JSON.stringify(context.params));
+  const timer = context.timerManager.getTimer(context.params.timerId);
   if (timer) {
-    timerManager.addUserToTimer(timer.id, user.id);
-    return {
-      timer: {
-        id: timer.id,
-        name: timer.name,
-      }
-    };
+    const user = context.userManager.getUser(context.params.userId);
+    if (user) {
+      context.timerManager.addUserToTimer(user, timer.id);
+      const clientState = new ClientState(user, timer);
+      return clientState.getAsObject();
+    } else {
+      return { error: `User ${context.params.userId} not found` };
+    }
   } else {
-    // TODO: if timer not found, create a new timer
-    return `Timer ${context.params.timerId} not found`;
+    return { error: `Timer ${context.params.timerId} not found` };
   }
 }

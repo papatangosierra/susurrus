@@ -1,7 +1,6 @@
 import { TimerManager } from "../Classes/timerManager";
 import { UserManager } from "../Classes/userManager";
-import db from "../database";
-
+import { ClientState } from "../Classes/clientState";
 export async function makeTimer(context: {
   timerManager: TimerManager;
   userManager: UserManager;
@@ -13,8 +12,8 @@ export async function makeTimer(context: {
   if (!user) {
     return { error: "User not found" };
   }
-  const timer = context.timerManager.createTimer(user.id);
-  return {
-    id: timer.id
-  };
+  const timer = context.timerManager.createTimer(user);
+  const clientState = new ClientState(user, timer);
+  return clientState.getAsObject();
 }
+

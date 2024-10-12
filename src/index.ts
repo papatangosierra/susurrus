@@ -42,7 +42,7 @@ const app = new Elysia()
   })
 
   /* When the client requests a user identity, we should give them one */
-  .post("/get-user", getUser)
+  .get("/get-user", getUser)
 
   /* When the client requests to make a timer, they give us their user id 
   and we make a timer for them and tell them its id*/
@@ -50,7 +50,8 @@ const app = new Elysia()
 
   /* When the client provides a timerId, we should join them to that timer, making a new user
   in the process */
-  .get("/timers/:timerId", joinTimer)
+  .get("/timers/:timerId/:userId", joinTimer)
+
   // .get("/timers/:id/users", getUsersForTimer)
   // .put("/timers/:id/start", startTimer)
   // .put("/timers/:id/stop", stopTimer)
