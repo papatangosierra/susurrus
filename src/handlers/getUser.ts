@@ -1,5 +1,6 @@
 import { User } from "../Classes/user";
 import { UserManager } from "../Classes/userManager";
+import { ClientState } from "../Classes/clientState";
 import db from "../database";
 
 export async function getUser(context: {
@@ -7,8 +8,6 @@ export async function getUser(context: {
 }): Promise<object> {
   const user = new User(db);
   context.userManager.createUser(user);
-  return {
-    id: user.id,
-    name: user.name
-  };
+  const clientState = new ClientState(user);
+  return clientState.getAsObject();
 }

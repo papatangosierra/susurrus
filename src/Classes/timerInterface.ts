@@ -4,13 +4,13 @@ import { UserInterface } from "./userInterface";
 // A timer will have:
 // - an id
 // - a name
-// - a duration in seconds
-// - a start time in seconds
-// - an array of user IDs representing the users who have joined the timer
+// - a duration 
+// - a start time 
+// - an array of User objects representing the users who have joined the timer
 // - a boolean indicating whether the timer is running or not
-// - an owner ID representing the user who created the timer
-// - a users string representing a JSON array of user IDs, which are people
-// who have joined the timer
+// - an owner User object representing the user who created the timer
+// - a deletedAt date representing the time the timer was deleted, if it has been deleted
+
 
 export interface TimerInterface {
   id: string;
@@ -23,7 +23,7 @@ export interface TimerInterface {
   users: UserInterface[];
   pingQueue: number[]; // array of indices of this.users who have sent a ping
   // TODO: change "deleted" to "deletedAt" and make it a date
-  deleted: boolean;
+  deletedAt: number;
   setName(name: string): void;
   setDurationInMinutes(duration: number): void;
   setOwner(owner: UserInterface): void;
@@ -31,7 +31,6 @@ export interface TimerInterface {
   removeUser(user: UserInterface): void;
   delete(): void;
   start(): void;
-  stop(): void;
   reset(): void;
   isFinished(): boolean;
 }

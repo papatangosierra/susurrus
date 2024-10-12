@@ -6,12 +6,11 @@ export interface TimerManagerInterface {
   getTimer(id: string): TimerInterface | null;
   deleteTimer(id: string): void;
   startTimer(id: string): void;
-  stopTimer(id: string): void;
   resetTimer(id: string, duration?: number): void;
-  addUserToTimer(id: string, userId: string): void;
-  removeUserFromTimer(id: string, userId: string): void;
+  addUserToTimer(user: UserInterface, timerId: string): void;
+  removeUserFromTimer(user: UserInterface, timerId: string): void;
   isFinished(id: string): boolean;
-  getUsersForTimer(id: string): string[];
+  getUsersForTimer(id: string): UserInterface[];
   // TODO: Implement purgeStaleTimers()
   // purgeStaleTimers(): number;
 }

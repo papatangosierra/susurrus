@@ -9,10 +9,9 @@ export class Timer implements TimerInterface {
   name: string;
   duration: number;
   startTime: number;
-  isRunning: boolean;
   users: UserInterface[];
   owner: UserInterface;
-  deleted: boolean;
+  deletedAt: number;
   pingQueue: number[];
   private timerDb: Database;
 
@@ -20,13 +19,12 @@ export class Timer implements TimerInterface {
     this.name = "Your timer";
     this.startTime = 0;
     this.duration = 0;
-    this.isRunning = false;
     this.users = [];
     this.users.push(owner);
     this.owner = owner;
     this.pingQueue = [];
     this.timerDb = db;
-    this.deleted = false;
+    this.deletedAt = 0;
     if (id) {
       this.id = id;
       this.load(); // if we got an id, that means the timer already exists in the database
@@ -65,29 +63,16 @@ export class Timer implements TimerInterface {
 
   start() {
     this.startTime = Date.now();
-    this.isRunning = true;
     this.save();
     console.log(`Timer ${this.id} started at ${this.startTime}`);
   }
 
-  stop() {
-    if (this.isRunning) {
-      this.isRunning = false;
-      this.save();
-    } else {
-      console.error("Timer is not running and thus cannot be stopped");
-    }
-  }
-
   reset() {
-    this.duration = 0;
     this.startTime = 0;
-    this.isRunning = false;
     this.save();
   }
 
   isFinished(): boolean {
-    if (!this.isRunning) return false;
     const currentTime = Date.now();
     // if the difference between
     // the current time and the start time is greater than
@@ -96,12 +81,12 @@ export class Timer implements TimerInterface {
   }
 
   delete() {
-    this.remove();
-    this.deleted = true;
+    this.remove(); // remove the timer from the database
+    this.deletedAt = Date.now(); // set the deletedAt date
   }
 
   private createId(): string {
-    return Bun.hash(this.owner, Date.now()).toString();
+    return Bun.hash(this.owner.name, Date.now()).toString();
   }
 
   private create() {
@@ -115,7 +100,6 @@ export class Timer implements TimerInterface {
         $name: this.name,
         $duration: this.duration,
         $startTime: this.startTime,
-        $isRunning: this.isRunning,
         $users: usersJson,
       });
     } catch (error) {
@@ -134,7 +118,6 @@ export class Timer implements TimerInterface {
         $name: this.name,
         $duration: this.duration,
         $startTime: this.startTime,
-        $isRunning: this.isRunning,
         $users: usersJson,
       });
     } catch (error) {
@@ -152,7 +135,6 @@ export class Timer implements TimerInterface {
       this.name = result.name;
       this.duration = result.duration;
       this.startTime = result.startTime || 0;
-      this.isRunning = result.isRunning || false;
 
       // Parse the users string into an array and do some basic validation
       try {

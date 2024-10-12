@@ -10,7 +10,6 @@ let query = testDb.query(`CREATE TABLE IF NOT EXISTS timers (
   name TEXT,
   duration INTEGER,
   startTime INTEGER,
-  isRunning INTEGER,
   owner TEXT,
   users TEXT
 )`);

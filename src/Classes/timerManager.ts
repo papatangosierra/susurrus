@@ -43,15 +43,6 @@ export class TimerManager implements TimerManagerInterface {
     }
   }
 
-  stopTimer(id: string): void {
-    const timer = this.getTimer(id);
-    if (timer) {
-      timer.stop();
-    } else {
-      throw new Error("Timer not found");
-    }
-  }
-
   resetTimer(id: string, duration?: number): void {
     const timer = this.getTimer(id);
     if (timer) {
@@ -70,7 +61,7 @@ export class TimerManager implements TimerManagerInterface {
     }
   }
 
-  getUsersForTimer(id: string): string[] {
+  getUsersForTimer(id: string): UserInterface[] {
     const timer = this.getTimer(id);
     if (timer) {
       return timer.users;
@@ -94,19 +85,19 @@ export class TimerManager implements TimerManagerInterface {
   //   return deletedCount;
   // }
 
-  addUserToTimer(timerId: string, userId: string): void {
+  addUserToTimer(user: UserInterface, timerId: string): void {
     const timer = this.getTimer(timerId);
     if (timer) {
-      timer.addUser(userId);
+      timer.addUser(user);
     } else {
       throw new Error("Timer not found");
     }
   }
 
-  removeUserFromTimer(timerId: string, userId: string): void {
+  removeUserFromTimer(user: UserInterface, timerId: string): void {
     const timer = this.getTimer(timerId);
     if (timer) {
-      timer.removeUser(userId);
+      timer.removeUser(user);
     } else {
       throw new Error("Timer not found");
     }

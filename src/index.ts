@@ -42,7 +42,7 @@ const app = new Elysia()
   })
 
   /* When the client requests a user identity, we should give them one */
-  .get("/get-user", getUser)
+  .post("/get-user", getUser)
 
   /* When the client requests to make a timer, they give us their user id 
   and we make a timer for them and tell them its id*/

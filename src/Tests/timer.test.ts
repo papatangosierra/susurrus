@@ -51,22 +51,12 @@ describe("Timer", () => {
   test("should start the timer", () => {
     timer.start();
     expect(timer.startTime).toBeGreaterThan(0);
-    expect(timer.isRunning).toBe(true);
-  });
-
-  test("should stop the timer", () => {
-    timer.setDurationInMinutes(10);
-    timer.start();
-    timer.stop();
-    expect(timer.isRunning).toBe(false);
   });
 
   test("should reset the timer", () => {
     timer.start();
-    timer.stop();
     timer.reset();
-    expect(timer.duration).toBe(0);
-    expect(timer.isRunning).toBe(false);
+    expect(timer.startTime).toBe(0);
   });
 
   test("should check if the timer is finished", () => {
@@ -81,7 +71,7 @@ describe("Timer", () => {
     const result = query.all({
       $id: timer.id,
     });
-    expect(timer.deleted).toBe(true);
+    expect(timer.deletedAt).toBeGreaterThan(0);
     expect(result.length).toBe(0);
   });
 });

@@ -3,6 +3,6 @@ import { TimerInterface } from "./timerInterface";
 import { UserInterface } from "./userInterface";
 
 export interface ClientStateInterface {
-  timer?: TimerInterface;
-  user?: UserInterface;
+  timer?: TimerInterface | null;
+  user?: UserInterface | null;
 }
