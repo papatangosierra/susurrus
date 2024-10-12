@@ -1,42 +1,45 @@
 import React, { useEffect, useState } from "react";
 import StartButton from "./StartButton";
 import Dial from "./Dial";
+
 interface TimerProps {
-  initialTime: number;
-  isRunning: boolean;
+  duration: number;
+  startTime: number;
 }
 
-const Timer: React.FC<TimerProps> = ({ initialTime, isRunning }) => {
-  const [remainingTime, setRemainingTime] = useState(initialTime);
-  const [isTimerRunning, setIsTimerRunning] = useState(isRunning);
+const Timer: React.FC<TimerProps> = ({ duration, startTime }) => {
+  const [theRemainingTime, setTheRemainingTime] = useState(duration);
+  const [theStartTime, setTheStartTime] = useState(startTime);
 
   useEffect(() => {
     let intervalId: number | undefined;
 
-    if (isTimerRunning && remainingTime > 0) {
+    // if theStartTime is greater than 0, that means the timer is running.
+    // so we need to update the remaining time every second.
+    if (theStartTime > 0) {
       intervalId = window.setInterval(() => {
-        setRemainingTime((prevTime) => {
-          if (prevTime <= 1000) {
-            clearInterval(intervalId);
-            setIsTimerRunning(false);
-            setRemainingTime(10000);
-            return 0;
-          }
-          return prevTime - 1000;
-        });
+        setTheRemainingTime(duration - (Date.now() - theStartTime));
       }, 1000);
     }
 
+    // if the remaining time is less than or equal to 0,
+    // reset the timer.
+    if (theRemainingTime <= 0) {
+      clearInterval(intervalId);
+      setTheRemainingTime(duration);
+      setTheStartTime(0);
+    }
+
     return () => clearInterval(intervalId);
-  }, [isTimerRunning, remainingTime]);
+  }, [theRemainingTime, theStartTime]);
 
   const handleStart = () => {
-    setIsTimerRunning(true);
-    // Add any other logic needed to start the timer
+    // start the timer 1 second in the future so that we don't skip the first tick
+    setTheStartTime(Date.now() + 1000);
   };
 
-  const minutes = Math.floor(remainingTime / 60000);
-  const seconds = Math.floor((remainingTime % 60000) / 1000);
+  const minutes = Math.floor(theRemainingTime / 60000);
+  const seconds = Math.floor((theRemainingTime % 60000) / 1000);
 
   // pad seconds with 0 if less than 10
   const paddedSeconds = seconds < 10 ? `0${seconds}` : seconds;
@@ -44,12 +47,12 @@ const Timer: React.FC<TimerProps> = ({ initialTime, isRunning }) => {
   return (
     <div className="remaining-time-display">
       <h2>Time Remaining</h2>
-      <Dial value={remainingTime} onChange={setRemainingTime} />
+      <Dial value={theRemainingTime} onChange={setTheRemainingTime} />
       <div className="countdown">
         <span id="countdown-minutes"> {minutes} </span>:
         <span id="countdown-seconds"> {paddedSeconds} </span>
       </div>
-      <StartButton onStart={handleStart} disabled={isTimerRunning} />
+      <StartButton onStart={handleStart} disabled={theStartTime > 0} />
     </div>
   );
 };
