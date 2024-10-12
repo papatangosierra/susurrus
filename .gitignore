@@ -41,6 +41,4 @@ yarn-error.log*
 **/*.log
 package-lock.json
 **/*.bun
-/data/*.sqlite
-/data/*.sqlite-shm
-/data/*.sqlite-wal
+/data

@@ -5,16 +5,21 @@ import db from "../database";
 
 export async function joinTimer(context: {
   params: { timerId: string };
-}): Promise<string> {
+}): Promise<object> {
   const user = new User(db);
   const userManager = new UserManager(db);
-  userManager.addUser(user);
+  userManager.createUser(user);
   const timerManager = new TimerManager(db);
   const timer = timerManager.getTimer(context.params.timerId);
   console.log(JSON.stringify(context.params));
   if (timer) {
     timerManager.addUserToTimer(timer.id, user.id);
-    return `User ${user.id} joined timer ${timer.id}`;
+    return {
+      timer: {
+        id: timer.id,
+        name: timer.name,
+      }
+    };
   } else {
     // TODO: if timer not found, create a new timer
     return `Timer ${context.params.timerId} not found`;

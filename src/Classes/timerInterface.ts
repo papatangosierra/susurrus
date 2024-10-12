@@ -14,8 +14,9 @@ export interface TimerInterface {
   id: string;
   name: string;
   duration: number;
-  startTime?: number;
-  isRunning?: boolean;
+  startTime: number;
+  // We don't need isRunning because we can calculate it from startTime and duration  
+  // isRunning?: boolean;
   owner: string;
   users: string[];
   pingQueue: number[]; // array of indices of this.users who have sent a ping

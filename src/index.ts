@@ -40,12 +40,17 @@ const app = new Elysia()
     console.log("styles.css requested");
     return Bun.file("./frontend/public/styles.css");
   })
+
   /* When the client requests a user identity, we should give them one */
   .get("/get-user", getUser)
+
   /* When the client requests to make a timer, they give us their user id 
   and we make a timer for them and tell them its id*/
   .get("/make-timer/:userId", makeTimer)
-  // .get("/timers/:timerId", joinTimer)
+
+  /* When the client provides a timerId, we should join them to that timer, making a new user
+  in the process */
+  .get("/timers/:timerId", joinTimer)
   // .get("/timers/:id/users", getUsersForTimer)
   // .put("/timers/:id/start", startTimer)
   // .put("/timers/:id/stop", stopTimer)

@@ -1,6 +1,7 @@
 // Timer class
 
 import { TimerInterface } from "./timerInterface";
+import { UserInterface } from "./userInterface";
 import { Database } from "bun:sqlite";
 
 export class Timer implements TimerInterface {
@@ -123,13 +124,32 @@ export class Timer implements TimerInterface {
     }
   }
 
+  private save() {
+    const usersJson = JSON.stringify(this.users);
+    const query = this.timerDb.query(
+      `UPDATE timers SET name = $name, duration = $duration, startTime = $startTime, isRunning = $isRunning, users = $users WHERE id = $id`,
+    );
+    try {
+      query.run({
+        $id: this.id,
+        $name: this.name,
+        $duration: this.duration,
+        $startTime: this.startTime,
+        $isRunning: this.isRunning,
+        $users: usersJson,
+      });
+    } catch (error) {
+      console.error("Error saving timer to database: ", error);
+    }
+  }
+
   private load() {
     const query = this.timerDb.query(`SELECT * FROM timers WHERE id = $id`);
     const result = query.get({
       $id: this.id,
     }) as Omit<TimerInterface, "users"> & { users: string }; // TypeScript is now satisfied that it's okay if users is a string (which it is, since it's the JSON stringified array of us)
     if (result) {
-      console.log(`loading timer ${this.id} from database`);
+      //console.log(`loading timer ${this.id} from database`);
       this.name = result.name;
       this.duration = result.duration;
       this.startTime = result.startTime || 0;
@@ -153,30 +173,6 @@ export class Timer implements TimerInterface {
       }
 
       this.owner = result.owner;
-
-      console.log(`typeof result.users: ${typeof result.users}`);
-      console.log(`typeof this.users: ${typeof this.users}`);
-      console.log(`number of users: ${this.users.length}`);
-      console.log(`users: ${this.users}`);
-    }
-  }
-
-  private save() {
-    const usersJson = JSON.stringify(this.users);
-    const query = this.timerDb.query(
-      `UPDATE timers SET name = $name, duration = $duration, startTime = $startTime, isRunning = $isRunning, users = $users WHERE id = $id`,
-    );
-    try {
-      query.run({
-        $id: this.id,
-        $name: this.name,
-        $duration: this.duration,
-        $startTime: this.startTime,
-        $isRunning: this.isRunning,
-        $users: usersJson,
-      });
-    } catch (error) {
-      console.error("Error saving timer to database: ", error);
     }
   }
 
