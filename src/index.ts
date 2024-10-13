@@ -16,6 +16,33 @@ import { makeTimer } from "./handlers/makeTimer";
 // SQLite Database
 import db from "./database";
 
+// Dummy Test State 
+const dummyState = {
+  timer: {
+    id: "abc",
+    name: "Juppun Souji",
+    duration: 10000,
+    startTime: 0,
+    owner: {
+      id: "1",
+      name: "Paul",
+    },
+    users: [
+      { id: "1", name: "User420" },
+      { id: "2", name: "Whit" },
+      { id: "3", name: "Christine" },
+      { id: "4", name: "Angela" },
+      { id: "5", name: "Molly" },
+    ],
+    pingQueue: [],
+    deletedAt: 0,
+  },
+  user: {
+    id: "1",
+    name: "Paul",
+  }
+}
+
 // Instantiate the timer and user managers
 const timerManager = new TimerManager(db);
 const userManager = new UserManager(db);
@@ -52,6 +79,13 @@ const app = new Elysia()
   in the process */
   .get("/timers/:timerId/:userId", joinTimer)
 
+  /* Use a websocket to send updates to the client about the timer */
+  .ws("/ws", {
+    message(ws, message) {
+      console.log("got websocket message: ", message);
+      ws.send(dummyState);
+    },
+  })
   // .get("/timers/:id/users", getUsersForTimer)
   // .put("/timers/:id/start", startTimer)
   // .put("/timers/:id/stop", stopTimer)

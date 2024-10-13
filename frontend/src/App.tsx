@@ -1,42 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import Timer from "./Timer";
 import Participants from "./Participants";
 
-const getClientState = () => {
-  // hardcoded dummy data
-  const state = {
-    timer: {
-      id: "abc",
-      name: "Juppun Souji",
-      duration: 10000,
-      startTime: 0,
-      owner: {
-        id: "1",
-        name: "Paul",
-      },
-      users: [
-        { id: "1", name: "Paul" },
-        { id: "2", name: "Whit" },
-        { id: "3", name: "Christine" },
-        { id: "4", name: "Angela" },
-        { id: "5", name: "Molly" },
-      ],
-      pingQueue: [],
-      deletedAt: 0,
-    },
-    user: {
-      id: "1",
-      name: "Paul",
-    }
-  }
-  
-  return state;
-};
 
 // App component
-const App: React.FC = () => {
-  const [clientState, setClientState] = useState(getClientState());
+const App: React.FC= () => {
+  const [clientState, setClientState] = useState(null);
+
+  useEffect(() => {
+    const client = new WebSocket('ws://localhost:3000/ws');
+
+    client.onopen = () => {
+      console.log('WebSocket Client Connected');
+      client.send("here comes a new challenger");
+    };
+
+
+    client.onmessage = (message) => {
+      const newState = JSON.parse(message.data as string);
+      setClientState(newState);
+    };
+
+    return () => {
+      client.close();
+    };
+  }, []);
+
+  if (!clientState) {
+    return <div>Loading...</div>;
+  }
   return (
     <div className="app-container">
       <h1>{clientState.timer.name}</h1>
