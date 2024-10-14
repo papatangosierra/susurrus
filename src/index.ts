@@ -5,19 +5,21 @@ import { swagger } from "@elysiajs/swagger";
 // Class Imports
 import { Timer } from "./Classes/timer";
 import { TimerManager } from "./Classes/timerManager";
-
 import { UserManager } from "./Classes/userManager";
 
 // Handler Imports
 import { joinTimer } from "./handlers/joinTimer";
 import { getUser } from "./handlers/getUser";
 import { makeTimer } from "./handlers/makeTimer";
-
+import { websocket } from "./websocket";
 // SQLite Database
 import db from "./database";
+import { User } from "./Classes/user";
+import { ClientState } from "./Classes/clientState";
+import { ServerWebSocket } from "bun";
 
 // Dummy Test State 
-const dummyState = {
+const dummyPlug = {
   timer: {
     id: "abc",
     name: "Juppun Souji",
@@ -28,7 +30,7 @@ const dummyState = {
       name: "Paul",
     },
     users: [
-      { id: "1", name: "User420" },
+      { id: "1", name: "Paul" },
       { id: "2", name: "Whit" },
       { id: "3", name: "Christine" },
       { id: "4", name: "Angela" },
@@ -81,10 +83,22 @@ const app = new Elysia()
 
   /* Use a websocket to send updates to the client about the timer */
   .ws("/ws", {
-    message(ws, message) {
-      console.log("got websocket message: ", message);
-      ws.send(dummyState);
+    open(ws) {
+      const user = new User(db);
+      userManager.createUser(user);
+      const timer = timerManager.createTimer(user);  
+      const clientState = new ClientState(user, timer);
+      console.log("websocket connection opened");
+      ws.send(clientState.getAsObject());
     },
+    message(ws, message) {
+      console.log("got websocket message: ", message);      
+      // ws.send(dummyPlug);
+    },
+    close(ws) {
+      console.log("websocket connection closed;");
+      // userManager.removeUser(ws.data.body.user.id);
+    }
   })
   // .get("/timers/:id/users", getUsersForTimer)
   // .put("/timers/:id/start", startTimer)

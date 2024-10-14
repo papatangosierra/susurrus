@@ -19,6 +19,7 @@ const App: React.FC= () => {
 
     client.onmessage = (message) => {
       const newState = JSON.parse(message.data as string);
+      client.send(newState);
       setClientState(newState);
     };
 
