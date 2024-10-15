@@ -4,6 +4,7 @@ import { Database } from "bun:sqlite";
 export class User implements UserInterface {
   id: string;
   name: string;
+  websocketId: string = "";
   deleted: boolean;
 
   private userDb: Database;
@@ -15,7 +16,7 @@ export class User implements UserInterface {
     // if we got an id, that mean the user already exists in the database, so load instead of create
     if (id) {
       this.id = id;
-      console.log(`Loading user ${this.id} from database`);
+      //console.log(`Loading user ${this.id} from database`);
       this.load();
     } else {
       this.id = this.hashUserId(this.name);
@@ -94,6 +95,7 @@ export class User implements UserInterface {
   }
 
   private remove(): void {
+    console.log("removing user with id: " + this.id);
     const query = this.userDb.query(`DELETE FROM users WHERE id = $id`);
     try {
       query.all({

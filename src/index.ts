@@ -11,12 +11,11 @@ import { UserManager } from "./Classes/userManager";
 import { joinTimer } from "./handlers/joinTimer";
 import { getUser } from "./handlers/getUser";
 import { makeTimer } from "./handlers/makeTimer";
-import { websocket } from "./websocket";
+
 // SQLite Database
 import db from "./database";
 import { User } from "./Classes/user";
 import { ClientState } from "./Classes/clientState";
-import { ServerWebSocket } from "bun";
 
 // Dummy Test State 
 const dummyPlug = {
@@ -49,11 +48,66 @@ const dummyPlug = {
 const timerManager = new TimerManager(db);
 const userManager = new UserManager(db);
 
+// Instantiate the websocket
+const websocket = new Elysia()
+  .ws("/ws", {
+    open(ws) {
+      console.log("websocket connection opened with id: " + ws.id);
+      const timerId = ws.data.query.timerId;
+      
+      if (timerId) {
+        // Join existing timer
+        const timer = timerManager.getTimer(timerId);
+        if (timer) {
+          const user = new User(db);
+          userManager.createUser(user);
+          user.websocketId = ws.id;
+          timerManager.addUserToTimer(user, timer.id);
+          const clientState = new ClientState(user, timer).getAsObject();
+          ws.send(JSON.stringify({
+            type: 'JOINED_TIMER',
+            payload: clientState,
+            timerId: timer.id
+          }));
+        } else {
+          ws.send(JSON.stringify({ error: `Timer ${timerId} not found` }));
+        }
+      } else {
+        // Create new timer
+        const user = new User(db);
+        userManager.createUser(user);
+        const timer = timerManager.createTimer(user);
+        user.websocketId = ws.id;
+        timer.setDurationInMinutes(10);
+        const clientState = new ClientState(user, timer).getAsObject();
+        ws.send(JSON.stringify({
+          type: 'INITIAL_STATE',
+          payload: clientState,
+          timerId: timer.id
+        }));
+      }
+    },
+
+    message(ws, message) {
+      console.log("got websocket message: " + message);      
+      // ws.send(dummyPlug);
+    },
+
+    close(ws) {
+      console.log("websocket connection closed");
+      const user = userManager.getUserByWebsocketId(ws.id);
+      if (user) {
+        userManager.removeUser(userManager.getUserByWebsocketId(ws.id)?.id ?? '');
+      }
+    }
+  });
+
 const app = new Elysia()
   .use(swagger())
-  // load the timer manager into the app state
+  // load the managers into the app state
   .decorate("timerManager", timerManager)
   .decorate("userManager", userManager)
+  .decorate("db", db)
   /* 
     Anyone visiting the site gets the frontend
    */
@@ -79,27 +133,11 @@ const app = new Elysia()
 
   /* When the client provides a timerId, we should join them to that timer, making a new user
   in the process */
-  .get("/timers/:timerId/:userId", joinTimer)
-
-  /* Use a websocket to send updates to the client about the timer */
-  .ws("/ws", {
-    open(ws) {
-      const user = new User(db);
-      userManager.createUser(user);
-      const timer = timerManager.createTimer(user);  
-      const clientState = new ClientState(user, timer);
-      console.log("websocket connection opened");
-      ws.send(clientState.getAsObject());
-    },
-    message(ws, message) {
-      console.log("got websocket message: ", message);      
-      // ws.send(dummyPlug);
-    },
-    close(ws) {
-      console.log("websocket connection closed;");
-      // userManager.removeUser(ws.data.body.user.id);
-    }
-  })
+  .get("/timers/:timerId", () => {
+    console.log("Timer Join requested");
+    return Bun.file("./frontend/dist/index.html");
+  })  /* Use a websocket to send updates to the client about the timer */
+  .use(websocket)
   // .get("/timers/:id/users", getUsersForTimer)
   // .put("/timers/:id/start", startTimer)
   // .put("/timers/:id/stop", stopTimer)

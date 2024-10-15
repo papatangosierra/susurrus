@@ -9,18 +9,30 @@ const App: React.FC= () => {
   const [clientState, setClientState] = useState(null);
 
   useEffect(() => {
-    const client = new WebSocket('ws://localhost:3000/ws');
-
+    const urlPath = window.location.pathname;
+    const timerId = urlPath.split('/')[2];
+    console.log('timerId: ', timerId);
+    const wsUrl = timerId 
+      ? `ws://localhost:3000/ws?timerId=${timerId}`
+      : 'ws://localhost:3000/ws';
+    
+    const client = new WebSocket(wsUrl);
     client.onopen = () => {
       console.log('WebSocket Client Connected');
-      client.send("here comes a new challenger");
+      // client.send("here comes a new challenger");
     };
 
-
     client.onmessage = (message) => {
-      const newState = JSON.parse(message.data as string);
-      client.send(newState);
-      setClientState(newState);
+      const data = JSON.parse(message.data as string);
+      if (data.type === 'INITIAL_STATE') {
+        setClientState(data.payload);
+        if (data.timerId) {
+          history.pushState(null, '', `/timers/${data.timerId}`);
+        }
+      }
+      if (data.type === 'JOINED_TIMER') {
+        setClientState(data.payload);
+      }
     };
 
     return () => {

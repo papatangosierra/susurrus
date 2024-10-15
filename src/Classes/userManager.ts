@@ -24,6 +24,18 @@ export class UserManager implements UserManagerInterface {
   getUser(id: string): UserInterface | null {
     return this.users.get(id) || null;
   }
+  // Get a user by their websocket ID. We only do this when a user disconnects,
+  // to remove them from the user manager's list. This should happen relatively
+  // rarely, so it's probably  not a big deal to do a linear search. Nevertheless,
+  // TODO: optimize by using a map from websocket ID to user ID.
+  getUserByWebsocketId(websocketId: string): UserInterface | null {
+    for (const user of this.users.values()) {
+      if (user.websocketId === websocketId) {
+        return user;
+      }
+    }
+    return null;
+  }
 
   private loadUsersFromDatabase(): void {
     const users = this.userDb.query("SELECT * FROM users").all();
