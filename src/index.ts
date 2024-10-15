@@ -54,7 +54,7 @@ const websocket = new Elysia()
     open(ws) {
       console.log("websocket connection opened with id: " + ws.id);
       const timerId = ws.data.query.timerId;
-      
+      // If the timerId was provided in the URL, join the timer
       if (timerId) {
         // Join existing timer
         const timer = timerManager.getTimer(timerId);

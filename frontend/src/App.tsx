@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import Timer from "./Timer";
 import Participants from "./Participants";
-
+import { UserInterface } from "../../src/Classes/userInterface";
+import { TimerInterface } from "../../src/Classes/timerInterface";
+import { ClientState } from "../../src/Classes/clientState";
 
 // App component
 const App: React.FC= () => {
-  const [clientState, setClientState] = useState(null);
+  const [clientState, setClientState] = useState<ClientState | null>(null);
 
   useEffect(() => {
     const urlPath = window.location.pathname;
@@ -45,12 +47,12 @@ const App: React.FC= () => {
   }
   return (
     <div className="app-container">
-      <h1>{clientState.timer.name}</h1>
+      <h1>{clientState.timer?.name}</h1>
       <Timer
-        duration={clientState.timer.duration}
-        startTime={clientState.timer.startTime}
+        duration={clientState.timer?.duration ?? 0}
+        startTime={clientState.timer?.startTime ?? 0}
       />
-      <Participants users={clientState.timer.users} />
+      <Participants users={clientState.timer?.users ?? [] } />
     </div>
   );
 };
