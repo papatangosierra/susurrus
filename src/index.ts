@@ -44,6 +44,40 @@ const dummyPlug = {
   }
 }
 
+// Map of timerIds to WebSocket objects that are subscribed to them
+const timerSubscriptions = new Map<string, Set<WebSocket>>();
+
+
+// Websocket Subscription Functions
+function subscribeToTimer(timerId: string, ws: WebSocket) {
+  console.log(`subscribing socket ${ws.id} to timer ${timerId}`);
+  if (!timerSubscriptions.has(timerId)) {
+    timerSubscriptions.set(timerId, new Set());
+  }
+  timerSubscriptions.get(timerId)!.add(ws);
+}
+
+function unsubscribeFromTimer(timerId: string, ws: WebSocket) {
+  console.log(`unsubscribing socket ${ws.id} from timer ${timerId}`);
+  const subscribers = timerSubscriptions.get(timerId);
+  if (subscribers) {
+    subscribers.delete(ws);
+    if (subscribers.size === 0) {
+      timerSubscriptions.delete(timerId);
+    }
+  }
+}
+
+function broadcastToTimer(timerId: string, message: any) {
+  console.log(`broadcasting to timer ${timerId}`);
+  const subscribers = timerSubscriptions.get(timerId);
+  if (subscribers) {
+    for (const ws of subscribers) {
+      ws.send(message);
+    }
+  }
+}
+
 // Instantiate the timer and user managers
 const timerManager = new TimerManager(db);
 const userManager = new UserManager(db);
@@ -64,13 +98,14 @@ const websocket = new Elysia()
           user.websocketId = ws.id;
           timerManager.addUserToTimer(user, timer.id);
           const clientState = new ClientState(user, timer).getAsObject();
-          ws.send(JSON.stringify({
+          ws.send({
             type: 'JOINED_TIMER',
             payload: clientState,
             timerId: timer.id
-          }));
+          });
+          subscribeToTimer(timer.id, ws as unknown as WebSocket);
         } else {
-          ws.send(JSON.stringify({ error: `Timer ${timerId} not found` }));
+          ws.send({ error: `Timer ${timerId} not found` });
         }
       } else {
         // Create new timer
@@ -80,25 +115,30 @@ const websocket = new Elysia()
         user.websocketId = ws.id;
         timer.setDurationInMinutes(10);
         const clientState = new ClientState(user, timer).getAsObject();
-        ws.send(JSON.stringify({
+        ws.send({
           type: 'INITIAL_STATE',
           payload: clientState,
           timerId: timer.id
-        }));
+        });
+        subscribeToTimer(timer.id, ws as unknown as WebSocket);
       }
     },
 
     message(ws, message) {
-      console.log("got websocket message: " + message);      
+      console.log("got websocket message: " + message);
       // ws.send(dummyPlug);
     },
 
     close(ws) {
       console.log("websocket connection closed");
       const user = userManager.getUserByWebsocketId(ws.id);
+      console.log("removing user: ", user?.name);
       if (user) {
         userManager.removeUser(userManager.getUserByWebsocketId(ws.id)?.id ?? '');
       }
+      // TODO: Remove user from timer
+
+      // TODO: broadcast updated timer state to other usersn
     }
   });
 
