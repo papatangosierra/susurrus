@@ -13,7 +13,7 @@ export async function joinTimer(context: {
   const timer = context.timerManager.getTimer(context.params.timerId);
   if (timer) {
     const user = new User(context.db);
-    context.userManager.createUser(user);
+    context.userManager.addUser(user);
     context.timerManager.addUserToTimer(user, timer.id);
     const clientState = new ClientState(user, timer);
     return {

@@ -13,7 +13,7 @@ export class UserManager implements UserManagerInterface {
     this.loadUsersFromDatabase();
   }
 
-  createUser(user: UserInterface): void {
+  addUser(user: UserInterface): void {
     this.users.set(user.id, user);
   }
 

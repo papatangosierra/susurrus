@@ -7,7 +7,7 @@ export async function getUser(context: {
   userManager: UserManager;
 }): Promise<object> {
   const user = new User(db);
-  context.userManager.createUser(user);
+  context.userManager.addUser(user);
   const clientState = new ClientState(user);
   return clientState.getAsObject();
 }

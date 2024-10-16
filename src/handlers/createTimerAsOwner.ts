@@ -9,7 +9,7 @@ export async function createTimerAsOwner(context: {
 }): Promise<TimerInterface> {
   const userManager = new UserManager(db);
   const user = new User(db);
-  userManager.createUser(user);
+  userManager.addUser(user);
   console.log(
     `We made a user. Their name is: ${user.name}. Their ID is ${user.id}`,
   );

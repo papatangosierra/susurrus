@@ -44,40 +44,6 @@ const dummyPlug = {
   }
 }
 
-// Map of timerIds to WebSocket objects that are subscribed to them
-const timerSubscriptions = new Map<string, Set<WebSocket>>();
-
-
-// Websocket Subscription Functions
-function subscribeToTimer(timerId: string, ws: WebSocket) {
-  console.log(`subscribing socket ${ws.id} to timer ${timerId}`);
-  if (!timerSubscriptions.has(timerId)) {
-    timerSubscriptions.set(timerId, new Set());
-  }
-  timerSubscriptions.get(timerId)!.add(ws);
-}
-
-function unsubscribeFromTimer(timerId: string, ws: WebSocket) {
-  console.log(`unsubscribing socket ${ws.id} from timer ${timerId}`);
-  const subscribers = timerSubscriptions.get(timerId);
-  if (subscribers) {
-    subscribers.delete(ws);
-    if (subscribers.size === 0) {
-      timerSubscriptions.delete(timerId);
-    }
-  }
-}
-
-function broadcastToTimer(timerId: string, message: any) {
-  console.log(`broadcasting to timer ${timerId}`);
-  const subscribers = timerSubscriptions.get(timerId);
-  if (subscribers) {
-    for (const ws of subscribers) {
-      ws.send(message);
-    }
-  }
-}
-
 // Instantiate the timer and user managers
 const timerManager = new TimerManager(db);
 const userManager = new UserManager(db);
@@ -85,32 +51,40 @@ const userManager = new UserManager(db);
 // Instantiate the websocket
 const websocket = new Elysia()
   .ws("/ws", {
+    // Validate incoming message shape
     open(ws) {
       console.log("websocket connection opened with id: " + ws.id);
-      const timerId = ws.data.query.timerId;
+      const providedTimerId = ws.data.query.timerId;
       // If the timerId was provided in the URL, join the timer
-      if (timerId) {
+      if (providedTimerId) {
         // Join existing timer
-        const timer = timerManager.getTimer(timerId);
+        const timer = timerManager.getTimer(providedTimerId);
         if (timer) {
+          ws.subscribe(providedTimerId);
           const user = new User(db);
-          userManager.createUser(user);
+          userManager.addUser(user);
           user.websocketId = ws.id;
           timerManager.addUserToTimer(user, timer.id);
           const clientState = new ClientState(user, timer).getAsObject();
-          ws.send({
+          ws.send({ // send to the client that just connected
             type: 'JOINED_TIMER',
             payload: clientState,
             timerId: timer.id
           });
-          subscribeToTimer(timer.id, ws as unknown as WebSocket);
+          ws.publish(providedTimerId, { // send to all other clients in the timer
+            type: 'JOINED_TIMER',
+            payload: clientState,
+            timerId: timer.id
+          });
         } else {
-          ws.send({ error: `Timer ${timerId} not found` });
+          // TODO: Handle the case of an invalid timerId in a way
+          // that is more useful to the user
+          ws.send({ error: `Timer ${providedTimerId} not found` });
         }
       } else {
         // Create new timer
         const user = new User(db);
-        userManager.createUser(user);
+        userManager.addUser(user);
         const timer = timerManager.createTimer(user);
         user.websocketId = ws.id;
         timer.setDurationInMinutes(10);
@@ -120,12 +94,16 @@ const websocket = new Elysia()
           payload: clientState,
           timerId: timer.id
         });
-        subscribeToTimer(timer.id, ws as unknown as WebSocket);
+        ws.subscribe(timer.id);
       }
     },
 
     message(ws, message) {
       console.log("got websocket message: " + message);
+      if (message.type === 'UPDATE_TIMER') {
+        const timerId = message.payload.timerId;
+        ws.publish(timerId, message);
+      }
       // ws.send(dummyPlug);
     },
 
@@ -134,8 +112,10 @@ const websocket = new Elysia()
       const user = userManager.getUserByWebsocketId(ws.id);
       console.log("removing user: ", user?.name);
       if (user) {
+        timerManager.removeUserFromTimer(user, user.timerId);
         userManager.removeUser(userManager.getUserByWebsocketId(ws.id)?.id ?? '');
       }
+
       // TODO: Remove user from timer
 
       // TODO: broadcast updated timer state to other usersn

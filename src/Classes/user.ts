@@ -5,6 +5,7 @@ export class User implements UserInterface {
   id: string;
   name: string;
   websocketId: string = "";
+  timerId: string = "";
   deleted: boolean;
 
   private userDb: Database;

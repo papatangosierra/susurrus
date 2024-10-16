@@ -32,7 +32,7 @@ const App: React.FC= () => {
           history.pushState(null, '', `/timers/${data.timerId}`);
         }
       }
-      if (data.type === 'JOINED_TIMER') {
+      if (data.type === 'JOINED_TIMER' || data.type === 'UPDATE_TIMER') {
         setClientState(data.payload);
       }
     };

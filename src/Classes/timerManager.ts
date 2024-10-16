@@ -89,6 +89,7 @@ export class TimerManager implements TimerManagerInterface {
     const timer = this.getTimer(timerId);
     if (timer) {
       timer.addUser(user);
+      user.timerId = timerId;
     } else {
       throw new Error("Timer not found");
     }

@@ -55,6 +55,7 @@ describe("TimerManager", () => {
     expect(timerWithUser).toBeDefined();
     expect(timerWithUser!.users.length).toBe(2);
     expect(timerWithUser!.users[1].id).toBe(user.id);
+    expect(user.timerId).toBe(timerId);
   });
 
   test("should return the users for a timer", () => {
