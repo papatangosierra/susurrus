@@ -8,6 +8,7 @@ export async function makeTimer(context: {
     userId: string;
   };
 }): Promise<object> {
+  console.log("makeTimer route called");
   const user = context.userManager.getUser(context.params.userId);
   if (!user) {
     return { error: "User not found" };

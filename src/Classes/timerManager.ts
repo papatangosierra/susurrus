@@ -97,6 +97,7 @@ export class TimerManager implements TimerManagerInterface {
 
   removeUserFromTimer(user: UserInterface, timerId: string): void {
     const timer = this.getTimer(timerId);
+    console.log("removing user from timer: ", timerId);
     if (timer) {
       timer.removeUser(user);
     } else {

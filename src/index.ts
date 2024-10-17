@@ -16,6 +16,7 @@ import { makeTimer } from "./handlers/makeTimer";
 import db from "./database";
 import { User } from "./Classes/user";
 import { ClientState } from "./Classes/clientState";
+import { UserInterface } from "./Classes/userInterface";
 
 // Dummy Test State 
 const dummyPlug = {
@@ -50,32 +51,40 @@ const userManager = new UserManager(db);
 
 // Instantiate the websocket
 const websocket = new Elysia()
+  //.decorate("user", new User(db)) // gives us a new user object to use in the websocket
+    // (accessible inside the methods as ws.data.user)
+  .derive( context => ({ 
+    "user": new User(db)
+  }))
   .ws("/ws", {
-    // Validate incoming message shape
     open(ws) {
       console.log("websocket connection opened with id: " + ws.id);
       const providedTimerId = ws.data.query.timerId;
+      const user = ws.data.user;
       // If the timerId was provided in the URL, join the timer
       if (providedTimerId) {
         // Join existing timer
         const timer = timerManager.getTimer(providedTimerId);
         if (timer) {
           ws.subscribe(providedTimerId);
-          const user = new User(db);
-          userManager.addUser(user);
           user.websocketId = ws.id;
+          user.timerId = providedTimerId;
+          userManager.addUser(user);
           timerManager.addUserToTimer(user, timer.id);
-          const clientState = new ClientState(user, timer).getAsObject();
           ws.send({ // send to the client that just connected
-            type: 'JOINED_TIMER',
-            payload: clientState,
+            type: 'INITIAL_STATE',
+            payload: {
+              timer: timer,
+              user: user
+            },
             timerId: timer.id
           });
           ws.publish(providedTimerId, { // send to all other clients in the timer
-            type: 'JOINED_TIMER',
-            payload: clientState,
+            type: 'OTHER_USER_JOINED_TIMER',
+            payload: user,
             timerId: timer.id
           });
+          console.log("user's timerId is: ", user.timerId);
         } else {
           // TODO: Handle the case of an invalid timerId in a way
           // that is more useful to the user
@@ -83,15 +92,17 @@ const websocket = new Elysia()
         }
       } else {
         // Create new timer
-        const user = new User(db);
         userManager.addUser(user);
         const timer = timerManager.createTimer(user);
         user.websocketId = ws.id;
+        user.timerId = timer.id;
         timer.setDurationInMinutes(10);
-        const clientState = new ClientState(user, timer).getAsObject();
-        ws.send({
+        ws.send({ // send to the client that just connected
           type: 'INITIAL_STATE',
-          payload: clientState,
+          payload: {
+            timer: timer,
+            user: user
+          },
           timerId: timer.id
         });
         ws.subscribe(timer.id);
@@ -109,16 +120,20 @@ const websocket = new Elysia()
 
     close(ws) {
       console.log("websocket connection closed");
-      const user = userManager.getUserByWebsocketId(ws.id);
-      console.log("removing user: ", user?.name);
-      if (user) {
-        timerManager.removeUserFromTimer(user, user.timerId);
-        userManager.removeUser(userManager.getUserByWebsocketId(ws.id)?.id ?? '');
+      const user = ws.data.user;
+      const timerId = user.timerId;
+      console.log("removing user: ", user.name);
+      timerManager.removeUserFromTimer(user, timerId);
+      userManager.removeUser(user.id);
+      // Find a way to do this without type assertion
+      if (timerManager.getTimer(timerId)!.users.length > 0) {
+        ws.publish(user.timerId, {
+          type: 'USER_LEFT_TIMER',
+          payload: user.id,
+          timerId: user.timerId
+        });
       }
 
-      // TODO: Remove user from timer
-
-      // TODO: broadcast updated timer state to other usersn
     }
   });
 
@@ -132,15 +147,15 @@ const app = new Elysia()
     Anyone visiting the site gets the frontend
    */
   .get("/", () => {
-    console.log("index.html requested");
+    //console.log("index.html requested");
     return Bun.file("./frontend/dist/index.html");
   })
   .get("/js/App.js", () => {
-    console.log("App.js requested");
+    //console.log("App.js requested");
     return Bun.file("./frontend/public/js/App.js");
   })
   .get("/styles.css", () => {
-    console.log("styles.css requested");
+    //console.log("styles.css requested");
     return Bun.file("./frontend/public/styles.css");
   })
 
