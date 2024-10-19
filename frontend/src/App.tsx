@@ -4,13 +4,17 @@ import Timer from "./Timer";
 import Participants from "./Participants";
 import { UserInterface } from "../../src/Classes/userInterface";
 import { TimerInterface } from "../../src/Classes/timerInterface";
-import { ClientState } from "../../src/Classes/clientState";
+import { ClientStateInterface } from "../../src/Classes/clientStateInterface";
 
 // App component
 const App: React.FC= () => {
-  const [clientState, setClientState] = useState<ClientState | null>(null);
+  const [thisUser, setThisUser] = useState<UserInterface | null>(null);
+  const [timer, setTimer] = useState<TimerInterface | null>(null);
 
-  useEffect(() => {
+  useEffect(() => { 
+    let current
+    // if the user specified a timer in the URL, connect to it,
+    // otherwise, connect to the default URL (thus creating a new timer)
     const urlPath = window.location.pathname;
     const timerId = urlPath.split('/')[2];
     console.log('timerId: ', timerId);
@@ -26,14 +30,16 @@ const App: React.FC= () => {
 
     client.onmessage = (message) => {
       const data = JSON.parse(message.data as string);
-      if (data.type === 'INITIAL_STATE') {
-        setClientState(data.payload);
-        if (data.timerId) {
-          history.pushState(null, '', `/timers/${data.timerId}`);
-        }
-      }
-      if (data.type === 'JOINED_TIMER') {
-        setClientState(data.payload);
+      console.log("data: ", data);
+
+      // set timer URL in the browser
+      if (data.timer) {
+        window.history.pushState(null, '', `/timers/${data.timer.id}`);
+        setTimer(data.timer);
+      }      
+      // Update user state only if new user data is received
+      if (data.user) {
+        setThisUser(data.user);
       }
     };
 
@@ -42,17 +48,17 @@ const App: React.FC= () => {
     };
   }, []);
 
-  if (!clientState) {
+  if (!timer) {
     return <div>Loading...</div>;
   }
   return (
     <div className="app-container">
-      <h1>{clientState.timer?.name}</h1>
+      <h1>{timer?.name}</h1>
       <Timer
-        duration={clientState.timer?.duration ?? 0}
-        startTime={clientState.timer?.startTime ?? 0}
+        duration={timer?.duration ?? 0}
+        startTime={timer?.startTime ?? 0}
       />
-      <Participants users={clientState.timer?.users ?? [] } />
+      <Participants thisUser={thisUser} users={timer?.users ?? [] } />
     </div>
   );
 };

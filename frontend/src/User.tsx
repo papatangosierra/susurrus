@@ -3,15 +3,17 @@ import React, { useState, useEffect } from "react";
 interface User {
   id: string;
   name: string;
+  isThisUser: boolean;
 }
 
-const User: React.FC<User> = ({ id, name }) => {
+const User: React.FC<User> = ({ id, name, isThisUser }) => {
   const [position, setPosition] = useState({
     x: Math.random() * (window.innerWidth * 0.9),
     y: Math.random() * (window.innerHeight * 0.9),
   });
-
   useEffect(() => {
+  console.log("isThisUser: ", isThisUser);
+
     // Initial random position
     // setPosition({
     //   x: Math.random() * (window.innerWidth * 0.9),
@@ -44,7 +46,7 @@ const User: React.FC<User> = ({ id, name }) => {
 
   return (
     <li
-      className="user-container"
+      className={`user-container ${isThisUser ? "this-user" : ""}`}
       style={{
         position: "absolute",
         top: position.y,

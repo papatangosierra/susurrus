@@ -1,7 +1,8 @@
 // Initialize the database and create the tables
 import { Database } from "bun:sqlite";
 
-const db = new Database("data/mydb.sqlite");
+// const db = new Database("data/mydb.sqlite");
+const db = new Database(":memory:");
 
 db.exec("PRAGMA journal_mode = WAL;");
 

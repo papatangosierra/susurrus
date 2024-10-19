@@ -1,144 +1,84 @@
 // Library Imports
 import { Elysia, t } from "elysia";
+import { ElysiaWS } from "elysia/dist/ws/index";
 import { swagger } from "@elysiajs/swagger";
 
-// Class Imports
+// Manager Imports
 import { Timer } from "./Classes/timer";
 import { TimerManager } from "./Classes/timerManager";
 import { UserManager } from "./Classes/userManager";
-
+import { WebSocketManager } from "./Classes/webSocketManager";
 // Handler Imports
 import { joinTimer } from "./handlers/joinTimer";
 import { getUser } from "./handlers/getUser";
 import { makeTimer } from "./handlers/makeTimer";
-
+import { StateUpdateService } from "./Classes/stateUpdateService";
 // SQLite Database
 import db from "./database";
 import { User } from "./Classes/user";
-import { ClientState } from "./Classes/clientState";
-
-// Dummy Test State 
-const dummyPlug = {
-  timer: {
-    id: "abc",
-    name: "Juppun Souji",
-    duration: 10000,
-    startTime: 0,
-    owner: {
-      id: "1",
-      name: "Paul",
-    },
-    users: [
-      { id: "1", name: "Paul" },
-      { id: "2", name: "Whit" },
-      { id: "3", name: "Christine" },
-      { id: "4", name: "Angela" },
-      { id: "5", name: "Molly" },
-    ],
-    pingQueue: [],
-    deletedAt: 0,
-  },
-  user: {
-    id: "1",
-    name: "Paul",
-  }
-}
-
-// Map of timerIds to WebSocket objects that are subscribed to them
-const timerSubscriptions = new Map<string, Set<WebSocket>>();
 
 
-// Websocket Subscription Functions
-function subscribeToTimer(timerId: string, ws: WebSocket) {
-  console.log(`subscribing socket ${ws.id} to timer ${timerId}`);
-  if (!timerSubscriptions.has(timerId)) {
-    timerSubscriptions.set(timerId, new Set());
-  }
-  timerSubscriptions.get(timerId)!.add(ws);
-}
 
-function unsubscribeFromTimer(timerId: string, ws: WebSocket) {
-  console.log(`unsubscribing socket ${ws.id} from timer ${timerId}`);
-  const subscribers = timerSubscriptions.get(timerId);
-  if (subscribers) {
-    subscribers.delete(ws);
-    if (subscribers.size === 0) {
-      timerSubscriptions.delete(timerId);
-    }
-  }
-}
-
-function broadcastToTimer(timerId: string, message: any) {
-  console.log(`broadcasting to timer ${timerId}`);
-  const subscribers = timerSubscriptions.get(timerId);
-  if (subscribers) {
-    for (const ws of subscribers) {
-      ws.send(message);
-    }
-  }
-}
 
 // Instantiate the timer and user managers
 const timerManager = new TimerManager(db);
 const userManager = new UserManager(db);
+const wsManager = new WebSocketManager();
+const stateUpdateService = new StateUpdateService(timerManager, userManager, wsManager);
 
 // Instantiate the websocket
 const websocket = new Elysia()
+  .decorate("timerManager", timerManager)
+  .decorate("userManager", userManager)
+  // gives us a new user object to use in the websocket
+    // (accessible inside the methods as ws.data.user)
+  .derive( context => ({ 
+    "user": new User(db)
+  }))
   .ws("/ws", {
     open(ws) {
       console.log("websocket connection opened with id: " + ws.id);
-      const timerId = ws.data.query.timerId;
+      const providedTimerId = ws.data.query.timerId;
+      const user = ws.data.user;
+      const timerManager = ws.data.timerManager;
       // If the timerId was provided in the URL, join the timer
-      if (timerId) {
+      if (providedTimerId) {
         // Join existing timer
-        const timer = timerManager.getTimer(timerId);
+        const timer = timerManager.getTimer(providedTimerId);
         if (timer) {
-          const user = new User(db);
-          userManager.createUser(user);
-          user.websocketId = ws.id;
-          timerManager.addUserToTimer(user, timer.id);
-          const clientState = new ClientState(user, timer).getAsObject();
-          ws.send({
-            type: 'JOINED_TIMER',
-            payload: clientState,
-            timerId: timer.id
-          });
-          subscribeToTimer(timer.id, ws as unknown as WebSocket);
+          //handleUserJoinedStateUpdate(ws, timer, user);
+          timerManager.addUserToTimer(user, providedTimerId, ws);
         } else {
-          ws.send({ error: `Timer ${timerId} not found` });
+          // TODO: Handle the case of an invalid timerId in a way
+          // that is more useful to the user
+          ws.send({ error: `Timer ${providedTimerId} not found` });
         }
       } else {
         // Create new timer
-        const user = new User(db);
-        userManager.createUser(user);
-        const timer = timerManager.createTimer(user);
-        user.websocketId = ws.id;
-        timer.setDurationInMinutes(10);
-        const clientState = new ClientState(user, timer).getAsObject();
-        ws.send({
-          type: 'INITIAL_STATE',
-          payload: clientState,
-          timerId: timer.id
-        });
-        subscribeToTimer(timer.id, ws as unknown as WebSocket);
+        console.log("creating new timer");
+        timerManager.createTimer(user, ws);
+        //handleInitialStateUpdate(ws, timer, user);
       }
     },
 
     message(ws, message) {
       console.log("got websocket message: " + message);
+      if (message.type === 'UPDATE_TIMER') {
+        const timerId = message.payload.timerId;
+        ws.publish(timerId, message);
+      }
       // ws.send(dummyPlug);
     },
 
     close(ws) {
       console.log("websocket connection closed");
-      const user = userManager.getUserByWebsocketId(ws.id);
-      console.log("removing user: ", user?.name);
-      if (user) {
-        userManager.removeUser(userManager.getUserByWebsocketId(ws.id)?.id ?? '');
-      }
-      // TODO: Remove user from timer
-
-      // TODO: broadcast updated timer state to other usersn
+      const user = ws.data.user;
+      const timerId = user.timerId;
+      console.log("removing user: ", user.name);
+      timerManager.removeUserFromTimer(user, timerId, ws);
+      userManager.removeUser(user.id);
+      // Find a way to do this without type assertion
+      // handleUserLeftStateUpdate(ws, timerManager.getTimer(timerId)!, user);
     }
   });
 
@@ -152,15 +92,15 @@ const app = new Elysia()
     Anyone visiting the site gets the frontend
    */
   .get("/", () => {
-    console.log("index.html requested");
+    //console.log("index.html requested");
     return Bun.file("./frontend/dist/index.html");
   })
   .get("/js/App.js", () => {
-    console.log("App.js requested");
+    //console.log("App.js requested");
     return Bun.file("./frontend/public/js/App.js");
   })
   .get("/styles.css", () => {
-    console.log("styles.css requested");
+    //console.log("styles.css requested");
     return Bun.file("./frontend/public/styles.css");
   })
 

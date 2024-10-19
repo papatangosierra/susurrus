@@ -12,7 +12,7 @@ describe("UserManager", () => {
 
   test("should create and get a new user", () => {
     const user = new User(testDb);
-    userManager.createUser(user);
+    userManager.addUser(user);
     // expect userManager's getUser to return the name of the user we
     // just created when given the user's id
     expect(userManager.getUser(user.id)?.name).toBe(user.name);
@@ -20,7 +20,7 @@ describe("UserManager", () => {
 
   test("should remove a user", () => {
     const user = new User(testDb);
-    userManager.createUser(user);
+    userManager.addUser(user);
     userManager.removeUser(user.id);
     expect(userManager.getUser(user.id)).toBeNull();
   });
@@ -28,7 +28,7 @@ describe("UserManager", () => {
   test("should get a user by their websocket ID", () => {
     const user = new User(testDb);
     user.websocketId = "123";
-    userManager.createUser(user);
+    userManager.addUser(user);
     expect(userManager.getUserByWebsocketId("123")).toBe(user);
   });
 });

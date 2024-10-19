@@ -14,9 +14,11 @@ const Dial: React.FC<DialProps> = ({ value, onChange }) => {
   };
 
   return (
-    <svg width="80%" height="50vh">
-      <circle cx="50%" cy="50%" r="40%" fill="transparent" stroke="black" strokeWidth="2" />
-    </svg>
+    <div className="dial">
+      <svg className="dial-svg">
+        <circle cx="50%" cy="50%" r="10vh" fill="transparent" stroke="black" strokeWidth="2" />
+      </svg>
+    </div>
   );
 };
 
