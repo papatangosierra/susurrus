@@ -77,8 +77,6 @@ const websocket = new Elysia()
       console.log("removing user: ", user.name);
       timerManager.removeUserFromTimer(user, timerId, ws);
       userManager.removeUser(user.id);
-      // Find a way to do this without type assertion
-      // handleUserLeftStateUpdate(ws, timerManager.getTimer(timerId)!, user);
     }
   });
 

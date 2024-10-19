@@ -8,7 +8,6 @@ to the appropriate clients.
 */
 export class WebSocketManager {
   // TODO: fix that <any, any, any> bullshit
-  // TODO: use publish/subscribe pattern for state updates
 
   addConnection(timerId: string, ws: ElysiaWS<any, any, any>) {
     ws.subscribe(timerId);

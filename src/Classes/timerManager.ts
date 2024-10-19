@@ -19,8 +19,9 @@ export class TimerManager extends EventEmitter implements TimerManagerInterface 
 
   createTimer(owner: UserInterface, ws: ElysiaWS<any, any, any>): TimerInterface {
     const timer = new Timer(this.timerDb, owner);
+    owner.timerId = timer.id;
+    timer.setDurationInMinutes(1);
     this.timers.set(timer.id, timer);
-    ws.subscribe(timer.id);
     this.emit("timerCreated", {timer, ws});
     return timer;
   }
@@ -97,7 +98,6 @@ export class TimerManager extends EventEmitter implements TimerManagerInterface 
     if (timer) {
       timer.addUser(user);
       user.timerId = timerId;
-      ws.subscribe(timerId);
       this.emit("userAddedToTimer", {user, timer, ws});
     } else {
       throw new Error("Timer not found");
@@ -108,9 +108,18 @@ export class TimerManager extends EventEmitter implements TimerManagerInterface 
     const timer = this.getTimer(timerId);
     console.log("removing user from timer: ", timerId);
     if (timer) {
-      timer.removeUser(user);
-      ws.unsubscribe(timerId);
-      this.emit("userRemovedFromTimer", {user, timer, ws});
+      // if user is the last user in the timer, delete the timer
+      if (timer.users.length === 1) {
+        this.deleteTimer(timerId, ws);
+        this.emit("lastUserRemovedFromTimer", {timer, ws});
+      } else if (user.id === timer.owner.id) { // if user is owner of timer
+        timer.removeUser(user);
+        timer.setOwner(timer.users[0]) // set new owner to first user in user list
+        this.emit("userRemovedFromTimer", {timer, ws});
+      } else {
+        timer.removeUser(user);
+        this.emit("userRemovedFromTimer", {user, timer, ws});
+      }
     } else {
       throw new Error("Timer not found");
     }

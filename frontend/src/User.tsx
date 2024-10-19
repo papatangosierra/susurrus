@@ -4,9 +4,10 @@ interface User {
   id: string;
   name: string;
   isThisUser: boolean;
+  isOwner: boolean;
 }
 
-const User: React.FC<User> = ({ id, name, isThisUser }) => {
+const User: React.FC<User> = ({ id, name, isThisUser, isOwner }) => {
   const [position, setPosition] = useState({
     x: Math.random() * (window.innerWidth * 0.9),
     y: Math.random() * (window.innerHeight * 0.9),
@@ -46,7 +47,7 @@ const User: React.FC<User> = ({ id, name, isThisUser }) => {
 
   return (
     <li
-      className={`user-container ${isThisUser ? "this-user" : ""}`}
+      className={`user-container ${isThisUser ? "this-user" : ""} ${isOwner ? "owner" : ""}`}
       style={{
         position: "absolute",
         top: position.y,

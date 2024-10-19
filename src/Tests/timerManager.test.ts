@@ -43,10 +43,11 @@ describe("TimerManager", () => {
   });
 
   test("should reset a timer", () => {
-    timerManager.resetTimer(timerId);
+    timerManager.resetTimer(timerId, 1);
     const resetTimer = timerManager.getTimer(timerId);
     expect(resetTimer).toBeDefined();
-    expect(resetTimer!.duration).toBe(0);
+    expect(resetTimer!.duration).toBe(60000);
+    expect(resetTimer!.startTime).toBe(0);
   });
 
   test("should add a user to a timer", () => {
