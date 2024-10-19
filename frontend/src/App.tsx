@@ -58,7 +58,7 @@ const App: React.FC= () => {
         duration={timer?.duration ?? 0}
         startTime={timer?.startTime ?? 0}
       />
-      <Participants thisUser={thisUser} users={timer?.users ?? [] } owner={timer.owner}/>
+      <Participants thisUser={thisUser ?? null} users={timer?.users ?? [] } owner={timer.owner}/>
     </div>
   );
 };

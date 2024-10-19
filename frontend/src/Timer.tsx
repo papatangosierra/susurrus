@@ -19,7 +19,7 @@ const Timer: React.FC<TimerProps> = ({ duration, startTime }) => {
     if (theStartTime > 0) {
       intervalId = window.setInterval(() => {
         setTheRemainingTime(duration - (Date.now() - theStartTime));
-      }, 1000);
+      }, 100);
     }
 
     // if the remaining time is less than or equal to 0,
@@ -35,22 +35,25 @@ const Timer: React.FC<TimerProps> = ({ duration, startTime }) => {
 
   const handleStart = () => {
     // start the timer 1 second in the future so that we don't skip the first tick
-    setTheStartTime(Date.now() + 1000);
+    setTheStartTime(Date.now() + 10);
   };
 
   const minutes = Math.floor(theRemainingTime / 60000);
   const seconds = Math.floor((theRemainingTime % 60000) / 1000);
+  const tenths = Math.floor((theRemainingTime % 1000) / 100);
 
   // pad seconds with 0 if less than 10
   const paddedSeconds = seconds < 10 ? `0${seconds}` : seconds;
+  const paddedTenths = tenths < 10 ? `0${tenths}` : tenths;
 
   return (
     <div className="remaining-time-display">
       <h2>Time Remaining</h2>
-      <Dial value={theRemainingTime} onChange={setTheRemainingTime} />
+      <Dial value={theRemainingTime / duration} />
       <div className="countdown">
-        <span id="countdown-minutes"> {minutes} </span>:
-        <span id="countdown-seconds"> {paddedSeconds} </span>
+        <span id="countdown-minutes">{minutes}</span>:
+        <span id="countdown-seconds">{paddedSeconds}</span>:
+        <span id="countdown-tenths">{paddedTenths}</span>
       </div>
       <StartButton onStart={handleStart} disabled={theStartTime > 0} />
     </div>

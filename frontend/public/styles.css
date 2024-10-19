@@ -1,13 +1,19 @@
-html {
+html, body {
   font-family: "Source Sans Pro", monospace;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
 }
 
 h1 {
   font-size: 5rem;
+  margin: 0;
 }
 
 h2 {
   font-size: 3rem;
+  margin: 0;
 }
 
 /* center the app container both horizontally and vertically */
@@ -17,34 +23,40 @@ h2 {
   align-items: center;
   justify-content: space-between;
   height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 }
 
 .remaining-time-display {
   display: flex;
   flex-direction: column;
   width: 100%;
-  /* height: 40vh; */
   align-items: center;
   justify-content: center;
-  border: 2px solid black;
-  margin: 1rem;
-  padding: 1rem;
+  /* border: 2px solid black; */
+  padding: 0.5rem;
+  box-sizing: border-box;
 }
 
 .countdown {
-  font-size: 2rem;
+  font-size: 5rem;
 }
 
 .dial {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 50vh;
+  flex: 1;
+  width: 100%;
+  padding: 0.5rem;
+  box-sizing: border-box;
 }
 
 .dial-svg {
   width: 100%;
   height: 100%;
+  max-width: 60vmin;
+  max-height: 60vmin;
 }
 
 .start-button {
@@ -56,14 +68,18 @@ h2 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  /* don't indent the list items */
-  margin: 0;
-  padding: 0;
+  width: 100%;
+  padding: 0.5rem;
+  box-sizing: border-box;
 }
 
 .user-list {
   list-style-type: none;
   padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 /* container for an individual user.*/
@@ -71,20 +87,19 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
+  font-size: 1.5rem;
   width: 5rem;
   height: 5rem;
-  margin: 0.5rem;
-  padding: 0.5rem;
-  border: 1rem solid rgb(255, 197, 197);
-  border-radius: 5rem;
+  margin: 0.25rem;
+  border: 0.5rem solid rgb(255, 197, 197);
+  border-radius: 50%;
   background-color: papayawhip;
 }
 
 .user-container.this-user {
-  border: 1rem solid rgb(0, 245, 155);
+  border-color: rgb(0, 245, 155);
 }
 
 .user-container.owner {
-  box-shadow: inset 0 0 3rem rgba(221, 0, 255, 0.75);
+  box-shadow: inset 0 0 1.5rem rgba(221, 0, 255, 0.75);
 }

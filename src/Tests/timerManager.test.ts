@@ -1,6 +1,7 @@
 import { TimerManager } from "../Classes/timerManager";
 import { UserInterface } from "../Classes/userInterface";
 import { User } from "../Classes/user";
+import { ElysiaWS } from "elysia/dist/ws";
 import { expect, test, describe, beforeEach, beforeAll } from "bun:test";
 import testDb from "../databaseTest";
 
@@ -9,7 +10,10 @@ describe("TimerManager", () => {
   let owner: UserInterface;
   let user: UserInterface;
   let timerId: string;
-
+  let ws: ElysiaWS<any>; // ElysiaWS is the type for the WebSocket connection
+  // (we're not actually testing the WebSocket connection here,
+  // but we need to pass it in to the TimerManager methods)
+  
   beforeAll(() => {
     timerManager = new TimerManager(testDb);
     owner = new User(testDb);
@@ -17,7 +21,7 @@ describe("TimerManager", () => {
   });
 
   test("should create a new timer", () => {
-    const timer = timerManager.createTimer(owner);
+    const timer = timerManager.createTimer(owner, ws);
     timerId = timer.id; // save the id for later tests
     expect(timer).toBeDefined();
     expect(timer.owner.id).toBe(owner.id);
@@ -36,14 +40,14 @@ describe("TimerManager", () => {
   });
 
   test("should start a timer", () => {
-    timerManager.startTimer(timerId);
+    timerManager.startTimer(timerId, ws);
     const startedTimer = timerManager.getTimer(timerId);
     expect(startedTimer).toBeDefined();
     expect(startedTimer!.startTime).toBeGreaterThan(0);
   });
 
   test("should reset a timer", () => {
-    timerManager.resetTimer(timerId, 1);
+    timerManager.resetTimer(timerId, 1, ws);
     const resetTimer = timerManager.getTimer(timerId);
     expect(resetTimer).toBeDefined();
     expect(resetTimer!.duration).toBe(60000);
@@ -51,7 +55,7 @@ describe("TimerManager", () => {
   });
 
   test("should add a user to a timer", () => {
-    timerManager.addUserToTimer(user, timerId);
+    timerManager.addUserToTimer(user, timerId, ws);
     const timerWithUser = timerManager.getTimer(timerId);
     expect(timerWithUser).toBeDefined();
     expect(timerWithUser!.users.length).toBe(2);
@@ -68,8 +72,8 @@ describe("TimerManager", () => {
 
   test("should remove a user from a timer", () => {
     const user = new User(testDb);
-    timerManager.addUserToTimer(user, timerId);
-    timerManager.removeUserFromTimer(user, timerId);
+    timerManager.addUserToTimer(user, timerId, ws);
+    timerManager.removeUserFromTimer(user, timerId, ws);
     const timerWithoutUser = timerManager.getTimer(timerId);
     expect(timerWithoutUser).toBeDefined();
     expect(timerWithoutUser!.users.length).toBe(2); // owner + the user we added in the previous test
