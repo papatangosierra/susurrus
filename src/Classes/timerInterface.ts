@@ -31,6 +31,6 @@ export interface TimerInterface {
   removeUser(user: UserInterface): void;
   delete(): void;
   start(): void;
-  reset(): void;
+  reset(duration?: number): void;
   isFinished(): boolean;
 }

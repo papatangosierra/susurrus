@@ -1,57 +1,39 @@
 // Library Imports
 import { Elysia, t } from "elysia";
+import { ElysiaWS } from "elysia/dist/ws/index";
 import { swagger } from "@elysiajs/swagger";
 
-// Class Imports
+// Manager Imports
 import { Timer } from "./Classes/timer";
 import { TimerManager } from "./Classes/timerManager";
 import { UserManager } from "./Classes/userManager";
-
+import { WebSocketManager } from "./Classes/webSocketManager";
 // Handler Imports
 import { joinTimer } from "./handlers/joinTimer";
 import { getUser } from "./handlers/getUser";
 import { makeTimer } from "./handlers/makeTimer";
-
+import { StateUpdateService } from "./Classes/stateUpdateService";
 // SQLite Database
 import db from "./database";
 import { User } from "./Classes/user";
 import { ClientState } from "./Classes/clientState";
 import { UserInterface } from "./Classes/userInterface";
+import { TimerInterface } from "./Classes/timerInterface";
+import { ServerWebSocket } from "bun";
 
-// Dummy Test State 
-const dummyPlug = {
-  timer: {
-    id: "abc",
-    name: "Juppun Souji",
-    duration: 10000,
-    startTime: 0,
-    owner: {
-      id: "1",
-      name: "Paul",
-    },
-    users: [
-      { id: "1", name: "Paul" },
-      { id: "2", name: "Whit" },
-      { id: "3", name: "Christine" },
-      { id: "4", name: "Angela" },
-      { id: "5", name: "Molly" },
-    ],
-    pingQueue: [],
-    deletedAt: 0,
-  },
-  user: {
-    id: "1",
-    name: "Paul",
-  }
-}
+
 
 // Instantiate the timer and user managers
 const timerManager = new TimerManager(db);
 const userManager = new UserManager(db);
+const wsManager = new WebSocketManager();
+const stateUpdateService = new StateUpdateService(timerManager, userManager, wsManager);
 
 // Instantiate the websocket
 const websocket = new Elysia()
-  //.decorate("user", new User(db)) // gives us a new user object to use in the websocket
+  .decorate("timerManager", timerManager)
+  .decorate("userManager", userManager)
+  // gives us a new user object to use in the websocket
     // (accessible inside the methods as ws.data.user)
   .derive( context => ({ 
     "user": new User(db)
@@ -61,30 +43,14 @@ const websocket = new Elysia()
       console.log("websocket connection opened with id: " + ws.id);
       const providedTimerId = ws.data.query.timerId;
       const user = ws.data.user;
+      const timerManager = ws.data.timerManager;
       // If the timerId was provided in the URL, join the timer
       if (providedTimerId) {
         // Join existing timer
         const timer = timerManager.getTimer(providedTimerId);
         if (timer) {
-          ws.subscribe(providedTimerId);
-          user.websocketId = ws.id;
-          user.timerId = providedTimerId;
-          userManager.addUser(user);
-          timerManager.addUserToTimer(user, timer.id);
-          ws.send({ // send to the client that just connected
-            type: 'INITIAL_STATE',
-            payload: {
-              timer: timer,
-              user: user
-            },
-            timerId: timer.id
-          });
-          ws.publish(providedTimerId, { // send to all other clients in the timer
-            type: 'OTHER_USER_JOINED_TIMER',
-            payload: user,
-            timerId: timer.id
-          });
-          console.log("user's timerId is: ", user.timerId);
+          //handleUserJoinedStateUpdate(ws, timer, user);
+          timerManager.addUserToTimer(user, providedTimerId, ws);
         } else {
           // TODO: Handle the case of an invalid timerId in a way
           // that is more useful to the user
@@ -92,20 +58,9 @@ const websocket = new Elysia()
         }
       } else {
         // Create new timer
-        userManager.addUser(user);
-        const timer = timerManager.createTimer(user);
-        user.websocketId = ws.id;
-        user.timerId = timer.id;
-        timer.setDurationInMinutes(10);
-        ws.send({ // send to the client that just connected
-          type: 'INITIAL_STATE',
-          payload: {
-            timer: timer,
-            user: user
-          },
-          timerId: timer.id
-        });
-        ws.subscribe(timer.id);
+        console.log("creating new timer");
+        timerManager.createTimer(user, ws);
+        //handleInitialStateUpdate(ws, timer, user);
       }
     },
 
@@ -123,17 +78,10 @@ const websocket = new Elysia()
       const user = ws.data.user;
       const timerId = user.timerId;
       console.log("removing user: ", user.name);
-      timerManager.removeUserFromTimer(user, timerId);
+      timerManager.removeUserFromTimer(user, timerId, ws);
       userManager.removeUser(user.id);
       // Find a way to do this without type assertion
-      if (timerManager.getTimer(timerId)!.users.length > 0) {
-        ws.publish(user.timerId, {
-          type: 'USER_LEFT_TIMER',
-          payload: user.id,
-          timerId: user.timerId
-        });
-      }
-
+      // handleUserLeftStateUpdate(ws, timerManager.getTimer(timerId)!, user);
     }
   });
 

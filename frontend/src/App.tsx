@@ -4,14 +4,15 @@ import Timer from "./Timer";
 import Participants from "./Participants";
 import { UserInterface } from "../../src/Classes/userInterface";
 import { TimerInterface } from "../../src/Classes/timerInterface";
+import { ClientStateInterface } from "../../src/Classes/clientStateInterface";
 
 // App component
 const App: React.FC= () => {
-  const [timer, setTimer] = useState<TimerInterface | null>(null);
-  const [users, setUsers] = useState<UserInterface[]>([]);
   const [thisUser, setThisUser] = useState<UserInterface | null>(null);
+  const [timer, setTimer] = useState<TimerInterface | null>(null);
 
-  useEffect(() => {
+  useEffect(() => { 
+    let current
     // if the user specified a timer in the URL, connect to it,
     // otherwise, connect to the default URL (thus creating a new timer)
     const urlPath = window.location.pathname;
@@ -29,28 +30,15 @@ const App: React.FC= () => {
 
     client.onmessage = (message) => {
       const data = JSON.parse(message.data as string);
-      if (data.type === 'INITIAL_STATE') {
-        setTimer(data.payload.timer);
-        setUsers(data.payload.timer.users);
-        setThisUser(data.payload.user);
-
-        // update the URL with the timerId
-        if (data.timerId) {
-          history.pushState(null, '', `/timers/${data.timerId}`);
-        }
+      // set timer URL in the browser
+      if (data.timer) {
+        window.history.pushState(null, '', `/timers/${data.timer.id}`);
       }
-
-      if (data.type === 'USER_JOINED_TIMER') {
-        setUsers(data.payload);
-      }
-
-      if (data.type === 'OTHER_USER_JOINED_TIMER') {
-        setUsers([...users, data.payload]);
-      }
-
-      if (data.type === 'USER_LEFT_TIMER') {
-        setUsers(users.filter(user => user.id !== data.payload.id));
-      }
+      console.log("data: ", data);
+      // Set the timer if we got new data
+      setTimer(data.timer ? data.timer : timer);
+      // Set the user if we got new data
+      setThisUser(data.user ? data.user : thisUser);
     };
 
     return () => {

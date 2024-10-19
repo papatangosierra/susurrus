@@ -3,7 +3,7 @@ import User from "./User";
 import { UserInterface } from "../../src/Classes/userInterface";
 
 interface ParticipantsProps {
-  thisUser: UserInterface | null;
+  thisUser: UserInterface;
   users: UserInterface[];
 }
 

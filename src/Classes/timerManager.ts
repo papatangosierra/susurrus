@@ -2,21 +2,26 @@ import { TimerManagerInterface } from "./timerManagerInterface";
 import { TimerInterface } from "./timerInterface";
 import { UserInterface } from "./userInterface";
 import { Timer } from "./timer";
+import { ElysiaWS } from "elysia/dist/ws";
+import { EventEmitter } from "events";
 import { Database } from "bun:sqlite";
 
-export class TimerManager implements TimerManagerInterface {
+export class TimerManager extends EventEmitter implements TimerManagerInterface {
   private timers: Map<string, TimerInterface>;
   private timerDb: Database;
 
   constructor(db: Database) {
+    super();
     this.timers = new Map();
     this.timerDb = db;
     this.loadTimersFromDatabase();
   }
 
-  createTimer(owner: UserInterface): TimerInterface {
+  createTimer(owner: UserInterface, ws: ElysiaWS<any, any, any>): TimerInterface {
     const timer = new Timer(this.timerDb, owner);
     this.timers.set(timer.id, timer);
+    ws.subscribe(timer.id);
+    this.emit("timerCreated", {timer, ws});
     return timer;
   }
 
@@ -24,17 +29,18 @@ export class TimerManager implements TimerManagerInterface {
     return this.timers.get(id) || null;
   }
 
-  deleteTimer(id: string): void {
+  deleteTimer(id: string, ws: ElysiaWS<any, any, any>): void {
     const timer = this.getTimer(id);
     if (timer) {
       timer.delete();
       this.timers.delete(id);
+      this.emit("timerDeleted", {timer, ws});
     } else {
       throw new Error("Timer not found");
     }
   }
 
-  startTimer(id: string): void {
+  startTimer(id: string, ws: ElysiaWS<any, any, any>): void {
     const timer = this.getTimer(id);
     if (timer) {
       timer.start();
@@ -43,10 +49,11 @@ export class TimerManager implements TimerManagerInterface {
     }
   }
 
-  resetTimer(id: string, duration?: number): void {
+  resetTimer(id: string, duration: number, ws: ElysiaWS<any, any, any>): void {
     const timer = this.getTimer(id);
     if (timer) {
-      timer.reset();
+      timer.reset(duration);
+      this.emit("timerReset", {timer, ws});
     } else {
       throw new Error("Timer not found");
     }
@@ -85,21 +92,25 @@ export class TimerManager implements TimerManagerInterface {
   //   return deletedCount;
   // }
 
-  addUserToTimer(user: UserInterface, timerId: string): void {
+  addUserToTimer(user: UserInterface, timerId: string, ws: ElysiaWS<any, any, any>): void {
     const timer = this.getTimer(timerId);
     if (timer) {
       timer.addUser(user);
       user.timerId = timerId;
+      ws.subscribe(timerId);
+      this.emit("userAddedToTimer", {user, timer, ws});
     } else {
       throw new Error("Timer not found");
     }
   }
 
-  removeUserFromTimer(user: UserInterface, timerId: string): void {
+  removeUserFromTimer(user: UserInterface, timerId: string, ws: ElysiaWS<any, any, any>): void {
     const timer = this.getTimer(timerId);
     console.log("removing user from timer: ", timerId);
     if (timer) {
       timer.removeUser(user);
+      ws.unsubscribe(timerId);
+      this.emit("userRemovedFromTimer", {user, timer, ws});
     } else {
       throw new Error("Timer not found");
     }

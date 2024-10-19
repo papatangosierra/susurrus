@@ -67,8 +67,9 @@ export class Timer implements TimerInterface {
     console.log(`Timer ${this.id} started at ${this.startTime}`);
   }
 
-  reset() {
+  reset(duration?: number) {
     this.startTime = 0;
+    this.duration = duration ? duration * 60 * 1000 : this.duration;
     this.save();
   }
 
@@ -92,7 +93,7 @@ export class Timer implements TimerInterface {
   private create() {
     const usersJson = JSON.stringify(this.users);
     const query = this.timerDb.query(
-      `INSERT INTO timers (id, name, duration, startTime, isRunning, owner, users) VALUES ($id, $name, $duration, $startTime, $isRunning, $owner, $users)`,
+      `INSERT INTO timers (id, name, duration, startTime, owner, users) VALUES ($id, $name, $duration, $startTime, $owner, $users)`,
     );
     try {
       query.all({
@@ -110,7 +111,7 @@ export class Timer implements TimerInterface {
   private save() {
     const usersJson = JSON.stringify(this.users);
     const query = this.timerDb.query(
-      `UPDATE timers SET name = $name, duration = $duration, startTime = $startTime, isRunning = $isRunning, users = $users WHERE id = $id`,
+      `UPDATE timers SET name = $name, duration = $duration, startTime = $startTime,  users = $users WHERE id = $id`,
     );
     try {
       query.run({

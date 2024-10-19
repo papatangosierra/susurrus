@@ -9,6 +9,6 @@ import { UserInterface } from "./userInterface";
 */
 
 export interface ClientStateInterface {
-  user: UserInterface;
-  timer?: TimerInterface | null;
+  user?: UserInterface;
+  timer?: TimerInterface;
 }
