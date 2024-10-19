@@ -16,10 +16,7 @@ import { StateUpdateService } from "./Classes/stateUpdateService";
 // SQLite Database
 import db from "./database";
 import { User } from "./Classes/user";
-import { ClientState } from "./Classes/clientState";
-import { UserInterface } from "./Classes/userInterface";
-import { TimerInterface } from "./Classes/timerInterface";
-import { ServerWebSocket } from "bun";
+
 
 
 

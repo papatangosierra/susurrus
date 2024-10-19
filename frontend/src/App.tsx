@@ -30,15 +30,17 @@ const App: React.FC= () => {
 
     client.onmessage = (message) => {
       const data = JSON.parse(message.data as string);
+      console.log("data: ", data);
+
       // set timer URL in the browser
       if (data.timer) {
         window.history.pushState(null, '', `/timers/${data.timer.id}`);
+        setTimer(data.timer);
+      }      
+      // Update user state only if new user data is received
+      if (data.user) {
+        setThisUser(data.user);
       }
-      console.log("data: ", data);
-      // Set the timer if we got new data
-      setTimer(data.timer ? data.timer : timer);
-      // Set the user if we got new data
-      setThisUser(data.user ? data.user : thisUser);
     };
 
     return () => {
