@@ -1,18 +1,22 @@
 html, body {
-  font-family: "Source Sans Pro", monospace;
+  font-family: "Jersey 10", monospace;
+  font-size: 1.5rem;
   margin: 0;
   padding: 0;
   height: 100%;
   overflow: hidden;
 }
 
-h1 {
-  font-size: 5rem;
+h1, h2 {
+  font-family: "Jersey 25", monospace;
   margin: 0;
 }
-
+h1 {
+  font-size: 4rem;
+  margin: 0;
+}
 h2 {
-  font-size: 3rem;
+  font-size: 2rem;
   margin: 0;
 }
 
@@ -59,8 +63,24 @@ h2 {
   max-height: 60vmin;
 }
 
+.dial-svg path {
+  fill: gray;
+  stroke: black;
+  stroke-width: .5rex;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-miterlimit: 10;
+}
+
 .start-button {
-  /* margin: 1rem; */
+  font-family: "Jersey 10", monospace;
+  font-size: 2rem;
+  margin: 1.5rem; 
+  background-color: white;
+  color: black;
+  border: 0.25rem solid black;
+  border-radius: 1rem;
+  padding: 0.5rem 1rem;
 }
 
 .participants-container {
@@ -91,15 +111,15 @@ h2 {
   width: 5rem;
   height: 5rem;
   margin: 0.25rem;
-  border: 0.5rem solid rgb(255, 197, 197);
+  border: 0.5rem solid black;
   border-radius: 50%;
-  background-color: papayawhip;
+  background-color: white;
 }
 
 .user-container.this-user {
-  border-color: rgb(0, 245, 155);
+  border-color: red;
 }
 
 .user-container.owner {
-  box-shadow: inset 0 0 1.5rem rgba(221, 0, 255, 0.75);
+  box-shadow: inset 0 0 1.5rem gray
 }

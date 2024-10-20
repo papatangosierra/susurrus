@@ -110,7 +110,8 @@ export class TimerManager extends EventEmitter implements TimerManagerInterface 
     if (timer) {
       // if user is the last user in the timer, delete the timer
       if (timer.users.length === 1) {
-        this.deleteTimer(timerId, ws);
+        timer.removeUser(user);
+        // this.deleteTimer(timerId, ws);
         this.emit("lastUserRemovedFromTimer", {timer, ws});
       } else if (user.id === timer.owner.id) { // if user is owner of timer
         timer.removeUser(user);

@@ -114,7 +114,8 @@ const app = new Elysia()
   .get("/timers/:timerId", () => {
     console.log("Timer Join requested");
     return Bun.file("./frontend/dist/index.html");
-  })  /* Use a websocket to send updates to the client about the timer */
+  }) 
+  /* Use a websocket to send updates to the client about the timer */
   .use(websocket)
   // .get("/timers/:id/users", getUsersForTimer)
   // .put("/timers/:id/start", startTimer)
