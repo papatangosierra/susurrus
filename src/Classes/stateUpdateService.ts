@@ -40,6 +40,10 @@ export class StateUpdateService {
       this.wsManager.sendToUser({user: timer.owner, timer: timer }, ws);
     });
 
-
+    this.timerManager.on('timerStarted', ({ timer, ws }) => {
+      console.log("caught timerStarted event for timer owned by: ", timer.owner.name);
+      this.wsManager.sendToUser({user: timer.owner, timer: timer }, ws);
+      this.wsManager.broadcastToTimer(timer.id, { timer }, ws);
+    });
   }
 }

@@ -14,7 +14,7 @@ const User: React.FC<UserProps> = ({ id, name, isThisUser, isOwner }) => {
   });
   const [isDragging, setIsDragging] = useState(false);
   const dragOffset = useRef({ x: 0, y: 0 });
-  const wanderIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const wanderIntervalRef = useRef(0);
 
   useEffect(() => {
     startWandering();

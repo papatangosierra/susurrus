@@ -17,9 +17,6 @@ import { StateUpdateService } from "./Classes/stateUpdateService";
 import db from "./database";
 import { User } from "./Classes/user";
 
-
-
-
 // Instantiate the timer and user managers
 const timerManager = new TimerManager(db);
 const userManager = new UserManager(db);
@@ -36,6 +33,9 @@ const websocket = new Elysia()
     "user": new User(db)
   }))
   .ws("/ws", {
+    /* * * * * * * * * * * *  * * * */
+    /* WEBSOCKET CONNECTION OPENED */
+    /* * * * * * * * * * * * * * * */
     open(ws) {
       console.log("websocket connection opened with id: " + ws.id);
       const providedTimerId = ws.data.query.timerId;
@@ -60,16 +60,20 @@ const websocket = new Elysia()
         //handleInitialStateUpdate(ws, timer, user);
       }
     },
-
+    /* * * * * * * * * * * * * * * */
+    /* WEBSOCKET MESSAGE RECEIVED  */
+    /* * * * * * * * * * * * * * * */
     message(ws, message) {
-      console.log("got websocket message: " + message);
-      if (message.type === 'UPDATE_TIMER') {
-        const timerId = message.payload.timerId;
-        ws.publish(timerId, message);
+      console.log("got websocket message: " + JSON.stringify(message));
+      if (message.type === 'START_TIMER') {
+        const timerId = message.payload.timerId
+        const timerManager = ws.data.timerManager;
+        timerManager.startTimer(timerId, ws);
       }
-      // ws.send(dummyPlug);
     },
-
+    /* * * * * * * * * * * * * * * */
+    /* WEBSOCKET CONNECTION CLOSED */
+    /* * * * * * * * * * * * * * * */
     close(ws) {
       console.log("websocket connection closed");
       const user = ws.data.user;
@@ -104,10 +108,6 @@ const app = new Elysia()
 
   /* When the client requests a user identity, we should give them one */
   .get("/get-user", getUser)
-
-  /* When the client requests to make a timer, they give us their user id 
-  and we make a timer for them and tell them its id*/
-  .get("/make-timer/:userId", makeTimer)
 
   /* When the client provides a timerId, we should join them to that timer, making a new user
   in the process */

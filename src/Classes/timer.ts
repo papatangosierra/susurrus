@@ -62,9 +62,9 @@ export class Timer implements TimerInterface {
   }
 
   start() {
-    this.startTime = Date.now();
+    this.startTime = Date.now() + 10;
     this.save();
-    console.log(`Timer ${this.id} started at ${this.startTime}`);
+    console.log(`Timer ${this.id} started at ${this.startTime + 10}`);
   }
 
   reset(duration?: number) {

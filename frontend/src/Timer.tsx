@@ -1,61 +1,83 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import StartButton from "./StartButton";
 import Dial from "./Dial";
+import WebSocketContext from "./WebSocketContext";
+import { UserInterface } from "../../src/Classes/userInterface";
 
 interface TimerProps {
   duration: number;
   startTime: number;
+  timerId: string;
+  owner: UserInterface;
+  currentUser: UserInterface | null;
 }
 
-const Timer: React.FC<TimerProps> = ({ duration, startTime }) => {
-  const [theRemainingTime, setTheRemainingTime] = useState(duration);
-  const [theStartTime, setTheStartTime] = useState(startTime);
+const Timer: React.FC<TimerProps> = ({ duration, startTime, timerId, owner, currentUser }) => {
+  const [remainingTime, setRemainingTime] = useState(duration);
+  const [isRunning, setIsRunning] = useState(false);
+  const webSocket = useContext(WebSocketContext);
+
+  useEffect(() => {
+    // Start the timer if startTime is greater than 0
+    if (startTime > 0) {
+      setIsRunning(true);
+      const elapsedTime = Date.now() - startTime;
+      setRemainingTime(Math.max(0, duration - elapsedTime));
+    } else {
+      setIsRunning(false);
+      setRemainingTime(duration);
+    }
+  }, [startTime, duration]);
 
   useEffect(() => {
     let intervalId: number | undefined;
 
-    // if theStartTime is greater than 0, that means the timer is running.
-    // so we need to update the remaining time every second.
-    if (theStartTime > 0) {
+    if (isRunning && remainingTime > 0) {
       intervalId = window.setInterval(() => {
-        setTheRemainingTime(duration - (Date.now() - theStartTime));
+        setRemainingTime(prevTime => {
+          const newTime = Math.max(0, prevTime - 100);
+          if (newTime === 0) {
+            setIsRunning(false);
+          }
+          return newTime;
+        });
       }, 100);
     }
 
-    // if the remaining time is less than or equal to 0,
-    // reset the timer.
-    if (theRemainingTime <= 0) {
-      clearInterval(intervalId);
-      setTheRemainingTime(duration);
-      setTheStartTime(0);
-    }
-
     return () => clearInterval(intervalId);
-  }, [theRemainingTime, theStartTime]);
+  }, [isRunning, remainingTime]);
 
   const handleStart = () => {
-    // start the timer 1 second in the future so that we don't skip the first tick
-    setTheStartTime(Date.now() + 10);
+    if (webSocket) {
+      webSocket.send(JSON.stringify({
+        type: 'START_TIMER',
+        payload: {
+          timerId: timerId,
+          startTime: Date.now()
+        }
+      }));
+    }
   };
 
-  const minutes = Math.floor(theRemainingTime / 60000);
-  const seconds = Math.floor((theRemainingTime % 60000) / 1000);
-  const tenths = Math.floor((theRemainingTime % 1000) / 100);
+  const isOwner = currentUser && owner && currentUser.id === owner.id;
 
-  // pad seconds with 0 if less than 10
+  const minutes = Math.floor(remainingTime / 60000);
+  const seconds = Math.floor((remainingTime % 60000) / 1000);
+  const tenths = Math.floor((remainingTime % 1000) / 100);
+
   const paddedSeconds = seconds < 10 ? `0${seconds}` : seconds;
   const paddedTenths = tenths < 10 ? `0${tenths}` : tenths;
 
   return (
     <div className="remaining-time-display">
       <h2>Time Remaining</h2>
-      <Dial value={theRemainingTime / duration} />
+      <Dial value={remainingTime / duration} />
       <div className="countdown">
         <span id="countdown-minutes">{minutes}</span>:
         <span id="countdown-seconds">{paddedSeconds}</span>:
         <span id="countdown-tenths">{paddedTenths}</span>
       </div>
-      <StartButton onStart={handleStart} disabled={theStartTime > 0} />
+      {isOwner && <StartButton onStart={handleStart} disabled={isRunning} />}
     </div>
   );
 };

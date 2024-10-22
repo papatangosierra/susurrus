@@ -45,6 +45,7 @@ export class TimerManager extends EventEmitter implements TimerManagerInterface 
     const timer = this.getTimer(id);
     if (timer) {
       timer.start();
+      this.emit("timerStarted", {timer, ws});
     } else {
       throw new Error("Timer not found");
     }

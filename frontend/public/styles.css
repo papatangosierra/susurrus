@@ -83,6 +83,21 @@ h2 {
   padding: 0.5rem 1rem;
 }
 
+.start-button:disabled {
+  background-color: gray;
+  color: white;
+}
+
+.start-button:hover:not(:disabled) {
+  border: 0.25rem solid orangered;
+}
+
+.start-button:active:not(:disabled) {
+  border: 0.25rem solid orangered;
+  background-color: black;
+  color: white;
+}
+
 .participants-container {
   display: flex;
   flex-direction: column;
