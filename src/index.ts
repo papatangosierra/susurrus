@@ -23,8 +23,18 @@ const userManager = new UserManager(db);
 const wsManager = new WebSocketManager();
 const stateUpdateService = new StateUpdateService(timerManager, userManager, wsManager);
 
+// TLS configuration for HTTPS
+const tlsConfig = {
+  key: Bun.file('./key.pem'),
+  cert: Bun.file('./cert.pem')
+};
+
 // Instantiate the websocket
-const websocket = new Elysia()
+const websocket = new Elysia({
+  serve: {
+    tls: tlsConfig
+  }
+})
   .decorate("timerManager", timerManager)
   .decorate("userManager", userManager)
   // gives us a new user object to use in the websocket
@@ -84,7 +94,11 @@ const websocket = new Elysia()
     }
   });
 
-const app = new Elysia()
+const app = new Elysia({
+  serve: {
+    tls: tlsConfig
+  }
+})
   .use(swagger())
   // load the managers into the app state
   .decorate("timerManager", timerManager)
