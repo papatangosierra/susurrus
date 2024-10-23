@@ -51,23 +51,22 @@ const websocket = new Elysia({
       const providedTimerId = ws.data.query.timerId;
       const user = ws.data.user;
       const timerManager = ws.data.timerManager;
-      // If the timerId was provided in the URL, join the timer
+      // If the timerId was provided in the URL, try tojoin the timer
       if (providedTimerId) {
-        // Join existing timer
-        const timer = timerManager.getTimer(providedTimerId);
-        if (timer) {
+        // If the requested timer doesn't exist, create a new one
+        const timer = 
+          timerManager.getTimer(providedTimerId) ? 
+          timerManager.getTimer(providedTimerId) : 
+          timerManager.createTimer(user, ws);
+        // We can assert here because in either case, we've just created a timer
+        if (user.id !== timer!.owner.id) { // if the user is not the owner, add them to the timer
           //handleUserJoinedStateUpdate(ws, timer, user);
           timerManager.addUserToTimer(user, providedTimerId, ws);
-        } else {
-          // TODO: Handle the case of an invalid timerId in a way
-          // that is more useful to the user
-          ws.send({ error: `Timer ${providedTimerId} not found` });
-        }
+        } 
       } else {
-        // Create new timer
+        // No timerId provided, so, create a new timer
         console.log("creating new timer");
         timerManager.createTimer(user, ws);
-        //handleInitialStateUpdate(ws, timer, user);
       }
     },
     /* * * * * * * * * * * * * * * */
