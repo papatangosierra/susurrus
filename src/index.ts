@@ -25,8 +25,8 @@ const stateUpdateService = new StateUpdateService(timerManager, userManager, wsM
 
 // TLS configuration for HTTPS
 const tlsConfig = {
-  key: Bun.file('./key.pem'),
-  cert: Bun.file('./cert.pem')
+  key: Bun.file(process.env.KEYPATH as string),
+  cert: Bun.file(process.env.CERTPATH as string)
 };
 
 // Instantiate the websocket

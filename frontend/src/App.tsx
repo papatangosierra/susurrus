@@ -19,8 +19,8 @@ const App: React.FC = () => {
     const timerId = urlPath.split('/')[2];
     console.log('timerId: ', timerId);
     const wsUrl = timerId 
-      ? `wss://localhost:3000/ws?timerId=${timerId}`
-      : 'wss://localhost:3000/ws';
+      ? `/ws?timerId=${timerId}`
+      : '/ws';
     
     const client = new WebSocket(wsUrl);
     setWebSocket(client);  // Store the WebSocket in state
