@@ -19,6 +19,9 @@ frontend/public/js
 # misc
 .DS_Store
 *.pem
+*.key
+*.cert
+*.cer
 
 # debug
 npm-debug.log*
