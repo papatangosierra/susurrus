@@ -1,5 +1,16 @@
+:root {
+  --font-family: "Xanh Mono", monospace;
+  --color-text: black;
+  --color-background: white;
+  --color-accent: orangered;
+  --color-disabled: gray;
+  --color-border: black;
+  --color-this-user: red;
+  --color-owner-shadow: gray;
+}
+
 html, body {
-  font-family: "Xanh Mono", monospace;
+  font-family: var(--font-family);
   font-weight: 400;
   font-style: normal;
   font-size: 16px; /* Base font size */
@@ -7,6 +18,8 @@ html, body {
   padding: 0;
   height: 100%;
   overflow: hidden;
+  color: var(--color-text);
+  background-color: var(--color-background);
 } 
 
 body {
@@ -37,6 +50,14 @@ h2 {
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+}
+
+.timer-titlebar {
+  padding-top: 2vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .remaining-time-display {
@@ -73,7 +94,7 @@ h2 {
 }
 
 #countdown-tenths {
-  color: orangered;
+  color: var(--color-accent);
   text-align: left;
   font-size: 5vh;
   width: 10vh;
@@ -97,35 +118,35 @@ h2 {
 }
 
 .dial-svg path {
-  fill: gray;
+  fill: var(--color-disabled);
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-miterlimit: 10;
 }
 
 .start-button {
-  font-family: "Xanh Mono", monospace;
+  font-family: var(--font-family);
   font-size: 3vh;
   width: 60%;
   margin: 2vh;
   margin-bottom: 15vh;
   padding: 1vh 2vh;
-  border: .5vh solid black;
+  border: .5vh solid var(--color-border);
   border-radius: 2vh;
 }
 
 .start-button:disabled {
-  background: repeating-linear-gradient(60deg,#ffffff, #ffffff 8px, gray 8px, gray 12.5px);
+  background: repeating-linear-gradient(60deg, var(--color-background), var(--color-background) 8px, var(--color-disabled) 8px, var(--color-disabled) 12.5px);
 }
 
 .start-button:hover:not(:disabled) {
-  border: 0.5vh solid orangered;
+  border: 0.5vh solid var(--color-accent);
 }
 
 .start-button:active:not(:disabled) {
-  border: 0.5vh solid orangered;
-  background-color: black;
-  color: white;
+  border: 0.5vh solid var(--color-accent);
+  background-color: var(--color-text);
+  color: var(--color-background);
 }
 
 .participants-container {
@@ -152,18 +173,20 @@ h2 {
   align-items: center;
   justify-content: center;
   font-size: 2.75vh;
-  width: 8vh;
-  height: 8vh;
+  min-width: 6vh;
+  max-width: 10vh;
+  padding: 1rex;
+  height: 6vh;
   margin: 1vh;
-  border: 0.5vh solid black;
+  border: 0.5vh solid var(--color-border);
   border-radius: 50%;
-  background-color: white;
+  background-color: var(--color-background);
 }
 
 .user-container.this-user {
-  border-color: red;
+  border-color: var(--color-this-user);
 }
 
 .user-container.owner {
-  box-shadow: inset 0 0 1.5rem gray
+  box-shadow: inset 0 0 1.5rem var(--color-owner-shadow);
 }
