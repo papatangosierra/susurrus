@@ -1,12 +1,15 @@
 :root {
+  --hue: 205;
+  --inverse-hue: calc(180 - var(--hue));
   --font-family: "Xanh Mono", monospace;
-  --color-text: black;
-  --color-background: white;
-  --color-accent: orangered;
-  --color-disabled: gray;
-  --color-border: black;
-  --color-this-user: red;
-  --color-owner-shadow: gray;
+  --color-text: hsl(var(--hue), 100%, 92%);
+  --color-background: hsl(var(--hue), 100%, 13%);
+  --color-accent: hsl(var(--inverse-hue), 100%, 50%);
+  --color-disabled: hsla(var(--hue), 100%, 73%, 0.432);
+  --color-border: hsl(var(--hue), 100%, 95%);
+  --color-this-user: hsl(var(--hue), 100%, 50%);
+  --color-owner-shadow: hsl(var(--hue), 100%, 50%);
+  --color-control: hsl(var(--hue), 100%, 20%);
 }
 
 html, body {
@@ -125,6 +128,8 @@ h2 {
 }
 
 .start-button {
+  color: var(--color-text);
+  background-color: var(--color-control);
   font-family: var(--font-family);
   font-size: 3vh;
   width: 60%;

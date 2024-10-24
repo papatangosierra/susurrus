@@ -21,6 +21,10 @@ import { User } from "./Classes/user";
 const timerManager = new TimerManager(db);
 const userManager = new UserManager(db);
 const wsManager = new WebSocketManager();
+// It may seem like we're not doing anything with the stateUpdateService, but we are.
+// We don't call its methods directly, but by instantiating it here, we ensure that its
+// constructor registeres all the event listeners it uses to dispatch state updates to 
+// the clients.
 const stateUpdateService = new StateUpdateService(timerManager, userManager, wsManager);
 
 // TLS configuration for HTTPS
