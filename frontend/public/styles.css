@@ -128,11 +128,14 @@ h2 {
 }
 
 .dial-svg {
-  width: 100%;
-  height: 100%;
-  padding: 3.5vh;
-  max-width: 50vh;
-  max-height: 40vh;
+  width: 70cqw;
+  height: 70cqw;
+  padding: 6.5vh;
+}
+
+.dial-svg text {
+  font-size: 1cqw;
+  fill: var(--color-text);
 }
 
 .dial-svg path {
@@ -150,7 +153,6 @@ h2 {
   font-size: 3vh;
   width: 25cqw;
   height: 25cqw;
-  padding: 1vh 2vh;
   border: .5vh solid var(--color-border);
   border-radius: 12.5cqw;
 }
