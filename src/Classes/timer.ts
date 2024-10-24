@@ -16,7 +16,7 @@ export class Timer implements TimerInterface {
   private timerDb: Database;
 
   constructor(db: Database, owner: UserInterface, id?: string) {
-    this.name = "Your timer";
+    this.name = "Countdown";
     this.startTime = 0;
     this.duration = 0;
     this.users = [];

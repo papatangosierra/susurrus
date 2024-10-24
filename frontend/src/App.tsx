@@ -50,12 +50,14 @@ const App: React.FC = () => {
   }, []);
 
   if (!timer) {
-    return <div>Loading...</div>;
+    return (<div className="app-container"><h1>Loading...</h1></div>);
   }
   return (
     <WebSocketContext.Provider value={webSocket}>
       <div className="app-container">
-        <h1>{timer?.name}</h1>
+        <div className="timer-titlebar">
+          <h1>{timer?.name}</h1>
+        </div>
         <Timer
           duration={timer?.duration ?? 0}
           startTime={timer?.startTime ?? 0}

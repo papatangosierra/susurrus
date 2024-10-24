@@ -1,23 +1,31 @@
 html, body {
-  font-family: "Jersey 10", monospace;
-  font-size: 1.5rem;
+  font-family: "Xanh Mono", monospace;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px; /* Base font size */
   margin: 0;
   padding: 0;
   height: 100%;
   overflow: hidden;
+} 
+
+body {
+  display: flex;
+  flex-direction: column;
 }
 
 h1, h2 {
-  font-family: "Jersey 25", monospace;
   margin: 0;
+  font-weight: 400;
 }
+
 h1 {
-  font-size: 4rem;
-  margin: 0;
+  font-size: 8vh;
+  margin: 2vh;
 }
+
 h2 {
-  font-size: 2rem;
-  margin: 0;
+  font-size: 4vh;
 }
 
 /* center the app container both horizontally and vertically */
@@ -25,7 +33,7 @@ h2 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;  
   height: 100vh;
   width: 100vw;
   overflow: hidden;
@@ -34,66 +42,88 @@ h2 {
 .remaining-time-display {
   display: flex;
   flex-direction: column;
-  width: 100%;
   align-items: center;
   justify-content: center;
-  /* border: 2px solid black; */
-  padding: 0.5rem;
+  flex: 1;
+  width: 100%;
   box-sizing: border-box;
 }
 
 .countdown {
-  font-size: 5rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-size: 9vh;
+  margin-bottom: 2vh;
 }
+
+
+#countdown-minutes {
+  text-align: right;
+  width: 10vh;
+}
+#countdown-minutes::after {
+  content: ":";
+} 
+
+#countdown-seconds {
+  text-align: center;
+  width: 10vh;
+}
+
+#countdown-tenths {
+  color: orangered;
+  text-align: left;
+  font-size: 5vh;
+  width: 10vh;
+} 
 
 .dial {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 1;
+  flex: 1 1 30vh;
   width: 100%;
-  padding: 0.5rem;
+  padding: 1vh;
   box-sizing: border-box;
 }
 
 .dial-svg {
   width: 100%;
   height: 100%;
-  max-width: 60vmin;
-  max-height: 60vmin;
+  max-width: 50vh;
+  max-height: 50vh;
 }
 
 .dial-svg path {
   fill: gray;
-  stroke: black;
-  stroke-width: .5rex;
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-miterlimit: 10;
 }
 
 .start-button {
-  font-family: "Jersey 10", monospace;
-  font-size: 2rem;
-  margin: 1.5rem; 
-  background-color: white;
-  color: black;
-  border: 0.25rem solid black;
-  border-radius: 1rem;
-  padding: 0.5rem 1rem;
+  font-family: "Xanh Mono", monospace;
+  font-size: 3vh;
+  width: 60%;
+  margin: 2vh;
+  margin-bottom: 15vh;
+  padding: 1vh 2vh;
+  border: .5vh solid black;
+  border-radius: 2vh;
 }
 
 .start-button:disabled {
-  background-color: gray;
-  color: white;
+  background: repeating-linear-gradient(60deg,#ffffff, #ffffff 8px, gray 8px, gray 12.5px);
 }
 
 .start-button:hover:not(:disabled) {
-  border: 0.25rem solid orangered;
+  border: 0.5vh solid orangered;
 }
 
 .start-button:active:not(:disabled) {
-  border: 0.25rem solid orangered;
+  border: 0.5vh solid orangered;
   background-color: black;
   color: white;
 }
@@ -102,9 +132,8 @@ h2 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   width: 100%;
-  padding: 0.5rem;
   box-sizing: border-box;
 }
 
@@ -122,11 +151,11 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
-  width: 5rem;
-  height: 5rem;
-  margin: 0.25rem;
-  border: 0.5rem solid black;
+  font-size: 2.5rem;
+  width: 8vh;
+  height: 8vh;
+  margin: 1vh;
+  border: 0.5vh solid black;
   border-radius: 50%;
   background-color: white;
 }
