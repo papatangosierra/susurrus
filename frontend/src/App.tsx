@@ -31,10 +31,11 @@ const App: React.FC = () => {
 
     client.onmessage = (message) => {
       const data = JSON.parse(message.data as string);
-      console.log("data: ", data);
+      console.log("Received data: ", data);
 
       // set timer URL in the browser
       if (data.timer) {
+        console.log("Updating timer state: ", data.timer);
         window.history.pushState(null, '', `/timers/${data.timer.id}`);
         setTimer(data.timer);
       }      
@@ -59,8 +60,8 @@ const App: React.FC = () => {
           <h1>{timer?.name}</h1>
         </div>
         <Timer
-          duration={timer?.duration ?? 0}
-          startTime={timer?.startTime ?? 0}
+          duration={timer.duration}
+          startTime={timer.startTime}
           timerId={timer.id}
           owner={timer.owner}
           currentUser={thisUser}

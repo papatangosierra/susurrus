@@ -14,6 +14,7 @@ export class Timer implements TimerInterface {
   deletedAt: number;
   pingQueue: number[];
   private timerDb: Database;
+  private futureOffset: number; // offset to account for network latency
 
   constructor(db: Database, owner: UserInterface, id?: string) {
     this.name = "Countdown";
@@ -25,6 +26,7 @@ export class Timer implements TimerInterface {
     this.pingQueue = [];
     this.timerDb = db;
     this.deletedAt = 0;
+    this.futureOffset = 10;
     if (id) {
       this.id = id;
       this.load(); // if we got an id, that means the timer already exists in the database
@@ -39,8 +41,8 @@ export class Timer implements TimerInterface {
     this.save();
   }
 
-  setDurationInMinutes(duration: number): void {
-    this.duration = duration * 60 * 1000;
+  setDuration(duration: number): void {
+    this.duration = duration;
     this.save();
   }
 
@@ -62,14 +64,14 @@ export class Timer implements TimerInterface {
   }
 
   start() {
-    this.startTime = Date.now() + 10;
+    this.startTime = Date.now() + this.futureOffset;
     this.save();
     console.log(`Timer ${this.id} started at ${this.startTime + 10}`);
   }
 
   reset(duration?: number) {
     this.startTime = 0;
-    this.duration = duration ? duration * 60 * 1000 : this.duration;
+    this.duration = duration ? duration : this.duration;
     this.save();
   }
 
@@ -78,7 +80,7 @@ export class Timer implements TimerInterface {
     // if the difference between
     // the current time and the start time is greater than
     // or equal to the duration, the timer is finished
-    return currentTime - this.startTime >= this.duration;
+    return (currentTime + this.futureOffset) - this.startTime >= this.duration;
   }
 
   delete() {

@@ -29,7 +29,7 @@ describe("Timer", () => {
   });
 
   test("should set the duration of the timer", () => {
-    timer.setDurationInMinutes(10);
+    timer.setDuration(600000);
     expect(timer.duration).toBe(600000);
   });
 
@@ -60,7 +60,8 @@ describe("Timer", () => {
   });
 
   test("should check if the timer is finished", () => {
-    timer.setDurationInMinutes(0);
+    // set du
+    timer.setDuration(0);
     timer.start();
     expect(timer.isFinished()).toBe(true);
   });

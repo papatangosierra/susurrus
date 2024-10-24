@@ -15,10 +15,12 @@ interface TimerProps {
 const Timer: React.FC<TimerProps> = ({ duration, startTime, timerId, owner, currentUser }) => {
   const [remainingTime, setRemainingTime] = useState(duration);
   const [isRunning, setIsRunning] = useState(false);
+  const [editableDuration, setEditableDuration] = useState(duration);
   const webSocket = useContext(WebSocketContext);
 
   useEffect(() => {
-    // Start the timer if startTime is greater than 0
+    console.log("Timer props updated: ", { duration, startTime });
+    setEditableDuration(duration);
     if (startTime > 0) {
       setIsRunning(true);
       const elapsedTime = Date.now() - startTime;
@@ -27,7 +29,7 @@ const Timer: React.FC<TimerProps> = ({ duration, startTime, timerId, owner, curr
       setIsRunning(false);
       setRemainingTime(duration);
     }
-  }, [startTime, duration]);
+  }, [duration, startTime]);
 
   useEffect(() => {
     let intervalId: number | undefined;
@@ -57,6 +59,44 @@ const Timer: React.FC<TimerProps> = ({ duration, startTime, timerId, owner, curr
         }
       }));
     }
+    setRemainingTime(editableDuration); // Set remaining time to editable duration when starting
+  };
+
+  const handleDurationChange = (newDuration: number) => {
+    setEditableDuration(newDuration);
+    if (webSocket) {
+      webSocket.send(JSON.stringify({
+        type: 'UPDATE_TIMER_DURATION',
+        payload: {
+          timerId: timerId,
+          duration: newDuration
+        }
+      }));
+    }
+  };
+
+  const incrementMinutes = () => {
+    if (!isRunning) {
+      handleDurationChange(editableDuration + 60000);
+    }
+  };
+
+  const decrementMinutes = () => {
+    if (!isRunning && editableDuration >= 60000) {
+      handleDurationChange(editableDuration - 60000);
+    }
+  };
+
+  const incrementSeconds = () => {
+    if (!isRunning) {
+      handleDurationChange(editableDuration + 1000);
+    }
+  };
+
+  const decrementSeconds = () => {
+    if (!isRunning && editableDuration >= 1000) {
+      handleDurationChange(editableDuration - 1000);
+    }
   };
 
   const isOwner = currentUser && owner && currentUser.id === owner.id;
@@ -70,13 +110,20 @@ const Timer: React.FC<TimerProps> = ({ duration, startTime, timerId, owner, curr
 
   return (
     <div className="remaining-time-display">
-      <h2>Time Remaining</h2>
       <div className="countdown">
-        <div id="countdown-minutes">{minutes}</div>
-        <div id="countdown-seconds">{paddedSeconds}</div>
+        <div className="time-control">
+          {isOwner && !isRunning && <button onClick={incrementMinutes}>▲</button>}
+          <div id="countdown-minutes">{minutes}</div>
+          {isOwner && !isRunning && <button onClick={decrementMinutes}>▼</button>}
+        </div>
+        <div className="time-control">
+          {isOwner && !isRunning && <button onClick={incrementSeconds}>▲</button>}
+          <div id="countdown-seconds">{paddedSeconds}</div>
+          {isOwner && !isRunning && <button onClick={decrementSeconds}>▼</button>}
+        </div>
         <div id="countdown-tenths">{paddedTenths}</div>
       </div>
-      <Dial value={remainingTime / duration} />
+      <Dial value={remainingTime / editableDuration} />
       {isOwner && <StartButton onStart={handleStart} disabled={isRunning} />}
     </div>
   );

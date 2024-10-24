@@ -45,5 +45,11 @@ export class StateUpdateService {
       this.wsManager.sendToUser({user: timer.owner, timer: timer }, ws);
       this.wsManager.broadcastToTimer(timer.id, { timer }, ws);
     });
+
+    this.timerManager.on('timerReset', ({ timer, ws }) => {
+      console.log("caught timerReset event for timer owned by: ", timer.owner.name);
+      this.wsManager.sendToUser({user: timer.owner, timer: timer }, ws);
+      this.wsManager.broadcastToTimer(timer.id, { timer }, ws);
+    });
   }
 }

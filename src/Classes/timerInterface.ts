@@ -25,7 +25,7 @@ export interface TimerInterface {
   // TODO: change "deleted" to "deletedAt" and make it a date
   deletedAt: number;
   setName(name: string): void;
-  setDurationInMinutes(duration: number): void;
+  setDuration(duration: number): void;
   setOwner(owner: UserInterface): void;
   addUser(user: UserInterface): void;
   removeUser(user: UserInterface): void;

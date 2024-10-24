@@ -15,6 +15,6 @@ export async function createTimerAsOwner(context: {
   );
   const newTimer = context.timerManager.createTimer(user);
   console.log(`We made a timer. The timer's id is ${newTimer.id}.`);
-  newTimer.setDurationInMinutes(10);
+  newTimer.setDuration(10);
   return newTimer;
 }
