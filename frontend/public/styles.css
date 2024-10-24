@@ -1,5 +1,5 @@
 :root {
-  --hue: 205;
+  --hue: 195;
   --inverse-hue: calc(180 - var(--hue));
   --font-family: "Xanh Mono", monospace;
   --color-text: hsl(var(--hue), 100%, 92%);
@@ -48,11 +48,26 @@ h2 {
 .app-container {
   display: flex;
   flex-direction: column;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: center;  
-  height: 100vh;
-  width: 100vw;
   overflow: hidden;
+}
+
+#app-firsthalf {
+  flex: 1 1 50vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; 
+}
+
+#app-secondhalf {
+  flex: 1 1 50vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; 
 }
 
 .timer-titlebar {
@@ -79,7 +94,7 @@ h2 {
   align-items: center;
   justify-content: center;
   font-size: 9vh;
-  margin-bottom: 2vh;
+  /* margin-bottom: 2vh; */
 }
 
 
@@ -87,13 +102,12 @@ h2 {
   text-align: right;
   width: 10vh;
 }
-#countdown-minutes::after {
+#countdown-seconds::before {
   content: ":";
-} 
-
+}
 #countdown-seconds {
   text-align: center;
-  width: 10vh;
+  /* width: 12vh; */
 }
 
 #countdown-tenths {
@@ -116,32 +130,33 @@ h2 {
 .dial-svg {
   width: 100%;
   height: 100%;
+  padding: 3.5vh;
   max-width: 50vh;
   max-height: 40vh;
 }
 
 .dial-svg path {
-  fill: var(--color-disabled);
+  fill: var(--color-accent);
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-miterlimit: 10;
 }
 
 .start-button {
+  position: absolute;
   color: var(--color-text);
   background-color: var(--color-control);
   font-family: var(--font-family);
   font-size: 3vh;
-  width: 60%;
-  margin: 2vh;
-  margin-bottom: 15vh;
+  width: 25cqw;
+  height: 25cqw;
   padding: 1vh 2vh;
   border: .5vh solid var(--color-border);
-  border-radius: 2vh;
+  border-radius: 12.5cqw;
 }
 
-.start-button:disabled {
-  background: repeating-linear-gradient(60deg, var(--color-background), var(--color-background) 8px, var(--color-disabled) 8px, var(--color-disabled) 12.5px);
+.start-button:disabled {  
+  display: none;
 }
 
 .start-button:hover:not(:disabled) {

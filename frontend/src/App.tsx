@@ -55,11 +55,8 @@ const App: React.FC = () => {
   }
   return (
     <WebSocketContext.Provider value={webSocket}>
-      <div className="app-container">
-        <div className="timer-titlebar">
-          <h1>{timer?.name}</h1>
-        </div>
         <Timer
+          name={timer.name}
           duration={timer.duration}
           startTime={timer.startTime}
           timerId={timer.id}
@@ -67,7 +64,6 @@ const App: React.FC = () => {
           currentUser={thisUser}
         />
         <Participants thisUser={thisUser ?? null} users={timer?.users ?? []} owner={timer.owner}/>
-      </div>
     </WebSocketContext.Provider>
   );
 };

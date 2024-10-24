@@ -5,6 +5,7 @@ import WebSocketContext from "./WebSocketContext";
 import { UserInterface } from "../../src/Classes/userInterface";
 
 interface TimerProps {
+  name: string;
   duration: number;
   startTime: number;
   timerId: string;
@@ -12,7 +13,14 @@ interface TimerProps {
   currentUser: UserInterface | null;
 }
 
-const Timer: React.FC<TimerProps> = ({ duration, startTime, timerId, owner, currentUser }) => {
+const Timer: React.FC<TimerProps> = ({
+  name,
+  duration,
+  startTime,
+  timerId,
+  owner,
+  currentUser,
+}) => {
   const [remainingTime, setRemainingTime] = useState(duration);
   const [isRunning, setIsRunning] = useState(false);
   const [editableDuration, setEditableDuration] = useState(duration);
@@ -36,7 +44,7 @@ const Timer: React.FC<TimerProps> = ({ duration, startTime, timerId, owner, curr
 
     if (isRunning && remainingTime > 0) {
       intervalId = window.setInterval(() => {
-        setRemainingTime(prevTime => {
+        setRemainingTime((prevTime) => {
           const newTime = Math.max(0, prevTime - 100);
           if (newTime === 0) {
             setIsRunning(false);
@@ -51,13 +59,15 @@ const Timer: React.FC<TimerProps> = ({ duration, startTime, timerId, owner, curr
 
   const handleStart = () => {
     if (webSocket) {
-      webSocket.send(JSON.stringify({
-        type: 'START_TIMER',
-        payload: {
-          timerId: timerId,
-          startTime: Date.now()
-        }
-      }));
+      webSocket.send(
+        JSON.stringify({
+          type: "START_TIMER",
+          payload: {
+            timerId: timerId,
+            startTime: Date.now(),
+          },
+        }),
+      );
     }
     setRemainingTime(editableDuration); // Set remaining time to editable duration when starting
   };
@@ -65,13 +75,15 @@ const Timer: React.FC<TimerProps> = ({ duration, startTime, timerId, owner, curr
   const handleDurationChange = (newDuration: number) => {
     setEditableDuration(newDuration);
     if (webSocket) {
-      webSocket.send(JSON.stringify({
-        type: 'UPDATE_TIMER_DURATION',
-        payload: {
-          timerId: timerId,
-          duration: newDuration
-        }
-      }));
+      webSocket.send(
+        JSON.stringify({
+          type: "UPDATE_TIMER_DURATION",
+          payload: {
+            timerId: timerId,
+            duration: newDuration,
+          },
+        }),
+      );
     }
   };
 
@@ -109,22 +121,40 @@ const Timer: React.FC<TimerProps> = ({ duration, startTime, timerId, owner, curr
   const paddedTenths = `0${tenths}`;
 
   return (
-    <div className="remaining-time-display">
-      <div className="countdown">
-        <div className="time-control">
-          {isOwner && !isRunning && <button onClick={incrementMinutes}>▲</button>}
-          <div id="countdown-minutes">{minutes}</div>
-          {isOwner && !isRunning && <button onClick={decrementMinutes}>▼</button>}
+    <div className="app-container">
+      <div id="app-firsthalf">
+        <div className="timer-titlebar">
+          <h1>{name}</h1>
         </div>
-        <div className="time-control">
-          {isOwner && !isRunning && <button onClick={incrementSeconds}>▲</button>}
-          <div id="countdown-seconds">{paddedSeconds}</div>
-          {isOwner && !isRunning && <button onClick={decrementSeconds}>▼</button>}
+        <div className="remaining-time-display">
+          <div className="countdown">
+            <div className="time-control">
+              {isOwner && !isRunning && (
+                <button onClick={incrementMinutes}>▲</button>
+              )}
+              <div id="countdown-minutes">{minutes}</div>
+              {isOwner && !isRunning && (
+                <button onClick={decrementMinutes}>▼</button>
+              )}
+            </div>
+            <div className="time-control">
+              {isOwner && !isRunning && (
+                <button onClick={incrementSeconds}>▲</button>
+              )}
+              <div id="countdown-seconds">{paddedSeconds}</div>
+              {isOwner && !isRunning && (
+                <button onClick={decrementSeconds}>▼</button>
+              )}
+            </div>
+            <div id="countdown-tenths">{paddedTenths}</div>
+          </div>
         </div>
-        <div id="countdown-tenths">{paddedTenths}</div>
       </div>
-      <Dial value={remainingTime / editableDuration} />
-      {isOwner && <StartButton onStart={handleStart} disabled={isRunning} />}
+
+      <div id="app-secondhalf">
+        <Dial value={remainingTime} />
+        {isOwner && <StartButton onStart={handleStart} disabled={isRunning} />}
+      </div>
     </div>
   );
 };
