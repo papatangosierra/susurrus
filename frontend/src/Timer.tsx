@@ -66,17 +66,17 @@ const Timer: React.FC<TimerProps> = ({ duration, startTime, timerId, owner, curr
   const tenths = Math.floor((remainingTime % 1000) / 100);
 
   const paddedSeconds = seconds < 10 ? `0${seconds}` : seconds;
-  const paddedTenths = tenths < 10 ? `0${tenths}` : tenths;
+  const paddedTenths = `0${tenths}`;
 
   return (
     <div className="remaining-time-display">
       <h2>Time Remaining</h2>
-      <Dial value={remainingTime / duration} />
       <div className="countdown">
-        <span id="countdown-minutes">{minutes}</span>:
-        <span id="countdown-seconds">{paddedSeconds}</span>:
-        <span id="countdown-tenths">{paddedTenths}</span>
+        <div id="countdown-minutes">{minutes}</div>
+        <div id="countdown-seconds">{paddedSeconds}</div>
+        <div id="countdown-tenths">{paddedTenths}</div>
       </div>
+      <Dial value={remainingTime / duration} />
       {isOwner && <StartButton onStart={handleStart} disabled={isRunning} />}
     </div>
   );
