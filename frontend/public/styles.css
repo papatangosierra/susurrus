@@ -46,36 +46,64 @@ h2 {
 
 /* center the app container both horizontally and vertically */
 .app-container {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: center;  
+  display: grid;
+  width: 100vw;
+  height: 100vh; 
   overflow: hidden;
 }
 
-#app-firsthalf {
-  flex: 1 1 50vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center; 
+#app-firsthalf, #app-secondhalf {
+  -webkit-user-select: none;
+  user-select: none;
+  aspect-ratio: 1 / 1;
+  overflow: visible;
 }
 
 #app-secondhalf {
-  flex: 1 1 50vh;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center; 
 }
 
+@media (orientation: portrait) {
+  .app-container {
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .dial-svg {
+    width: 45vh;
+    height: 45vh;
+    overflow: visible;
+  } 
+
+  .start-button-container {
+    order: 1;
+    position: absolute;
+    width: 45vh;
+    height: 45vh;
+    display: flex;
+  }
+
+}
+
+@media (orientation: landscape) {
+  .app-container {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* #app-firsthalf, #app-secondhalf {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; 
+  } */
+}
+
+
 .timer-titlebar {
-  padding-top: 2vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  display: block;
 }
 
 .remaining-time-display {
@@ -83,7 +111,6 @@ h2 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex: 1;
   width: 100%;
   box-sizing: border-box;
 }
@@ -117,24 +144,25 @@ h2 {
   width: 10vh;
 } 
 
-.dial {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1 1 30vh;
-  width: 100%;
-  padding: 1vh;
-  box-sizing: border-box;
+.start-button {
+  color: var(--color-text);
+  background-color: var(--color-control);
+  font-family: var(--font-family);
+  font-size: 2rem;
+  width: 8rem;
+  height: 8rem;
+  border: .5rex solid var(--color-border);
+  border-radius: 8rem;
+  margin: auto;
 }
 
 .dial-svg {
-  width: 70cqw;
-  height: 70cqw;
-  padding: 6.5vh;
+  order: 2;
+  overflow: visible;
 }
 
 .dial-svg text {
-  font-size: 1cqw;
+  font-size: .5rem;
   fill: var(--color-text);
 }
 
@@ -143,18 +171,6 @@ h2 {
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-miterlimit: 10;
-}
-
-.start-button {
-  position: absolute;
-  color: var(--color-text);
-  background-color: var(--color-control);
-  font-family: var(--font-family);
-  font-size: 3vh;
-  width: 25cqw;
-  height: 25cqw;
-  border: .5vh solid var(--color-border);
-  border-radius: 12.5cqw;
 }
 
 .start-button:disabled {  
@@ -203,6 +219,8 @@ h2 {
   border: 0.5vh solid var(--color-border);
   border-radius: 50%;
   background-color: var(--color-background);
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .user-container.this-user {

@@ -76,7 +76,6 @@ const Dial: React.FC<DialProps> = ({ value }) => {
               y={y}
               textAnchor="middle"
               dominantBaseline="middle"
-              fontSize="1vh"
               fill="var(--color-text)"
             >
               {i * 5}

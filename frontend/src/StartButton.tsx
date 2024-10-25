@@ -16,9 +16,11 @@ const StartButton: React.FC<StartButtonProps> = ({
   };
 
   return (
-    <button className="start-button" onClick={handleClick} disabled={disabled}>
+    <div className="start-button-container">
+      <button className="start-button" onClick={handleClick} disabled={disabled}>
       Start
     </button>
+    </div>
   );
 };
 
