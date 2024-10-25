@@ -74,6 +74,10 @@ h1, h2 {
     justify-items: center;
   }
 
+  .dial {
+    padding-bottom: 20vh;
+  }
+
   .dial-svg {
     width: 80vw;
     height: 80vw;
