@@ -47,6 +47,8 @@ const Dial: React.FC<DialProps> = ({ value }) => {
         <circle id="dial-background" cx="50" cy="50" r="45" fill="var(--color-control)" />
         <path id="dial-slice" />
         {[...Array(60)].map((_, i) => {
+          const majorRadius = 50;
+          const minorRadius = 45;
           const angle = (i / 60) * 2 * Math.PI;
           const x1 = 50 + 45 * Math.sin(angle);
           const y1 = 50 - 45 * Math.cos(angle);
