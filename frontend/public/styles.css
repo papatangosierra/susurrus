@@ -109,6 +109,13 @@ h1, h2 {
     border-radius: 8vh;
   }
 
+  .reset-button {
+    font-size: 4vh;
+    width: 15vh;
+    height: 15vh;
+    border-radius: 8vh;
+  }
+
 }
 
 @media (orientation: landscape) {
@@ -251,6 +258,7 @@ h1, h2 {
 }
 
 .start-button {
+  z-index: 1;
   padding: 0;
   color: var(--color-text);
   background-color: var(--color-control);
@@ -258,10 +266,11 @@ h1, h2 {
   border: .5rex solid var(--color-border);
   margin: auto;
   box-shadow: .8vh .8vh var(--color-button-shadow);
-  transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out, color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out, color 0.15s ease-out, background-color 0.15s ease-out;
 }
 
 .start-button:disabled {  
+  z-index: 0;
   color: transparent;
   background-color: transparent;
   border: none;
@@ -280,9 +289,36 @@ h1, h2 {
   color: var(--color-background);
 }
 
-
 .reset-button {
+  z-index: 1;
+  padding: 0;
+  color: var(--color-background);
   background-color: var(--color-accent);
+  font-family: var(--font-family);
+  border: .5rex solid var(--color-text);
+  margin: auto;
+  box-shadow: .8vh .8vh var(--color-button-shadow);
+  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out, color 0.15s ease-out, background-color 0.15s ease-out;
+}
+
+.reset-button:disabled {
+  z-index: 0;
+  color: transparent;
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.reset-button:hover:not(:disabled) {
+  border: 0.5vh solid var(--color-accent);
+}
+
+.reset-button:active:not(:disabled) {
+  border: 0.5vh solid var(--color-control);
+  background-color: var(--color-control);
+  transform: translate(.6vh, .6vh);
+  box-shadow: .2vh .2vh var(--color-button-shadow);
+  color: var(--color-accent);
 }
 
 .participants-container {

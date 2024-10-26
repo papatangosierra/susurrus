@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import StartButton from "./StartButton";
+import ResetButton from "./ResetButton";
 import Dial from "./Dial";
 import TimerTitlebar from "./TimerTitlebar";
 import WebSocketContext from "./WebSocketContext";
@@ -71,6 +72,20 @@ const Timer: React.FC<TimerProps> = ({
       );
     }
     setRemainingTime(editableDuration); // Set remaining time to editable duration when starting
+  };
+
+  const handleReset = () => {
+    if (webSocket) {
+      webSocket.send(
+        JSON.stringify({
+          type: "RESET_TIMER",
+          payload: {
+            timerId: timerId,
+            duration: editableDuration,
+          },
+        }),
+      );
+    }
   };
 
   const handleDurationChange = (newDuration: number) => {
@@ -168,6 +183,7 @@ const Timer: React.FC<TimerProps> = ({
       <div id="app-secondhalf">
         <Dial value={remainingTime} isOwner={isOwner} />
         {isOwner && <StartButton onStart={handleStart} disabled={isRunning} />}
+        {isOwner && <ResetButton onReset={handleReset} disabled={!isRunning} />}
       </div>
     </div>
   );
