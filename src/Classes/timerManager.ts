@@ -61,6 +61,16 @@ export class TimerManager extends EventEmitter implements TimerManagerInterface 
     }
   }
 
+  renameTimer(id: string, name: string, ws: ElysiaWS<any, any, any>): void {
+    const timer = this.getTimer(id);
+    if (timer) {
+      timer.setName(name);
+      this.emit("timerRenamed", {timer, ws});
+    } else {
+      throw new Error("Timer not found");
+    }
+  }
+
   isFinished(id: string): boolean {
     const timer = this.getTimer(id);
     if (timer) {

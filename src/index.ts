@@ -89,6 +89,18 @@ const websocket = new Elysia({
         const duration = message.payload.duration;
         timerManager.resetTimer(timerId, duration, ws);
       }
+
+      if (message.type === 'RENAME_TIMER') {
+        const timerId = message.payload.timerId;
+        const name = message.payload.name;
+        timerManager.renameTimer(timerId, name, ws);
+      }
+
+      if (message.type === 'RESET_TIMER') {
+        const timerId = message.payload.timerId;
+        const duration = message.payload.duration;
+        timerManager.resetTimer(timerId, duration, ws);
+      }
     },
     /* * * * * * * * * * * * * * * */
     /* WEBSOCKET CONNECTION CLOSED */

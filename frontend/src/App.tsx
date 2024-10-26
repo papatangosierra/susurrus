@@ -6,6 +6,29 @@ import { UserInterface } from "../../src/Classes/userInterface";
 import { TimerInterface } from "../../src/Classes/timerInterface";
 import WebSocketContext from "./WebSocketContext";
 
+// Utility functions
+function getCSSVariable(variable: string) {
+  return getComputedStyle(document.documentElement).getPropertyValue(variable);
+}
+
+function setCSSVariable(variable: string, value: string) {
+  document.documentElement.style.setProperty(variable, value);
+}
+
+// set up listener for "j" key to decrement the value of the --hue variable
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'j') {
+    setCSSVariable('--hue', (parseInt(getCSSVariable('--hue')) - 1).toString());
+  }
+});
+
+// set up listener for "k" key to increment the value of the --hue variable
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'k') {
+    setCSSVariable('--hue', (parseInt(getCSSVariable('--hue')) + 1).toString());
+  }
+});
+
 // App component
 const App: React.FC = () => {
   const [thisUser, setThisUser] = useState<UserInterface | null>(null);

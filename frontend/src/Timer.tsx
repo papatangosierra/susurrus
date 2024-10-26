@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import StartButton from "./StartButton";
 import Dial from "./Dial";
+import TimerTitlebar from "./TimerTitlebar";
 import WebSocketContext from "./WebSocketContext";
 import { UserInterface } from "../../src/Classes/userInterface";
 
@@ -10,7 +11,7 @@ interface TimerProps {
   startTime: number;
   timerId: string;
   owner: UserInterface;
-  currentUser: UserInterface | null;
+  currentUser: UserInterface;
 }
 
 const Timer: React.FC<TimerProps> = ({
@@ -29,7 +30,7 @@ const Timer: React.FC<TimerProps> = ({
   useEffect(() => {
     console.log("Timer props updated: ", { duration, startTime });
     setEditableDuration(duration);
-    if (startTime > 0) {
+    if (startTime + duration > Date.now()) {
       setIsRunning(true);
       const elapsedTime = Date.now() - startTime;
       setRemainingTime(Math.max(0, duration - elapsedTime));
@@ -113,6 +114,7 @@ const Timer: React.FC<TimerProps> = ({
 
   const isOwner = currentUser && owner && currentUser.id === owner.id;
 
+
   const minutes = Math.floor(remainingTime / 60000);
   const seconds = Math.floor((remainingTime % 60000) / 1000);
   const tenths = Math.floor((remainingTime % 1000) / 100);
@@ -120,12 +122,24 @@ const Timer: React.FC<TimerProps> = ({
   const paddedSeconds = seconds < 10 ? `0${seconds}` : seconds;
   const paddedTenths = `0${tenths}`;
 
+  const handleRename = (newName: string) => {
+    if (webSocket) {
+      webSocket.send(
+        JSON.stringify({
+          type: "RENAME_TIMER",
+          payload: {
+            timerId: timerId,
+            name: newName,
+          },
+        })
+      );
+    }
+  };
+
   return (
     <div className="app-container">
       <div id="app-firsthalf">
-        <div className="timer-titlebar">
-          <h1>{name}</h1>
-        </div>
+        <TimerTitlebar name={name} isOwner={isOwner} onRename={handleRename} />
         <div className="remaining-time-display">
           <div className="countdown">
             <div className="time-control">
@@ -152,7 +166,7 @@ const Timer: React.FC<TimerProps> = ({
       </div>
 
       <div id="app-secondhalf">
-        <Dial value={remainingTime} />
+        <Dial value={remainingTime} isOwner={isOwner} />
         {isOwner && <StartButton onStart={handleStart} disabled={isRunning} />}
       </div>
     </div>

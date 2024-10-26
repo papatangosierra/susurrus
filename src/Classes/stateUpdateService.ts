@@ -51,5 +51,11 @@ export class StateUpdateService {
       this.wsManager.sendToUser({user: timer.owner, timer: timer }, ws);
       this.wsManager.broadcastToTimer(timer.id, { timer }, ws);
     });
+
+    this.timerManager.on('timerRenamed', ({ timer, ws }) => {
+      console.log("caught timerRenamed event for timer owned by: ", timer.owner.name);
+      this.wsManager.sendToUser({user: timer.owner, timer: timer }, ws);
+      this.wsManager.broadcastToTimer(timer.id, { timer }, ws);
+    });
   }
 }

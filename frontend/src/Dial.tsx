@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 
 interface DialProps {
   value: number;
+  isOwner: boolean;
 }
 
 const Dial: React.FC<DialProps> = ({ value }) => {
@@ -44,7 +45,9 @@ const Dial: React.FC<DialProps> = ({ value }) => {
   return (
     <div className="dial">
       <svg className="dial-svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+
         <circle id="dial-background" cx="50" cy="50" r="45" fill="var(--color-control)" />
+
         <path id="dial-slice" />
         {[...Array(60)].map((_, i) => {
           const majorRadius = 50;

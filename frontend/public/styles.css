@@ -10,6 +10,7 @@
   --color-this-user: hsl(var(--hue), 100%, 50%);
   --color-owner-shadow: hsl(var(--hue), 100%, 50%);
   --color-control: hsl(var(--hue), 100%, 20%);
+  --color-button-shadow: hsl(var(--hue), 100%, 12%);
 }
 
 html, body {
@@ -31,7 +32,7 @@ body {
 }
 
 h1, h2 {
-  margin: 0;
+  text-align: center;
   font-weight: 400;
 }
 
@@ -58,6 +59,13 @@ h1, h2 {
   h1 {
     font-size: 8vh;
     margin: 2vh;
+  }
+
+  .timer-titlebar input {
+    font-size: 8vh; /* Match the h1 font size */
+    max-width: 40vh;
+    margin: none;
+    padding: none;
   }
 
   .countdown {
@@ -94,12 +102,26 @@ h1, h2 {
     display: flex;
   }
 
+  .start-button {
+    font-size: 4vh;
+    width: 15vh;
+    height: 15vh;
+    border-radius: 8vh;
+  }
+
 }
 
 @media (orientation: landscape) {
   h1 {
     font-size: 8vw;
     margin: 2vw;
+  }
+
+  .timer-titlebar input {
+    font-size: 8vw; /* Match the h1 font size */
+    max-width: 40vw;
+    margin: none;
+    padding: none;
   }
 
   .countdown {
@@ -148,11 +170,33 @@ h1, h2 {
     max-width: 40vw;
     display: flex;
   }
-}
 
+  .start-button {
+    font-size: 4vw;    
+    width: 15vw;
+    height: 15vw;
+    border-radius: 8vw;
+  }
+}
 
 .timer-titlebar {
   display: block;
+}
+
+.timer-titlebar h1 {
+  cursor: pointer;
+}
+
+.timer-titlebar input {
+  text-align: center;
+  font-family: var(--font-family);
+  color: var(--color-background);
+  background-color: var(--color-text);
+  border: none;
+  outline: none;
+  text-align: center;
+  padding: none;
+  margin: 2vw; /* Match the h1 margin */
 }
 
 .remaining-time-display {
@@ -170,7 +214,6 @@ h1, h2 {
   align-items: center;
   justify-content: center;
 }
-
 
 #countdown-minutes {
   text-align: right;
@@ -190,18 +233,6 @@ h1, h2 {
   width: 10vh;
 } 
 
-.start-button {
-  color: var(--color-text);
-  background-color: var(--color-control);
-  font-family: var(--font-family);
-  font-size: 2rem;
-  width: 8rem;
-  height: 8rem;
-  border: .5rex solid var(--color-border);
-  border-radius: 8rem;
-  margin: auto;
-}
-
 .dial-svg {
   order: 2;
   overflow: visible;
@@ -219,8 +250,22 @@ h1, h2 {
   stroke-miterlimit: 10;
 }
 
+.start-button {
+  padding: 0;
+  color: var(--color-text);
+  background-color: var(--color-control);
+  font-family: var(--font-family);
+  border: .5rex solid var(--color-border);
+  margin: auto;
+  box-shadow: .8vh .8vh var(--color-button-shadow);
+  transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out, color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
 .start-button:disabled {  
-  display: none;
+  color: transparent;
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 .start-button:hover:not(:disabled) {
@@ -229,8 +274,15 @@ h1, h2 {
 
 .start-button:active:not(:disabled) {
   border: 0.5vh solid var(--color-accent);
-  background-color: var(--color-text);
+  background-color: var(--color-accent);
+  transform: translate(.6vh, .6vh);
+  box-shadow: .2vh .2vh var(--color-button-shadow);
   color: var(--color-background);
+}
+
+
+.reset-button {
+  background-color: var(--color-accent);
 }
 
 .participants-container {
