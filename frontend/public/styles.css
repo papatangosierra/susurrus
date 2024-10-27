@@ -184,7 +184,7 @@ h1, h2 {
     height: 15vw;
     border-radius: 8vw;
   }
-  
+
   .reset-button {
     font-size: 4vw;    
     width: 15vw;
@@ -350,9 +350,10 @@ h1, h2 {
 /* container for an individual user.*/
 .user-container {
   display: flex;
+  text-align: center;
   align-items: center;
   justify-content: center;
-  font-size: 2.75vh;
+  font-size: 2.25vh;
   min-width: 6vh;
   max-width: 10vh;
   padding: 1rex;
