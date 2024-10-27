@@ -350,7 +350,7 @@ h1, h2 {
 /* container for an individual user.*/
 .user-container {
   display: flex;
-  text-align: center;
+  /* text-align: center;
   align-items: center;
   justify-content: center;
   font-size: 2.25vh;
@@ -363,16 +363,21 @@ h1, h2 {
   border-radius: 50%;
   background-color: var(--color-background);
   -webkit-user-select: none;
-  user-select: none;
+  user-select: none; */
 }
 
-.user-container.this-user {
+.user-svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* .user-container.this-user {
   border-color: var(--color-this-user);
 }
 
 .user-container.owner {
   box-shadow: inset 0 0 1.5rem var(--color-owner-shadow);
-}
+} */
 
 .time-control {
   display: flex;

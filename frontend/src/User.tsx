@@ -34,8 +34,20 @@ const User: React.FC<UserProps> = ({ id, name, isThisUser, isOwner }) => {
     wanderIntervalRef.current = setInterval(() => {
       if (!isDragging) {
         setPosition((prevPos) => ({
-          x: Math.max(0, Math.min(window.innerWidth * 0.9, prevPos.x + (Math.random() - 0.5) * 10)),
-          y: Math.max(0, Math.min(window.innerHeight * 0.9, prevPos.y + (Math.random() - 0.5) * 10)),
+          x: Math.max(
+            0,
+            Math.min(
+              window.innerWidth * 0.9,
+              prevPos.x + (Math.random() - 0.5) * 10,
+            ),
+          ),
+          y: Math.max(
+            0,
+            Math.min(
+              window.innerHeight * 0.9,
+              prevPos.y + (Math.random() - 0.5) * 10,
+            ),
+          ),
         }));
       }
     }, 200);
@@ -81,7 +93,37 @@ const User: React.FC<UserProps> = ({ id, name, isThisUser, isOwner }) => {
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
     >
-      {name}
+      <svg className="user-svg"
+        width="200"
+        height="200"
+        viewBox="0 0 100 100"
+        preserveAspectRatio="xMidYMid meet"
+      >
+        <circle
+          id="thePath"
+          cx="50"
+          cy="50"
+          r="35"
+          fill="transparent"
+          stroke="var(--color-border)"
+          stroke-width="5px"
+          transform="rotate(180, 50, 50)"
+        />
+        <circle
+          id="stroke"
+          cx="50"
+          cy="50"
+          r="41"
+          fill="transparent"
+          stroke="var(--color-background)"
+          stroke-width="1rem"
+        />
+        <text fill="var(--color-text)">
+          <textPath href="#thePath" startOffset="0%">
+            {name}
+          </textPath>
+        </text>
+      </svg>
     </div>
   );
 };
