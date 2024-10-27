@@ -13,7 +13,8 @@ export class User implements UserInterface {
   private nameGenerator: NameGenerator;
   constructor(db: Database, id?: string) {
     this.userDb = db;
-    
+    this.nameGenerator = new NameGenerator();
+
     this.name = this.createName();
 
     // if we got an id, that mean the user already exists in the database, so load instead of create
@@ -44,21 +45,25 @@ export class User implements UserInterface {
   }
 
   // Generate a new phonetically plausible name
+  // private createName(): string {
+  //   const consonants = "bcdfghjklmnprstvwxz";
+  //   const vowels = "aeiouy";
+  //   let name = "";
+  //   let length = Math.floor(Math.random() * 5) + 3;
+  //   let useConsonant = true;
+  //   for (let i = 0; i < length; i++) {
+  //     if (useConsonant) {
+  //       name += consonants[Math.floor(Math.random() * consonants.length)];
+  //     } else {
+  //       name += vowels[Math.floor(Math.random() * vowels.length)];
+  //     }
+  //     useConsonant = !useConsonant;
+  //   }
+  //   return name[0].toUpperCase() + name.slice(1);
+  // }
+
   private createName(): string {
-    const consonants = "bcdfghjklmnprstvwxz";
-    const vowels = "aeiouy";
-    let name = "";
-    let length = Math.floor(Math.random() * 5) + 3;
-    let useConsonant = true;
-    for (let i = 0; i < length; i++) {
-      if (useConsonant) {
-        name += consonants[Math.floor(Math.random() * consonants.length)];
-      } else {
-        name += vowels[Math.floor(Math.random() * vowels.length)];
-      }
-      useConsonant = !useConsonant;
-    }
-    return name[0].toUpperCase() + name.slice(1);
+    return this.nameGenerator.generateName();
   }
 
   private create(): void {
