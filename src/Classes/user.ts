@@ -1,4 +1,5 @@
 import { UserInterface } from "./userInterface";
+import { NameGenerator } from "./nameGenerator";
 import { Database } from "bun:sqlite";
 
 export class User implements UserInterface {
@@ -9,9 +10,10 @@ export class User implements UserInterface {
   deleted: boolean;
 
   private userDb: Database;
-
+  private nameGenerator: NameGenerator;
   constructor(db: Database, id?: string) {
     this.userDb = db;
+    
     this.name = this.createName();
 
     // if we got an id, that mean the user already exists in the database, so load instead of create
