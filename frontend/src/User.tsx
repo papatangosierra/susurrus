@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 
 interface UserProps {
   id: string;
@@ -6,13 +6,20 @@ interface UserProps {
   name: string;
   isThisUser: boolean;
   isOwner: boolean;
+  rotation: number;
 }
 
-const User: React.FC<UserProps> = ({ id, value, name, isThisUser, isOwner }) => {
+const User: React.FC<UserProps> = ({ id, value, name, isThisUser, isOwner, rotation }) => {
+  const style = {
+    transform: `rotate(${rotation}deg)`,
+  };
+
   return (
     <li 
       className={`user-container ${isThisUser ? "this-user" : ""} ${isOwner ? "owner" : ""}`}
-    >{name}
+      style={style}
+    >
+      <span className="user-name-line"><span className="user-name">{name}</span></span>
     </li>
   );
 };

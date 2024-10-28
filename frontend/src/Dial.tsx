@@ -24,9 +24,7 @@ const Dial: React.FC<DialProps> = ({ value, thisUser, users, owner }) => {
         <DialRemainingSlice value={value} />
         <DialDigits />
       </svg>
-      <div className="dial-userlist">
-        <DialUsers value={value} users={users} thisUser={thisUser} owner={owner} />
-      </div>
+        <DialUsers id="dial-userlist" value={value} users={users} thisUser={thisUser} owner={owner} />
     </div>
   );
 };
