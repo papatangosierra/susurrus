@@ -1,10 +1,24 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import StartButton from "./StartButton";
 import ResetButton from "./ResetButton";
 import Dial from "./Dial";
 import TimerTitlebar from "./TimerTitlebar";
 import WebSocketContext from "./WebSocketContext";
 import { UserInterface } from "../../src/Classes/userInterface";
+
+declare global {
+  interface Navigator {
+    wakeLock?: {
+      request(type: "screen"): Promise<WakeLockSentinel>;
+    };
+  }
+  
+  interface WakeLockSentinel {
+    release(): Promise<void>;
+    addEventListener(type: string, listener: EventListener): void;
+    removeEventListener(type: string, listener: EventListener): void;
+  }
+}
 
 interface TimerProps {
   name: string;
@@ -29,6 +43,7 @@ const Timer: React.FC<TimerProps> = ({
   const [isRunning, setIsRunning] = useState(false);
   const [editableDuration, setEditableDuration] = useState(duration);
   const webSocket = useContext(WebSocketContext);
+  const wakeLockRef = useRef<WakeLockSentinel | null>(null);
 
   useEffect(() => {
     console.log("Timer props updated: ", { duration, startTime });
@@ -47,21 +62,33 @@ const Timer: React.FC<TimerProps> = ({
     let intervalId: number | undefined;
 
     if (isRunning && remainingTime > 0) {
+      // Request wake lock when timer starts
+      requestWakeLock();
+      
       intervalId = window.setInterval(() => {
         setRemainingTime((prevTime) => {
           const newTime = Math.max(0, prevTime - 100);
           if (newTime === 0) {
             setIsRunning(false);
+            // Release wake lock when timer reaches zero
+            releaseWakeLock();
           }
           return newTime;
         });
       }, 100);
+    } else if (!isRunning) {
+      // Release wake lock when timer is not running
+      releaseWakeLock();
     }
 
-    return () => clearInterval(intervalId);
+    return () => {
+      clearInterval(intervalId);
+      releaseWakeLock(); // Clean up wake lock on component unmount
+    };
   }, [isRunning, remainingTime]);
 
   const handleStart = () => {
+    console.log("Starting timer");
     if (webSocket) {
       webSocket.send(
         JSON.stringify({
@@ -77,6 +104,7 @@ const Timer: React.FC<TimerProps> = ({
   };
 
   const handleReset = () => {
+    releaseWakeLock(); // Release wake lock when timer is reset
     if (webSocket) {
       webSocket.send(
         JSON.stringify({
@@ -150,6 +178,29 @@ const Timer: React.FC<TimerProps> = ({
           },
         })
       );
+    }
+  };
+
+  const requestWakeLock = async () => {
+    try {
+      if ('wakeLock' in navigator) {
+        wakeLockRef.current = await navigator.wakeLock?.request('screen');
+        console.log('Wake Lock is active');
+      }
+    } catch (err) {
+      console.log(`Wake Lock request failed: ${err}`);
+    }
+  };
+
+  const releaseWakeLock = async () => {
+    if (wakeLockRef.current) {
+      try {
+        await wakeLockRef.current.release();
+        wakeLockRef.current = null;
+        console.log('Wake Lock released');
+      } catch (err) {
+        console.log(`Wake Lock release failed: ${err}`);
+      }
     }
   };
 
