@@ -39,6 +39,7 @@ const Timer: React.FC<TimerProps> = ({
   const webSocket = useContext(WebSocketContext);
   const wakeLockRef = useRef<WakeLockSentinel | null>(null);
 
+  // Update state when props are updated
   useEffect(() => {
     console.log("Timer props updated: ", { duration, startTime });
     setEditableDuration(duration);
@@ -54,9 +55,9 @@ const Timer: React.FC<TimerProps> = ({
     }
   }, [duration, startTime]);
 
+  // Update remaining time every 100ms
   useEffect(() => {
     let intervalId: number | undefined;
-
     if (isRunning && remainingTime > 0) {
       // Request wake lock when timer starts
       requestWakeLock();
