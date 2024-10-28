@@ -47,15 +47,24 @@ h1, h2 {
 #app-firsthalf, #app-secondhalf {
   -webkit-user-select: none;
   user-select: none;
-  aspect-ratio: 1 / 1;
   overflow: visible;
 }
 
 #app-secondhalf {
   display: flex;
+  width: 100%;
+  height: 100%;
 }
 
 @media (orientation: portrait) {
+  .app-container {
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    height: 100vh;
+    overflow: hidden;
+  }
+
   h1 {
     font-size: 8vh;
     margin: 2vh;
@@ -76,15 +85,9 @@ h1, h2 {
     font-size: 5vh;
   }
 
-  .app-container {
-    grid-template-rows: 1fr 1fr;
-    grid-template-columns: 1fr;
-    justify-items: center;
-  }
-
-  .dial {
+  /* .dial {
     padding-bottom: 20vh;
-  }
+  } */
 
   .dial-svg {
     width: 80vw;
@@ -116,12 +119,29 @@ h1, h2 {
     border-radius: 8vh;
   }
 
+  #app-firsthalf, #app-secondhalf {
+    width: 100%;
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #app-firsthalf {
+    padding-top: 2vh;
+  }
+
+  #app-secondhalf {
+    height: 30%;
+  }
+
 }
 
 @media (orientation: landscape) {
   h1 {
     font-size: 8vw;
-    margin: 2vw;
+    padding: 2vw;
   }
 
   .timer-titlebar input {
@@ -359,8 +379,9 @@ h1, h2 {
 
 /* container for an individual user.*/
 .user-container {
-  display: flex;
   position: absolute;
+  transform-origin: left 1em;
+  transform: rotate(-40deg);
 }
 
 .user-svg {

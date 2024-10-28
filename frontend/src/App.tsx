@@ -87,7 +87,6 @@ const App: React.FC = () => {
           currentUser={thisUser ?? null}
           users={timer?.users ?? []}
         />
-        <Participants thisUser={thisUser ?? null} users={timer?.users ?? []} owner={timer.owner}/>
     </WebSocketContext.Provider>
   );
 };
