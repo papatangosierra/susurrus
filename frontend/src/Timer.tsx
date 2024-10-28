@@ -59,25 +59,17 @@ const Timer: React.FC<TimerProps> = ({
   useEffect(() => {
     let intervalId: number | undefined;
     if (isRunning && remainingTime > 0) {
-      // Request wake lock when timer starts
-      requestWakeLock();
-      
+      // Request wake lock when timer starts      
       intervalId = window.setInterval(() => {
         setRemainingTime((prevTime) => {
           const newTime = Math.max(0, prevTime - 100);
           if (newTime === 0) {
             setIsRunning(false);
-            // Release wake lock when timer reaches zero
-            releaseWakeLock();
           }
           return newTime;
         });
       }, 100);
-    } else if (!isRunning) {
-      // Release wake lock when timer is not running
-      releaseWakeLock();
-    }
-
+    } 
     return () => {
       clearInterval(intervalId);
       releaseWakeLock(); // Clean up wake lock on component unmount
