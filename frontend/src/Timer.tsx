@@ -72,7 +72,6 @@ const Timer: React.FC<TimerProps> = ({
     } 
     return () => {
       clearInterval(intervalId);
-      releaseWakeLock(); // Clean up wake lock on component unmount
     };
   }, [isRunning, remainingTime]);
 
