@@ -84,7 +84,8 @@ const App: React.FC = () => {
           startTime={timer.startTime}
           timerId={timer.id}
           owner={timer.owner}
-          currentUser={thisUser}
+          currentUser={thisUser ?? null}
+          users={timer?.users ?? []}
         />
         <Participants thisUser={thisUser ?? null} users={timer?.users ?? []} owner={timer.owner}/>
     </WebSocketContext.Provider>

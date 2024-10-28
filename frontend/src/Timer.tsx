@@ -13,6 +13,7 @@ interface TimerProps {
   timerId: string;
   owner: UserInterface;
   currentUser: UserInterface;
+  users: UserInterface[];
 }
 
 const Timer: React.FC<TimerProps> = ({
@@ -22,6 +23,7 @@ const Timer: React.FC<TimerProps> = ({
   timerId,
   owner,
   currentUser,
+  users,
 }) => {
   const [remainingTime, setRemainingTime] = useState(duration);
   const [isRunning, setIsRunning] = useState(false);
@@ -181,7 +183,7 @@ const Timer: React.FC<TimerProps> = ({
       </div>
 
       <div id="app-secondhalf">
-        <Dial value={remainingTime} isOwner={isOwner} />
+        <Dial value={remainingTime} isOwner={isOwner} thisUser={currentUser} users={users} owner={owner} />
         {isOwner && <StartButton onStart={handleStart} disabled={isRunning} />}
         {isOwner && <ResetButton onReset={handleReset} disabled={!isRunning} />}
       </div>

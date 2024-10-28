@@ -347,23 +347,20 @@ h1, h2 {
   justify-content: center;
 }
 
+.dial-userlist {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+}
+
 /* container for an individual user.*/
 .user-container {
   display: flex;
-  /* text-align: center;
-  align-items: center;
-  justify-content: center;
-  font-size: 2.25vh;
-  min-width: 6vh;
-  max-width: 10vh;
-  padding: 1rex;
-  height: 6vh;
-  margin: 1vh;
-  border: 0.5vh solid var(--color-border);
-  border-radius: 50%;
-  background-color: var(--color-background);
-  -webkit-user-select: none;
-  user-select: none; */
+  position: absolute;
 }
 
 .user-svg {

@@ -2,129 +2,18 @@ import React, { useState, useEffect, useRef } from "react";
 
 interface UserProps {
   id: string;
+  value: number;
   name: string;
   isThisUser: boolean;
   isOwner: boolean;
 }
 
-const User: React.FC<UserProps> = ({ id, name, isThisUser, isOwner }) => {
-  const [position, setPosition] = useState({
-    x: Math.random() * (window.innerWidth * 0.9),
-    y: Math.random() * (window.innerHeight * 0.9),
-  });
-  const [isDragging, setIsDragging] = useState(false);
-  const dragOffset = useRef({ x: 0, y: 0 });
-  const wanderIntervalRef = useRef(0);
-
-  useEffect(() => {
-    startWandering();
-
-    return () => {
-      if (wanderIntervalRef.current) {
-        clearInterval(wanderIntervalRef.current);
-      }
-    };
-  }, []);
-
-  const startWandering = () => {
-    if (wanderIntervalRef.current) {
-      clearInterval(wanderIntervalRef.current);
-    }
-
-    wanderIntervalRef.current = setInterval(() => {
-      if (!isDragging) {
-        setPosition((prevPos) => ({
-          x: Math.max(
-            0,
-            Math.min(
-              window.innerWidth * 0.9,
-              prevPos.x + (Math.random() - 0.5) * 10,
-            ),
-          ),
-          y: Math.max(
-            0,
-            Math.min(
-              window.innerHeight * 0.9,
-              prevPos.y + (Math.random() - 0.5) * 10,
-            ),
-          ),
-        }));
-      }
-    }, 200);
-  };
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    setIsDragging(true);
-    dragOffset.current = {
-      x: e.clientX - position.x,
-      y: e.clientY - position.y,
-    };
-    if (wanderIntervalRef.current) {
-      clearInterval(wanderIntervalRef.current);
-    }
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (isDragging) {
-      setPosition({
-        x: e.clientX - dragOffset.current.x,
-        y: e.clientY - dragOffset.current.y,
-      });
-    }
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-    startWandering();
-  };
-
+const User: React.FC<UserProps> = ({ id, value, name, isThisUser, isOwner }) => {
   return (
-    <div
+    <li 
       className={`user-container ${isThisUser ? "this-user" : ""} ${isOwner ? "owner" : ""}`}
-      style={{
-        position: "absolute",
-        top: position.y,
-        left: position.x,
-        transition: isDragging ? "none" : "all 0.2s linear",
-        cursor: isDragging ? "grabbing" : "grab",
-      }}
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
-    >
-      <svg className="user-svg"
-        width="200"
-        height="200"
-        viewBox="0 0 100 100"
-        preserveAspectRatio="xMidYMid meet"
-      >
-        <circle
-          id="thePath"
-          cx="50"
-          cy="50"
-          r="35"
-          fill="transparent"
-          stroke="var(--color-border)"
-          stroke-width="5px"
-          transform="rotate(180, 50, 50)"
-        />
-        <circle
-          id="stroke"
-          cx="50"
-          cy="50"
-          r="41"
-          fill="transparent"
-          stroke="var(--color-background)"
-          stroke-width="1rem"
-        />
-        <text fill="var(--color-text)">
-          <textPath href="#thePath" startOffset="0%">
-            {name}
-          </textPath>
-        </text>
-      </svg>
-    </div>
+    >{name}
+    </li>
   );
 };
 
