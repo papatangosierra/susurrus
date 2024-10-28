@@ -5,6 +5,7 @@ import DialDigits from "./DialDigits";
 import DialUsers from "./DialUsers";
 import User from "./User";
 import { UserInterface } from "../../src/Classes/userInterface";
+
 interface DialProps {
   value: number;
   isOwner: boolean;

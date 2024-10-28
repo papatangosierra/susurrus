@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext, useRef } from "react";
 import StartButton from "./StartButton";
 import ResetButton from "./ResetButton";
+import HereButton from "./HereButton";
 import Dial from "./Dial";
 import TimerTitlebar from "./TimerTitlebar";
 import WebSocketContext from "./WebSocketContext";
@@ -45,13 +46,11 @@ const Timer: React.FC<TimerProps> = ({
     setEditableDuration(duration);
     if (startTime + duration > Date.now()) {
       setIsRunning(true);
-      requestWakeLock(); // Request wake lock if updated state results in a running timer
       const elapsedTime = Date.now() - startTime;
       setRemainingTime(Math.max(0, duration - elapsedTime));
     } else {
       setIsRunning(false);
       setRemainingTime(duration);
-      releaseWakeLock();
     }
   }, [duration, startTime]);
 
@@ -92,7 +91,6 @@ const Timer: React.FC<TimerProps> = ({
   };
 
   const handleReset = () => {
-    releaseWakeLock(); // Release wake lock when timer is reset
     if (webSocket) {
       webSocket.send(
         JSON.stringify({
@@ -169,29 +167,6 @@ const Timer: React.FC<TimerProps> = ({
     }
   };
 
-  const requestWakeLock = async () => {
-    try {
-      if ('wakeLock' in navigator) {
-        wakeLockRef.current = await navigator.wakeLock?.request('screen');
-        console.log('Wake Lock is active');
-      }
-    } catch (err) {
-      console.log(`Wake Lock request failed: ${err}`);
-    }
-  };
-
-  const releaseWakeLock = async () => {
-    if (wakeLockRef.current) {
-      try {
-        await wakeLockRef.current.release();
-        wakeLockRef.current = null;
-        console.log('Wake Lock released');
-      } catch (err) {
-        console.log(`Wake Lock release failed: ${err}`);
-      }
-    }
-  };
-
   return (
     <div className="app-container">
       <div id="app-firsthalf">
@@ -225,6 +200,7 @@ const Timer: React.FC<TimerProps> = ({
         <Dial value={remainingTime} isOwner={isOwner} thisUser={currentUser} users={users} owner={owner} />
         {isOwner && <StartButton onStart={handleStart} disabled={isRunning} />}
         {isOwner && <ResetButton onReset={handleReset} disabled={!isRunning} />}
+        {!isOwner && <HereButton/>}
       </div>
     </div>
   );

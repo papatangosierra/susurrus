@@ -115,6 +115,13 @@ h1, h2 {
     border-radius: 8vh;
   }
 
+  .here-button {
+    font-size: 4vh;
+    width: 15vh;
+    height: 15vh;
+    border-radius: 8vh;
+  }
+
   .user-container .user-name-line {
     font-size: 2vh;
   }
@@ -211,6 +218,13 @@ h1, h2 {
   }
 
   .reset-button {
+    font-size: 4vw;    
+    width: 15vw;
+    height: 15vw;
+    border-radius: 8vw;
+  }
+
+  .here-button {
     font-size: 4vw;    
     width: 15vw;
     height: 15vw;
@@ -361,6 +375,40 @@ h1, h2 {
   box-shadow: .2vh .2vh var(--color-button-shadow);
   color: var(--color-accent);
 }
+
+
+.here-button {
+  z-index: 1;
+  padding: 0;
+  color: var(--color-background);
+  background-color: var(--color-accent);
+  font-family: var(--font-family);
+  border: .5rex solid var(--color-text);
+  margin: auto;
+  box-shadow: .8vh .8vh var(--color-button-shadow);
+  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out, color 0.15s ease-out, background-color 0.15s ease-out;
+}
+
+.here-button:disabled {
+  z-index: 0;
+  color: transparent;
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.here-button:hover:not(:disabled) {
+  border: 0.5vh solid var(--color-accent);
+}
+
+.here-button:active:not(:disabled) {
+  border: 0.5vh solid var(--color-control);
+  background-color: var(--color-control);
+  transform: translate(.6vh, .6vh);
+  box-shadow: .2vh .2vh var(--color-button-shadow);
+  color: var(--color-accent);
+}
+
 
 #dial-userlist {
   position: absolute;

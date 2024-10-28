@@ -1,6 +1,6 @@
 import React from "react";
 import User from "./User";
-import { UserInterface } from "./Classes/userInterface";
+import { UserInterface } from "../../src/Classes/userInterface";
 
 interface DialUsersProps {
   value: number;
