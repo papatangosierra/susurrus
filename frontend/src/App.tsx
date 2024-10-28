@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import Timer from "./Timer";
-import Participants from "./Participants";
 import { UserInterface } from "../../src/Classes/userInterface";
 import { TimerInterface } from "../../src/Classes/timerInterface";
 import WebSocketContext from "./WebSocketContext";
