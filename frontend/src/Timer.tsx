@@ -7,12 +7,6 @@ import WebSocketContext from "./WebSocketContext";
 import { UserInterface } from "../../src/Classes/userInterface";
 
 declare global {
-  interface Navigator {
-    wakeLock?: {
-      request(type: "screen"): Promise<WakeLockSentinel>;
-    };
-  }
-  
   interface WakeLockSentinel {
     release(): Promise<void>;
     addEventListener(type: string, listener: EventListener): void;
