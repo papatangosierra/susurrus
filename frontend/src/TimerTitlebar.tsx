@@ -6,7 +6,11 @@ interface TimerTitlebarProps {
   onRename: (newName: string) => void;
 }
 
-export default function TimerTitlebar({ name, isOwner, onRename }: TimerTitlebarProps) {
+const TimerTitlebar: React.FC<TimerTitlebarProps> = ({
+  name,
+  isOwner,
+  onRename,
+}) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState(name);
 
@@ -42,4 +46,6 @@ export default function TimerTitlebar({ name, isOwner, onRename }: TimerTitlebar
       <h1 onClick={() => isOwner && setIsEditing(true)}>{name}</h1>
     </div>
   );
-}
+};
+
+export default TimerTitlebar;
