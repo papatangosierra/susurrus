@@ -44,11 +44,13 @@ const Timer: React.FC<TimerProps> = ({
     setEditableDuration(duration);
     if (startTime + duration > Date.now()) {
       setIsRunning(true);
+      requestWakeLock(); // Request wake lock if updated state results in a running timer
       const elapsedTime = Date.now() - startTime;
       setRemainingTime(Math.max(0, duration - elapsedTime));
     } else {
       setIsRunning(false);
       setRemainingTime(duration);
+      releaseWakeLock();
     }
   }, [duration, startTime]);
 
