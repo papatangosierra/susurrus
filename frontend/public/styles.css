@@ -122,6 +122,10 @@ h1, h2 {
     border-radius: 8vh;
   }
 
+  .time-control button {
+    width: 10vh;
+  }
+
   .user-container .user-name-line {
     font-size: 2vh;
   }
@@ -231,6 +235,10 @@ h1, h2 {
     border-radius: 8vw;
   }
 
+  .time-control button {
+    width: 10vw;
+  }
+
   .user-container .user-name-line {
     font-size: 2vw;
     padding-left: 8vw;
@@ -278,9 +286,6 @@ h1, h2 {
   /* width: 10vw; */
 }
 
-#countdown-seconds::before {
-  content: ":";
-}
 #countdown-seconds {
   text-align: center;
 }
@@ -469,8 +474,9 @@ h1, h2 {
 }
 
 .time-control button {
-  background: none;
+  background: var(--color-accent);
   border: none;
+  border-radius: 1vh;
   font-size: 3vh;
   cursor: pointer;
   color: var(--color-text);
