@@ -44,6 +44,11 @@ const Timer: React.FC<TimerProps> = ({
   const seconds = Math.floor((remainingTime % 60000) / 1000);
   const tenths = Math.floor((remainingTime % 1000) / 100);
 
+  const handleDurationUpdate = (newDuration: number) => {
+    const validDuration = Math.max(0, newDuration);
+    handleDurationChange(validDuration);
+  };
+
   return (
     <div className="app-container">
       <div id="app-firsthalf">
@@ -59,10 +64,10 @@ const Timer: React.FC<TimerProps> = ({
             tenths={tenths}
             isOwner={isOwner}
             isRunning={isRunning}
-            onIncrementMinutes={() => handleDurationChange(editableDuration + 60000)}
-            onDecrementMinutes={() => handleDurationChange(editableDuration - 60000)}
-            onIncrementSeconds={() => handleDurationChange(editableDuration + 1000)}
-            onDecrementSeconds={() => handleDurationChange(editableDuration - 1000)}
+            onIncrementMinutes={() => handleDurationUpdate(editableDuration + 60000)}
+            onDecrementMinutes={() => handleDurationUpdate(editableDuration - 60000)}
+            onIncrementSeconds={() => handleDurationUpdate(editableDuration + 1000)}
+            onDecrementSeconds={() => handleDurationUpdate(editableDuration - 1000)}
           />
         </div>
       </div>
