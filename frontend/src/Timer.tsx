@@ -6,6 +6,7 @@ import Dial from "./Dial";
 import TimerTitlebar from "./TimerTitlebar";
 import WebSocketContext from "./WebSocketContext";
 import { UserInterface } from "../../src/Classes/userInterface";
+import { AudioService } from './services/AudioService';
 
 declare global {
   interface WakeLockSentinel {
@@ -39,6 +40,10 @@ const Timer: React.FC<TimerProps> = ({
   const [editableDuration, setEditableDuration] = useState(duration);
   const webSocket = useContext(WebSocketContext);
   const wakeLockRef = useRef<WakeLockSentinel | null>(null);
+  const audioService = useRef(AudioService.getInstance());
+  const [audioEnabled, setAudioEnabled] = useState(false);
+
+  const isOwner = currentUser && owner && currentUser.id === owner.id;
 
   // Update state when props are updated
   useEffect(() => {
@@ -58,12 +63,18 @@ const Timer: React.FC<TimerProps> = ({
   useEffect(() => {
     let intervalId: number | undefined;
     if (isRunning && remainingTime > 0) {
-      // Request wake lock when timer starts      
       intervalId = window.setInterval(() => {
         setRemainingTime((prevTime) => {
           const newTime = Math.max(0, prevTime - 100);
           if (newTime === 0) {
             setIsRunning(false);
+            if (isOwner || audioEnabled) {
+              try {
+                audioService.current.play('timerEnd');
+              } catch (error) {
+                console.warn('Could not play timer end sound:', error);
+              }
+            }
           }
           return newTime;
         });
@@ -72,7 +83,11 @@ const Timer: React.FC<TimerProps> = ({
     return () => {
       clearInterval(intervalId);
     };
-  }, [isRunning, remainingTime]);
+  }, [isRunning, remainingTime, isOwner, audioEnabled]);
+
+  useEffect(() => {
+    audioService.current.preloadSounds();
+  }, []);
 
   const handleStart = () => {
     console.log("Starting timer");
@@ -87,7 +102,12 @@ const Timer: React.FC<TimerProps> = ({
         }),
       );
     }
-    setRemainingTime(editableDuration); // Set remaining time to editable duration when starting
+    try {
+      audioService.current.play('timerStart');
+    } catch (error) {
+      console.warn('Could not play timer start sound:', error);
+    }
+    setRemainingTime(editableDuration);
   };
 
   const handleReset = () => {
@@ -143,9 +163,6 @@ const Timer: React.FC<TimerProps> = ({
     }
   };
 
-  const isOwner = currentUser && owner && currentUser.id === owner.id;
-
-
   const minutes = Math.floor(remainingTime / 60000);
   const seconds = Math.floor((remainingTime % 60000) / 1000);
   const tenths = Math.floor((remainingTime % 1000) / 100);
@@ -200,7 +217,7 @@ const Timer: React.FC<TimerProps> = ({
         <Dial value={remainingTime} isOwner={isOwner} thisUser={currentUser} users={users} owner={owner} />
         {isOwner && <StartButton onStart={handleStart} disabled={isRunning} />}
         {isOwner && <ResetButton onReset={handleReset} disabled={!isRunning} />}
-        {!isOwner && <HereButton/>}
+        {!isOwner && <HereButton onHereClick={() => setAudioEnabled(true)}/>}
       </div>
     </div>
   );

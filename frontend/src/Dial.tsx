@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import DialRemainingSlice from "./DialRemainingSlice";
 import DialDigits from "./DialDigits";
 import DialUsers from "./DialUsers";
-import User from "./User";
 import { UserInterface } from "../../src/Classes/userInterface";
 
 interface DialProps {

@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import { AudioService } from './services/AudioService';
 
 declare global {
   interface WakeLockSentinel {
@@ -10,16 +11,22 @@ declare global {
 
 interface HereButtonProps {
   disabled?: boolean;
+  onHereClick?: () => void;
 }
 
 const HereButton: React.FC<HereButtonProps> = ({
   disabled = false,
+  onHereClick
 }) => {
   const wakeLockRef = useRef<WakeLockSentinel | null>(null);
+  const audioService = useRef(AudioService.getInstance());
   
-  const handleClick = () => {
+  const handleClick = async () => {
     if (!disabled) {
-      requestWakeLock();
+      await requestWakeLock();
+      // Preload sounds when user clicks "I'm Here"
+      audioService.current.preloadSounds();
+      onHereClick?.();
     }
   };
 
