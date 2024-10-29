@@ -475,11 +475,16 @@ h1, h2 {
 
 .time-control button {
   background: var(--color-accent);
-  border: none;
+  border: .5rex solid var(--color-border);
   border-radius: 1vh;
   font-size: 3vh;
   cursor: pointer;
   color: var(--color-text);
+}
+
+.time-control button:active {
+  color: var(--color-background);
+  background: var(--color-control);
 }
 
 .time-control button:disabled {
