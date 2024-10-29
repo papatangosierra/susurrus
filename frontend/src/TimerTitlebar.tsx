@@ -19,6 +19,7 @@ const TimerTitlebar: React.FC<TimerTitlebarProps> = ({
   }, [name]);
 
   const handleRename = () => {
+    console.log("TimerTitlebar handleRename called", { editedName });
     if (editedName.trim() !== "") {
       onRename(editedName.trim());
       setIsEditing(false);
@@ -34,7 +35,9 @@ const TimerTitlebar: React.FC<TimerTitlebarProps> = ({
           value={editedName}
           onChange={(e) => setEditedName(e.target.value)}
           onBlur={handleRename}
-          onKeyPress={(e) => e.key === "Enter" && handleRename()}
+          onKeyPress={(e) => {
+            if (e.key === "Enter") handleRename();
+          }}
           autoFocus
         />
       </div>
@@ -43,7 +46,12 @@ const TimerTitlebar: React.FC<TimerTitlebarProps> = ({
 
   return (
     <div className="timer-titlebar">
-      <h1 onClick={() => isOwner && setIsEditing(true)}>{name}</h1>
+      <h1 onClick={() => {
+        console.log("Title clicked, isOwner:", isOwner);
+        isOwner && setIsEditing(true);
+      }}>
+        {name}
+      </h1>
     </div>
   );
 };

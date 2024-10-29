@@ -9,7 +9,6 @@ interface DialRemainingSliceProps {
   on the timer. It is used in the Dial component. 
 */
 const DialRemainingSlice: React.FC<DialRemainingSliceProps> = ({ value }) => {
-  const [timerSlice, setTimerSlice] = useState(value);
 
   function updateTimer(millisecondsRemaining: number) {
     const path = document.getElementById("dial-slice");
@@ -23,8 +22,8 @@ const DialRemainingSlice: React.FC<DialRemainingSliceProps> = ({ value }) => {
       path!.setAttribute(
         "d",
         `M 50 5
-                               A 45 45 0 1 1 49.99 5
-                               Z`,
+         A 45 45 0 1 1 49.99 5
+         Z`,
       );
     } else {
       const endAngle = 2 * Math.PI * fractionRemaining;
@@ -43,7 +42,6 @@ const DialRemainingSlice: React.FC<DialRemainingSliceProps> = ({ value }) => {
   }
 
   useEffect(() => {
-    setTimerSlice(value);
     updateTimer(value);
   }, [value]);
 
