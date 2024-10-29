@@ -52,6 +52,13 @@ export function useTimer({ duration, startTime, timerId, isOwner, audioEnabled }
     return () => clearInterval(intervalId);
   }, [isRunning, remainingTime, isOwner, audioEnabled]);
 
+  useEffect(() => {
+    if (!isRunning) {
+      setEditableDuration(duration);
+      setRemainingTime(duration);
+    }
+  }, [duration, isRunning]);
+
   const handleStart = () => {
     webSocket?.send(JSON.stringify({
       type: "START_TIMER",
@@ -74,6 +81,7 @@ export function useTimer({ duration, startTime, timerId, isOwner, audioEnabled }
 
   const handleDurationChange = (newDuration: number) => {
     setEditableDuration(newDuration);
+    setRemainingTime(newDuration);
     webSocket?.send(JSON.stringify({
       type: "UPDATE_TIMER_DURATION",
       payload: { timerId, duration: newDuration },
