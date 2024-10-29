@@ -33,6 +33,7 @@ export const TimeControls: React.FC<TimeControlsProps> = ({
         <div id="countdown-minutes">{minutes}</div>
         {isOwner && !isRunning && <button onClick={onDecrementMinutes}>▼</button>}
       </div>
+      <div id="countdown-separator">:</div>
       <div className="time-control">
         {isOwner && !isRunning && <button onClick={onIncrementSeconds}>▲</button>}
         <div id="countdown-seconds">{paddedSeconds}</div>
