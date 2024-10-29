@@ -78,7 +78,8 @@ const Timer: React.FC<TimerProps> = ({
           isOwner={isOwner} 
           thisUser={currentUser} 
           users={users} 
-          owner={owner} 
+          owner={owner}
+          onValueChange={isOwner ? handleDurationUpdate : undefined}
         />
         {isOwner && <StartButton onStart={handleStart} disabled={isRunning} />}
         {isOwner && <ResetButton onReset={handleReset} disabled={!isRunning} />}
