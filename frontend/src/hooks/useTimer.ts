@@ -18,61 +18,55 @@ export function useTimer({ duration, startTime, timerId, isOwner, audioEnabled }
   const audioService = AudioService.getInstance();
 
   useEffect(() => {
+    console.log('Effect 1 triggered with:', {
+      startTime,
+      duration,
+      currentTime: Date.now(),
+      wouldStart: startTime && startTime + duration > Date.now(),
+      elapsedTime: startTime ? Date.now() - startTime : null
+    });
+
     setEditableDuration(duration);
-    if (startTime + duration > Date.now()) {
+    if (startTime && startTime + duration > Date.now()) {
       setIsRunning(true);
       const elapsedTime = Date.now() - startTime;
-      setRemainingTime(Math.max(0, duration - elapsedTime));
+      const newRemainingTime = Math.max(0, duration - elapsedTime);
+      console.log('Setting remaining time to:', newRemainingTime);
+      setRemainingTime(newRemainingTime);
     } else {
+      console.log('Timer not running, setting to duration:', duration);
       setIsRunning(false);
       setRemainingTime(duration);
     }
   }, [duration, startTime]);
 
   useEffect(() => {
+    console.log('Effect 2 (countdown) triggered:', { isRunning, remainingTime });
     let intervalId: number | undefined;
     if (isRunning && remainingTime > 0) {
       intervalId = window.setInterval(() => {
         setRemainingTime((prevTime) => {
           const newTime = Math.max(0, prevTime - 100);
-          if (newTime === 0) {
-            setIsRunning(false);
-            if (isOwner || audioEnabled) {
-              try {
-                audioService.play('timerEnd');
-              } catch (error) {
-                console.warn('Could not play timer end sound:', error);
-              }
-            }
-          }
           return newTime;
         });
       }, 100);
     }
     return () => clearInterval(intervalId);
-  }, [isRunning, remainingTime, isOwner, audioEnabled]);
-
-  useEffect(() => {
-    if (!isRunning) {
-      setEditableDuration(duration);
-      setRemainingTime(duration);
-    }
-  }, [duration, isRunning]);
+  }, [isRunning, remainingTime]);
 
   const handleStart = () => {
-    webSocket?.send(JSON.stringify({
-      type: "START_TIMER",
-      payload: { timerId, startTime: Date.now() },
-    }));
-    try {
-      audioService.play('timerStart');
-    } catch (error) {
-      console.warn('Could not play timer start sound:', error);
+    if (isOwner) {
+      webSocket?.send(JSON.stringify({
+        type: "START_TIMER",
+        payload: { timerId, startTime: Date.now() },
+      }));
     }
-    setRemainingTime(editableDuration);
   };
 
   const handleReset = () => {
+    setIsRunning(false);
+    setEditableDuration(duration);
+    setRemainingTime(duration);
     webSocket?.send(JSON.stringify({
       type: "RESET_TIMER",
       payload: { timerId, duration: editableDuration },
@@ -82,10 +76,12 @@ export function useTimer({ duration, startTime, timerId, isOwner, audioEnabled }
   const handleDurationChange = (newDuration: number) => {
     setEditableDuration(newDuration);
     setRemainingTime(newDuration);
-    webSocket?.send(JSON.stringify({
-      type: "UPDATE_TIMER_DURATION",
-      payload: { timerId, duration: newDuration },
-    }));
+    if (isOwner) {
+      webSocket?.send(JSON.stringify({
+        type: "UPDATE_TIMER_DURATION",
+        payload: { timerId, duration: newDuration },
+      }));  
+    }
   };
 
   const handleRename = (newName: string) => {

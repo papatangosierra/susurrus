@@ -14,7 +14,7 @@ interface TimerProps {
   startTime: number;
   timerId: string;
   owner: UserInterface;
-  currentUser: UserInterface;
+  currentUser: UserInterface | null;
   users: UserInterface[];
 }
 
@@ -28,7 +28,7 @@ const Timer: React.FC<TimerProps> = ({
   users,
 }) => {
   const [audioEnabled, setAudioEnabled] = useState(false);
-  const isOwner = currentUser && owner && currentUser.id === owner.id;
+  const isOwner = currentUser ? currentUser.id === owner.id : false;
 
   const {
     remainingTime,

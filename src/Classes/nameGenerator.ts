@@ -30,7 +30,7 @@ export class NameGenerator {
 
   private mutateLastName(name: string): string {
     let mutatedName: string = name;
-    let prefixes = ['Mc', 'Mac', 'O\''];
+    let prefixes = ['Mc', 'Mac', 'O\'', 'De'];
     let suffixes = ['son', 'er'];
     let frequency = 0.5;
     let prefixFrequency = 0.1;
