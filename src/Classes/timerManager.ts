@@ -89,6 +89,15 @@ export class TimerManager extends EventEmitter implements TimerManagerInterface 
     }
   }
 
+  pingTimerOfUser(user: UserInterface, ws: ElysiaWS<any, any, any>): void {
+    const timer = this.getTimer(user.timerId);
+    if (timer) {
+      this.emit("timerPinged", {user,timer, ws});
+    } else {
+      throw new Error("Timer not found");
+    }
+  }
+
   // purgeStaleTimers(): number {
   // // Iterate over the timers and delete any that are more than 12 hours old
   // const cutoff = Date.now() - (12 * 60 * 60 * 1000);

@@ -13,6 +13,7 @@ export interface TimerManagerInterface {
   removeUserFromTimer(user: UserInterface, timerId: string, ws: ElysiaWS<any, any, any>): void;
   isFinished(id: string): boolean;
   getUsersForTimer(id: string): UserInterface[];
+  pingTimerOfUser(user: UserInterface, ws: ElysiaWS<any, any, any>): void;
   // TODO: Implement purgeStaleTimers()
   // purgeStaleTimers(): number;
 }

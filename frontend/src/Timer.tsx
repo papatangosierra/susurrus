@@ -50,7 +50,12 @@ const Timer: React.FC<TimerProps> = ({
         />
       );
     } else {
-      return <PingButton onHereClick={() => setAudioEnabled(true)} />;
+      return (
+        <PingButton 
+          onPingClick={() => setAudioEnabled(true)}
+          user={currentUser || undefined}
+        />
+      );
     }
   };
 

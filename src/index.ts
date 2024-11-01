@@ -101,6 +101,11 @@ const websocket = new Elysia({
         const duration = message.payload.duration;
         timerManager.resetTimer(timerId, duration, ws);
       }
+
+      if (message.type === 'PING') {
+        const user = message.payload.user;
+        timerManager.pingTimerOfUser(user, ws);
+      }
     },
     /* * * * * * * * * * * * * * * */
     /* WEBSOCKET CONNECTION CLOSED */

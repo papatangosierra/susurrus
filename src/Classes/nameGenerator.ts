@@ -5,30 +5,31 @@ import { firstNames, lastNames } from "../Definitions/hollywoodNames";
 */
 
 export class NameGenerator {
-  private firstNames: string[];
-  private lastNames: string[];
-
-  private consonants: string[];
-  private vowels: string[];
+  private firstName: string;
+  private lastName: string;
 
   constructor() {
-    this.firstNames = firstNames;
-    this.lastNames = lastNames;
-    this.consonants = ['B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Z'];
-    this.vowels = ['A', 'E', 'I', 'O', 'U', 'Y'];
+    this.firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+    this.lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+    //this.consonants = ['B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Z'];
+
   }
 
   private mutateFirstName(name: string): string {
     let mutatedName: string;
+    const consonants = ['B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Z'];
+    const vowels = ['A', 'E', 'I', 'O', 'U', 'Y'];
     let frequency = 0.5;
     // if the first letter is a consonant, change it to a different, random consonant
-    if (this.consonants.includes(name[0]) && Math.random() < frequency) {
-      return this.consonants[Math.floor(Math.random() * this.consonants.length)] + name.slice(1);
+    if (consonants.includes(name[0]) && Math.random() < frequency) {
+      return consonants[Math.floor(Math.random() * consonants.length)] + name.slice(1);
     }
     return name;
   }
 
   private mutateLastName(name: string): string {
+    const consonants = ['B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Z'];
+    const vowels = ['A', 'E', 'I', 'O', 'U', 'Y'];
     let mutatedName: string = name;
     let prefixes = ['Mc', 'Mac', 'O\'', 'De'];
     let suffixes = ['son', 'er'];
@@ -36,8 +37,8 @@ export class NameGenerator {
     let prefixFrequency = 0.1;
     let suffixFrequency = 0.1;
     // if the first letter is a consonant, change it to a different, random consonant
-    if (this.consonants.includes(name[0]) && Math.random() < frequency) {
-      mutatedName = this.consonants[Math.floor(Math.random() * this.consonants.length)] + name.slice(1);
+    if (consonants.includes(name[0]) && Math.random() < frequency) {
+      mutatedName = consonants[Math.floor(Math.random() * consonants.length)] + name.slice(1);
     }
 
     // add a prefix
@@ -54,8 +55,8 @@ export class NameGenerator {
   }
 
   generateName(): string {
-    const firstName = this.mutateFirstName(this.firstNames[Math.floor(Math.random() * this.firstNames.length)]);
-    const lastName = this.mutateLastName(this.lastNames[Math.floor(Math.random() * this.lastNames.length)]);
+    const firstName = this.mutateFirstName(this.firstName);
+    const lastName = this.mutateLastName(this.lastName);
     return `${firstName} ${lastName}`;
   }
 }

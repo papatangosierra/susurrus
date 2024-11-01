@@ -65,6 +65,11 @@ const App: React.FC = () => {
       if (data.user) {
         setThisUser(data.user);
       }
+
+      // handle a ping from another user
+      if (data.ping) {
+        console.log("Received ping from: ", data.ping.from.name);
+      }
     };
 
     return () => {

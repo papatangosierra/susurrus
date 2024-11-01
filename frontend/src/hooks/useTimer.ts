@@ -18,14 +18,6 @@ export function useTimer({ duration, startTime, timerId, isOwner, audioEnabled }
   const audioService = AudioService.getInstance();
 
   useEffect(() => {
-    console.log('Effect 1 triggered with:', {
-      startTime,
-      duration,
-      currentTime: Date.now(),
-      wouldStart: startTime && startTime + duration > Date.now(),
-      elapsedTime: startTime ? Date.now() - startTime : null
-    });
-
     setEditableDuration(duration);
     if (startTime && startTime + duration > Date.now()) {
       setIsRunning(true);
@@ -41,7 +33,6 @@ export function useTimer({ duration, startTime, timerId, isOwner, audioEnabled }
   }, [duration, startTime]);
 
   useEffect(() => {
-    console.log('Effect 2 (countdown) triggered:', { isRunning, remainingTime });
     let intervalId: number | undefined;
     if (isRunning && remainingTime > 0) {
       intervalId = window.setInterval(() => {

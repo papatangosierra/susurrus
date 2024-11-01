@@ -15,7 +15,7 @@ export class User implements UserInterface {
     this.userDb = db;
     this.nameGenerator = new NameGenerator();
 
-    this.name = this.createName();
+    this.name = this.nameGenerator.generateName();
 
     // if we got an id, that mean the user already exists in the database, so load instead of create
     if (id) {

@@ -1,6 +1,7 @@
-import React, { useRef } from "react";
+import React, { useRef, useContext } from "react";
 import { AudioService } from './services/AudioService';
-import { useTimer } from './hooks/useTimer';
+import WebSocketContext from './WebSocketContext';
+import { UserInterface } from "../../src/Classes/userInterface";
 
 declare global {
   interface WakeLockSentinel {
@@ -13,20 +14,31 @@ declare global {
 interface PingButtonProps {
   disabled?: boolean;
   onPingClick?: () => void;
+  user?: UserInterface;
 }
 
 const PingButton: React.FC<PingButtonProps> = ({
   disabled = false,
-  onPingClick
+  onPingClick,
+  user
 }) => {
   const wakeLockRef = useRef<WakeLockSentinel | null>(null);
   const audioService = useRef(AudioService.getInstance());
+  const webSocket = useContext(WebSocketContext);
   
   const handleClick = async () => {
     if (!disabled) {
       await requestWakeLock();
-      // Preload sounds when user clicks "I'm Here"
       audioService.current.preloadSounds();
+      
+      if (webSocket && user) {
+        webSocket.send(JSON.stringify({ 
+          type: 'PING',
+          payload: { user: user },
+        }));
+        console.log('Sent PING message for user:', user);
+      }
+
       onPingClick?.();
     }
   };
