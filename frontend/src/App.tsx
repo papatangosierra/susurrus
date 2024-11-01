@@ -4,6 +4,7 @@ import Timer from "./Timer";
 import { UserInterface } from "../../src/Classes/userInterface";
 import { TimerInterface } from "../../src/Classes/timerInterface";
 import WebSocketContext from "./WebSocketContext";
+import { AudioService } from "./services/AudioService";
 
 // Utility functions
 function getCSSVariable(variable: string) {
@@ -35,6 +36,7 @@ const App: React.FC = () => {
   const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
 
   useEffect(() => { 
+    const audioService = AudioService.getInstance();
     // if the user specified a timer in the URL, connect to it,
     // otherwise, connect to the default URL (thus creating a new timer)
     const urlPath = window.location.pathname;
@@ -69,6 +71,7 @@ const App: React.FC = () => {
       // handle a ping from another user
       if (data.ping) {
         console.log("Received ping from: ", data.ping.from.name);
+        audioService.play('ping');
       }
     };
 

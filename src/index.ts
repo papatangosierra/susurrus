@@ -149,6 +149,10 @@ const app = new Elysia({
     //console.log("styles.css requested");
     return Bun.file("./frontend/dist/audio/chime.mp3");
   })
+  .get("/sounds/ping.mp3", () => {
+    //console.log("styles.css requested");
+    return Bun.file("./frontend/dist/audio/ping.mp3");
+  })
 
   /* When the client requests a user identity, we should give them one */
   .get("/get-user", getUser)
