@@ -47,7 +47,13 @@ export function useTimer({ duration, startTime, timerId, isOwner, audioEnabled }
       intervalId = window.setInterval(() => {
         setRemainingTime(() => {
           // every 100 ms, update the timer with the remaining time
-          return duration - (Date.now() - startTime);
+          const newRemainingTime = Math.max(0, duration - (Date.now() - startTime));
+          // if we've reached 0, play the timer end sound
+          if (newRemainingTime === 0) {
+            console.log('Timer ended, playing sound');
+            audioService.play('timerEnd');
+          }
+          return newRemainingTime;
         });
       }, 100);
     }

@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import { AudioService } from './services/AudioService';
+import { useTimer } from './hooks/useTimer';
 
 declare global {
   interface WakeLockSentinel {
@@ -9,14 +10,14 @@ declare global {
   }
 }
 
-interface HereButtonProps {
+interface PingButtonProps {
   disabled?: boolean;
-  onHereClick?: () => void;
+  onPingClick?: () => void;
 }
 
-const PingButton: React.FC<HereButtonProps> = ({
+const PingButton: React.FC<PingButtonProps> = ({
   disabled = false,
-  onHereClick
+  onPingClick
 }) => {
   const wakeLockRef = useRef<WakeLockSentinel | null>(null);
   const audioService = useRef(AudioService.getInstance());
@@ -26,7 +27,7 @@ const PingButton: React.FC<HereButtonProps> = ({
       await requestWakeLock();
       // Preload sounds when user clicks "I'm Here"
       audioService.current.preloadSounds();
-      onHereClick?.();
+      onPingClick?.();
     }
   };
 
