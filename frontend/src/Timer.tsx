@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import TimeControls from "./TimeControls";
 import { useTimer } from "./hooks/useTimer";
-import StartButton from "./StartButton";
-import ResetButton from "./ResetButton";
-import HereButton from "./HereButton";
+import PingButton from "./PingButton";
 import Dial from "./Dial";
 import TimerTitlebar from "./TimerTitlebar";
 import { UserInterface } from "../../src/Classes/userInterface";
+import TimerControlButton from "./TimerControlButton";
 
 interface TimerProps {
   name: string;
@@ -40,6 +39,21 @@ const Timer: React.FC<TimerProps> = ({
     handleRename,
   } = useTimer({ duration, startTime, timerId, isOwner, audioEnabled });
 
+  const renderButton = () => {
+    if (isOwner) {
+      return (
+        <TimerControlButton
+          isRunning={isRunning}
+          onStart={handleStart}
+          onReset={handleReset}
+          disabled={false}
+        />
+      );
+    } else {
+      return <PingButton onHereClick={() => setAudioEnabled(true)} />;
+    }
+  };
+
   const minutes = Math.floor(remainingTime / 60000);
   const seconds = Math.floor((remainingTime % 60000) / 1000);
   const tenths = Math.floor((remainingTime % 1000) / 100);
@@ -52,11 +66,7 @@ const Timer: React.FC<TimerProps> = ({
   return (
     <div className="app-container">
       <div id="app-firsthalf">
-        <TimerTitlebar 
-          name={name} 
-          isOwner={isOwner} 
-          onRename={handleRename} 
-        />
+        <TimerTitlebar name={name} isOwner={isOwner} onRename={handleRename} />
         <div className="remaining-time-display">
           <TimeControls
             minutes={minutes}
@@ -64,26 +74,32 @@ const Timer: React.FC<TimerProps> = ({
             tenths={tenths}
             isOwner={isOwner}
             isRunning={isRunning}
-            onIncrementMinutes={() => handleDurationUpdate(editableDuration + 60000)}
-            onDecrementMinutes={() => handleDurationUpdate(editableDuration - 60000)}
-            onIncrementSeconds={() => handleDurationUpdate(editableDuration + 1000)}
-            onDecrementSeconds={() => handleDurationUpdate(editableDuration - 1000)}
+            onIncrementMinutes={() =>
+              handleDurationUpdate(editableDuration + 60000)
+            }
+            onDecrementMinutes={() =>
+              handleDurationUpdate(editableDuration - 60000)
+            }
+            onIncrementSeconds={() =>
+              handleDurationUpdate(editableDuration + 1000)
+            }
+            onDecrementSeconds={() =>
+              handleDurationUpdate(editableDuration - 1000)
+            }
           />
         </div>
       </div>
 
       <div id="app-secondhalf">
-        <Dial 
-          value={remainingTime} 
-          isOwner={isOwner} 
-          thisUser={currentUser} 
-          users={users} 
+        <Dial
+          value={remainingTime}
+          isOwner={isOwner}
+          thisUser={currentUser}
+          users={users}
           owner={owner}
           onValueChange={isOwner ? handleDurationUpdate : undefined}
         />
-        {isOwner && <StartButton onStart={handleStart} disabled={isRunning} />}
-        {isOwner && <ResetButton onReset={handleReset} disabled={!isRunning} />}
-        {!isOwner && <HereButton onHereClick={() => setAudioEnabled(true)}/>}
+        <div className="start-button-container">{renderButton()}</div>
       </div>
     </div>
   );

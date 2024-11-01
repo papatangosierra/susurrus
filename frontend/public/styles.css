@@ -1,6 +1,9 @@
 :root {
   --hue: 195;
   --inverse-hue: calc(180 - var(--hue));
+  --start-button: hsl(var(--hue), 00%, 10%);
+  --reset-button: hsl(calc(180 - var(--hue)), 100%, 50%);
+  --ping-button: hsl(calc(var(--hue)), 100%, 80%);
   --font-family: "Xanh Mono", monospace;
   --color-text: hsl(var(--hue), 100%, 92%);
   --color-background: hsl(var(--hue), 100%, 13%);
@@ -102,21 +105,7 @@ h1, h2 {
     z-index: 0;
   }
 
-  .start-button {
-    font-size: 4vh;
-    width: 15vh;
-    height: 15vh;
-    border-radius: 8vh;
-  }
-
-  .reset-button {
-    font-size: 4vh;
-    width: 15vh;
-    height: 15vh;
-    border-radius: 8vh;
-  }
-
-  .here-button {
+  .start-button, .reset-button, .ping-button {
     font-size: 4vh;
     width: 15vh;
     height: 15vh;
@@ -215,21 +204,7 @@ h1, h2 {
     display: flex;
   }
 
-  .start-button {
-    font-size: 4vw;    
-    width: 15vw;
-    height: 15vw;
-    border-radius: 8vw;
-  }
-
-  .reset-button {
-    font-size: 4vw;    
-    width: 15vw;
-    height: 15vw;
-    border-radius: 8vw;
-  }
-
-  .here-button {
+  .start-button, .reset-button, .ping-button {
     font-size: 4vw;    
     width: 15vw;
     height: 15vw;
@@ -326,57 +301,54 @@ h1, h2 {
 }
 
 .start-button-container {
-  z-index: 0;
+  position: absolute;
+  width: 80vh;  /* Match dial size */
+  height: 80vh;
+  max-width: 40vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
   pointer-events: none;
 }
 
-
-.start-button {
-  z-index: 1;
+.start-button,
+.reset-button,
+.ping-button {
+  text-transform: uppercase; 
+  position: absolute;
+  z-index: 2;
   padding: 0;
-  color: var(--color-text);
-  background-color: var(--color-control);
   font-family: var(--font-family);
-  border: .5rex solid var(--color-border);
   margin: auto;
   box-shadow: .8vh .8vh var(--color-button-shadow);
   transition: transform 0.15s ease-out, box-shadow 0.15s ease-out, color 0.15s ease-out, background-color 0.15s ease-out;
   pointer-events: auto;
+  border: .1vh solid lightgray;
 }
 
-.start-button:disabled {  
-  z-index: 0;
-  color: transparent;
-  background-color: transparent;
-  border: none;
-  box-shadow: none;
-}
-
-.start-button:hover:not(:disabled) {
-  border: 0.5vh solid var(--color-accent);
-}
-
-.start-button:active:not(:disabled) {
-  border: 0.5vh solid var(--color-accent);
-  background-color: var(--color-accent);
-  transform: translate(.6vh, .6vh);
-  box-shadow: .2vh .2vh var(--color-button-shadow);
-  color: var(--color-background);
+.start-button {
+  /* radial gradient for button background */
+  color: var(--color-text);
+  background: radial-gradient(var(--start-button), var(--color-control));
 }
 
 .reset-button {
-  z-index: 1;
-  padding: 0;
-  color: var(--color-background);
-  background-color: var(--color-accent);
-  font-family: var(--font-family);
-  border: .5rex solid var(--color-text);
-  margin: auto;
-  box-shadow: .8vh .8vh var(--color-button-shadow);
-  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out, color 0.15s ease-out, background-color 0.15s ease-out;
+  /* radial gradient for button background */
+  color: var(--color-text);
+  text-shadow: 0 0 .7vh var(--color-accent);
+  background: radial-gradient(var(--reset-button), var(--color-control));
 }
 
-.reset-button:disabled {
+.ping-button {
+  color: var(--color-text);
+  text-shadow: 0 0 .7vh var(--color-accent);
+  background: radial-gradient(var(--ping-button), var(--color-control));
+}
+
+.start-button:disabled,
+.reset-button:disabled,
+.ping-button:disabled {
   z-index: 0;
   color: transparent;
   background-color: transparent;
@@ -384,51 +356,21 @@ h1, h2 {
   box-shadow: none;
 }
 
-.reset-button:hover:not(:disabled) {
-  border: 0.5vh solid var(--color-accent);
+.start-button:hover:not(:disabled),
+.reset-button:hover:not(:disabled),
+.ping-button:hover:not(:disabled) {
+  border: .1vh solid var(--color-accent);
 }
 
-.reset-button:active:not(:disabled) {
+.start-button:active:not(:disabled),
+.reset-button:active:not(:disabled),
+.ping-button:active:not(:disabled) {
   border: 0.5vh solid var(--color-control);
   background-color: var(--color-control);
   transform: translate(.6vh, .6vh);
   box-shadow: .2vh .2vh var(--color-button-shadow);
   color: var(--color-accent);
 }
-
-
-.here-button {
-  z-index: 1;
-  padding: 0;
-  color: var(--color-background);
-  background-color: var(--color-accent);
-  font-family: var(--font-family);
-  border: .5rex solid var(--color-text);
-  margin: auto;
-  box-shadow: .8vh .8vh var(--color-button-shadow);
-  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out, color 0.15s ease-out, background-color 0.15s ease-out;
-}
-
-.here-button:disabled {
-  z-index: 0;
-  color: transparent;
-  background-color: transparent;
-  border: none;
-  box-shadow: none;
-}
-
-.here-button:hover:not(:disabled) {
-  border: 0.5vh solid var(--color-accent);
-}
-
-.here-button:active:not(:disabled) {
-  border: 0.5vh solid var(--color-control);
-  background-color: var(--color-control);
-  transform: translate(.6vh, .6vh);
-  box-shadow: .2vh .2vh var(--color-button-shadow);
-  color: var(--color-accent);
-}
-
 
 #dial-userlist {
   position: absolute;

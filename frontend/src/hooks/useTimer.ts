@@ -45,9 +45,9 @@ export function useTimer({ duration, startTime, timerId, isOwner, audioEnabled }
     let intervalId: number | undefined;
     if (isRunning && remainingTime > 0) {
       intervalId = window.setInterval(() => {
-        setRemainingTime((prevTime) => {
-          const newTime = Math.max(0, prevTime - 100);
-          return newTime;
+        setRemainingTime(() => {
+          // every 100 ms, update the timer with the remaining time
+          return duration - (Date.now() - startTime);
         });
       }, 100);
     }

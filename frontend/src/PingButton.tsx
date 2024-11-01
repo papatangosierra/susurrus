@@ -14,7 +14,7 @@ interface HereButtonProps {
   onHereClick?: () => void;
 }
 
-const HereButton: React.FC<HereButtonProps> = ({
+const PingButton: React.FC<HereButtonProps> = ({
   disabled = false,
   onHereClick
 }) => {
@@ -54,12 +54,10 @@ const HereButton: React.FC<HereButtonProps> = ({
   };
 
   return (
-    <div className="start-button-container">
-      <button className="here-button" onClick={handleClick} disabled={disabled}>
-      I'm Here
+    <button className="ping-button" onClick={handleClick} disabled={disabled}>
+      Ping
     </button>
-    </div>
   );
 };
 
-export default HereButton;
+export default PingButton;

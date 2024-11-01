@@ -43,9 +43,10 @@ describe("Timer", () => {
   test("should remove a user from the timer", () => {
     const user = new User(testDb);
     timer.addUser(user);
+    expect(timer.users.length).toBe(2);
     expect(timer.users[timer.users.length - 1].id).toBe(user.id);
     timer.removeUser(user);
-    expect(timer.users[timer.users.length - 1].id).not.toBe(user.id);
+    expect(timer.users.length).toBe(1);
   });
 
   test("should start the timer", () => {

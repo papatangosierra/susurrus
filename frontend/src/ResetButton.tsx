@@ -16,11 +16,9 @@ const ResetButton: React.FC<ResetButtonProps> = ({
   };
 
   return (
-    <div className="start-button-container">
       <button className="reset-button" onClick={handleClick} disabled={disabled}>
       Reset
     </button>
-    </div>
   );
 };
 
