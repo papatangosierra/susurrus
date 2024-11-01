@@ -97,6 +97,7 @@ const Timer: React.FC<TimerProps> = ({
           thisUser={currentUser}
           users={users}
           owner={owner}
+          isRunning={isRunning}
           onValueChange={isOwner ? handleDurationUpdate : undefined}
         />
         <div className="start-button-container">{renderButton()}</div>

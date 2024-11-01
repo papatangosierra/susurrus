@@ -11,10 +11,11 @@ interface DialProps {
   thisUser: UserInterface | null;
   users: UserInterface[];
   owner: UserInterface;
+  isRunning: boolean;
   onValueChange?: (newValue: number) => void;
 }
 
-const Dial: React.FC<DialProps> = ({ value, thisUser, users, owner, isOwner, onValueChange }) => {
+const Dial: React.FC<DialProps> = ({ value, thisUser, users, owner, isOwner, isRunning, onValueChange }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [lastAngle, setLastAngle] = useState(0);
   const [temporaryValue, setTemporaryValue] = useState(value);
@@ -23,6 +24,13 @@ const Dial: React.FC<DialProps> = ({ value, thisUser, users, owner, isOwner, onV
   useEffect(() => {
     setTemporaryValue(value);
   }, [value]);
+
+  const normalizeAngle = useCallback((angle: number): number => {
+    // Convert angle to be between 0 and 2π
+    while (angle < 0) angle += 2 * Math.PI;
+    while (angle >= 2 * Math.PI) angle -= 2 * Math.PI;
+    return angle;
+  }, []);
 
   const getAngleFromEvent = useCallback((event: MouseEvent | TouchEvent) => {
     const dialElement = document.querySelector('.dial-svg');
@@ -35,22 +43,32 @@ const Dial: React.FC<DialProps> = ({ value, thisUser, users, owner, isOwner, onV
     const clientX = 'touches' in event ? event.touches[0].clientX : event.clientX;
     const clientY = 'touches' in event ? event.touches[0].clientY : event.clientY;
 
-    return Math.atan2(clientY - centerY, clientX - centerX);
-  }, []);
+    return normalizeAngle(Math.atan2(clientY - centerY, clientX - centerX));
+  }, [normalizeAngle]);
 
   const handleDragStart = useCallback((event: React.MouseEvent | React.TouchEvent) => {
-    if (!isOwner) return;
+    if (!isOwner || isRunning) return;
     
     event.preventDefault();
     setIsDragging(true);
     setLastAngle(getAngleFromEvent(event.nativeEvent));
-  }, [isOwner, getAngleFromEvent]);
+  }, [isOwner, isRunning, getAngleFromEvent]);
 
   const handleDragMove = useCallback((event: MouseEvent | TouchEvent) => {
     if (!isDragging) return;
 
     const currentAngle = getAngleFromEvent(event);
-    const angleDiff = currentAngle - lastAngle;
+    let angleDiff = currentAngle - lastAngle;
+
+    // Handle crossing between quadrants 4 and 1
+    if (Math.abs(angleDiff) > Math.PI) {
+      // If the difference is greater than π, we've crossed the boundary
+      if (angleDiff > 0) {
+        angleDiff -= 2 * Math.PI;
+      } else {
+        angleDiff += 2 * Math.PI;
+      }
+    }
     
     // Convert angle difference to minutes (60 minutes = full rotation)
     const minutesDiff = (angleDiff * 60) / (2 * Math.PI);
@@ -94,7 +112,7 @@ const Dial: React.FC<DialProps> = ({ value, thisUser, users, owner, isOwner, onV
         preserveAspectRatio="xMidYMid meet"
         onMouseDown={handleDragStart}
         onTouchStart={handleDragStart}
-        style={{ cursor: isOwner ? 'grab' : 'default' }}
+        style={{ cursor: (isOwner && !isRunning) ? 'grab' : 'default' }}
       >
         <circle id="dial-background" cx="50" cy="50" r="45" fill="var(--color-control)" />
         <DialRemainingSlice value={isDragging ? temporaryValue : value} />
