@@ -5,6 +5,7 @@ export class AudioService {
   private constructor() {
     // Initialize audio elements
     this.audioElements.set('timerEnd', new Audio('/sounds/chime.mp3')); // Adjust path as needed
+    this.audioElements.set('ping', new Audio('/sounds/ping.mp3')); // Adjust path as needed
     // Add more sounds as needed:
     // this.audioElements.set('timerStart', new Audio('/sounds/start.mp3'));
     // this.audioElements.set('userJoined', new Audio('/sounds/join.mp3'));
