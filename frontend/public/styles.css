@@ -458,3 +458,24 @@ h1, h2 {
 .dial-svg line {
   pointer-events: none;
 }
+
+/* TODO: The ping pulse animation transform isn't working right now. Only the color change works.*/
+@keyframes ping-pulse {
+  0% {
+    transform: scale(1) rotate(var(--rotation));
+    background-color: white;
+  }
+  50% {
+    transform: scale(1.2) rotate(var(--rotation));
+    background-color: var(--color-accent);
+    color: white;
+  }
+  100% {
+    transform: scale(1) rotate(var(--rotation));
+    background-color: white;
+  }
+}
+
+.user-name.pinging {
+  animation: ping-pulse 0.5s ease-in-out;
+}

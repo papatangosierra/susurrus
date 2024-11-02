@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 interface UserProps {
   id: string;
@@ -7,9 +7,27 @@ interface UserProps {
   isThisUser: boolean;
   isOwner: boolean;
   rotation: number;
+  isPinging?: boolean;
 }
 
-const User: React.FC<UserProps> = ({ id, value, name, isThisUser, isOwner, rotation }) => {
+const User: React.FC<UserProps> = ({ id, value, name, isThisUser, isOwner, rotation, isPinging }) => {
+  const userNameRef = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const element = userNameRef.current;
+    if (element && isPinging) {
+      console.log("[User] Starting ping animation for:", name);
+      element.classList.add('pinging');
+      const timer = setTimeout(() => {
+        element.classList.remove('pinging');
+      }, 500);
+      return () => {
+        clearTimeout(timer);
+        element.classList.remove('pinging');
+      };
+    }
+  }, [isPinging, name]);
+
   const style = {
     transform: `rotate(${rotation}deg)`,
   };
@@ -19,7 +37,9 @@ const User: React.FC<UserProps> = ({ id, value, name, isThisUser, isOwner, rotat
       className={`user-container ${isThisUser ? "this-user" : ""} ${isOwner ? "owner" : ""}`}
       style={style}
     >
-      <span className="user-name-line"><span className="user-name">{name}</span></span>
+      <span className="user-name-line">
+        <span ref={userNameRef} className="user-name">{name}</span>
+      </span>
     </li>
   );
 };

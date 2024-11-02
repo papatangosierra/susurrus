@@ -34,6 +34,7 @@ const App: React.FC = () => {
   const [thisUser, setThisUser] = useState<UserInterface | null>(null);
   const [timer, setTimer] = useState<TimerInterface | null>(null);
   const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
+  const [pingingUserId, setPingingUserId] = useState<string | undefined>(undefined);
 
   useEffect(() => { 
     const audioService = AudioService.getInstance();
@@ -70,8 +71,9 @@ const App: React.FC = () => {
 
       // handle a ping from another user
       if (data.ping) {
-        console.log("Received ping from: ", data.ping.from.name);
+        console.log("[App] Received ping from:", data.ping.from.name, "with ID:", data.ping.from.id);
         audioService.play('ping');
+        setPingingUserId(data.ping.from.id);
       }
     };
 
@@ -79,6 +81,15 @@ const App: React.FC = () => {
       client.close();
     };
   }, []);
+
+  useEffect(() => {
+    if (pingingUserId) {
+      const timer = setTimeout(() => {
+        setPingingUserId(undefined);
+      }, 500); // Match animation duration
+      return () => clearTimeout(timer);
+    }
+  }, [pingingUserId]);
 
   if (!timer) {
     return (<div className="app-container"><h1>Loading...</h1></div>);
@@ -93,6 +104,7 @@ const App: React.FC = () => {
           owner={timer.owner}
           currentUser={thisUser ?? null}
           users={timer?.users ?? []}
+          pingingUserId={pingingUserId}
         />
     </WebSocketContext.Provider>
   );

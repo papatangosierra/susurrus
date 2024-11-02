@@ -13,9 +13,10 @@ interface DialProps {
   owner: UserInterface;
   isRunning: boolean;
   onValueChange?: (newValue: number) => void;
+  pingingUserId?: string;
 }
 
-const Dial: React.FC<DialProps> = ({ value, thisUser, users, owner, isOwner, isRunning, onValueChange }) => {
+const Dial: React.FC<DialProps> = ({ value, thisUser, users, owner, isOwner, isRunning, onValueChange, pingingUserId }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [lastAngle, setLastAngle] = useState(0);
   const [temporaryValue, setTemporaryValue] = useState(value);
@@ -118,7 +119,14 @@ const Dial: React.FC<DialProps> = ({ value, thisUser, users, owner, isOwner, isR
         <DialRemainingSlice value={isDragging ? temporaryValue : value} />
         <DialDigits />
       </svg>
-      <DialUsers value={isDragging ? temporaryValue : value} users={users} thisUser={thisUser} owner={owner} />
+      <DialUsers 
+        value={isDragging ? temporaryValue : value} 
+        users={users} 
+        thisUser={thisUser} 
+        owner={owner}
+        pingingUserId={pingingUserId}
+      />
+      {/* {console.log("[Dial] Rendering with pingingUserId:", pingingUserId)} */}
     </div>
   );
 };

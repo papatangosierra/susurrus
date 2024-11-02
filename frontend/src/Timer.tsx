@@ -15,6 +15,7 @@ interface TimerProps {
   owner: UserInterface;
   currentUser: UserInterface | null;
   users: UserInterface[];
+  pingingUserId?: string;
 }
 
 const Timer: React.FC<TimerProps> = ({
@@ -25,6 +26,7 @@ const Timer: React.FC<TimerProps> = ({
   owner,
   currentUser,
   users,
+  pingingUserId,
 }) => {
   const [audioEnabled, setAudioEnabled] = useState(false);
   const isOwner = currentUser ? currentUser.id === owner.id : false;
@@ -68,6 +70,8 @@ const Timer: React.FC<TimerProps> = ({
     handleDurationChange(validDuration);
   };
 
+  // console.log("[Timer] Rendering with pingingUserId:", pingingUserId);
+
   return (
     <div className="app-container">
       <div id="app-firsthalf">
@@ -104,6 +108,7 @@ const Timer: React.FC<TimerProps> = ({
           owner={owner}
           isRunning={isRunning}
           onValueChange={isOwner ? handleDurationUpdate : undefined}
+          pingingUserId={pingingUserId}
         />
         <div className="start-button-container">{renderButton()}</div>
       </div>
