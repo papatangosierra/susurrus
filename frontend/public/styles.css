@@ -410,11 +410,12 @@ h1, h2 {
   background-color: white;
   color: black;
   border: 0.1vh solid var(--color-border);
-  border-radius: 1vh;
+  border-radius: 0 1vh 1vh 0;
   padding-bottom: 0;
   padding-top: 0;
-  padding-left: 1rex;
+  padding-left: 2rex;
   padding-right: 1rex;
+  margin-left: -1rex;
   box-shadow: .5rex .5rex 0.5em black;
 }
 

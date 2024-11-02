@@ -719,7 +719,6 @@ export const firstNames = [
   "Morton",
   "Motion",
   "Mötley",
-  "Muhammad",
   "Myrna",
   "Nancy",
   "Nanette",

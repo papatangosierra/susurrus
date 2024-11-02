@@ -16,7 +16,7 @@ const DialUsers: React.FC<DialUsersProps> = ({ value, users, thisUser, owner }) 
   const timeRotation = fractionRemaining * 360;
   
   // Fixed angle for each user (adjust this value to control spacing)
-  const anglePerUser = 18; // degrees
+  const anglePerUser = 14; // degrees
   
   return (
     <ul id="dial-userlist">
