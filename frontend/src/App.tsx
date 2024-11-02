@@ -75,7 +75,7 @@ const App: React.FC = () => {
         // generate a unique pitch for the ping based on the user's ID
         const factor = 12;
         const numerator = Math.floor(parseFloat("0." + data.ping.from.id) * factor);
-        const denominator = Math.max(1, parseInt(data.ping.from.id) % factor);
+        const denominator = Math.max(1, parseFloat("0." + data.ping.from.id) % factor);
         const cents = (numerator / denominator) * 1200; 
         audioService.play('ping', cents);
       
