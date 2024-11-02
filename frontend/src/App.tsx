@@ -72,11 +72,11 @@ const App: React.FC = () => {
       // handle a ping from another user
       if (data.ping) {
         console.log("[App] Received ping from:", data.ping.from.name, "with ID:", data.ping.from.id);
-        // generate a unique pitch for the ping based on the user's ID
-        const factor = 12;
-        const numerator = Math.floor(parseFloat("0." + data.ping.from.id) * factor);
-        const denominator = Math.max(1, parseFloat("0." + data.ping.from.id) % factor);
-        const cents = (numerator / denominator) * 1200; 
+        // generate a unique-ish pitch for the ping based on the user's ID
+        const factor = 22;
+        const numerator = Math.floor(parseFloat("0." + data.ping.from.id) * factor) + 1;
+        console.log("[App] numerator:", numerator, "factor:", factor);
+        const cents = (numerator / factor) * 1200; 
         audioService.play('ping', cents);
       
         setPingingUserId(data.ping.from.id);
