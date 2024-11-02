@@ -61,6 +61,7 @@ export class StateUpdateService {
     this.timerManager.on('timerPinged', ({ user, timer, ws }) => {
       const ping = { from: user };
       console.log("caught timerPinged event for timer owned by: ", timer.owner.name);
+      this.wsManager.sendToUser({ ping }, ws);
       this.wsManager.broadcastToTimer(timer.id, { ping }, ws);
     });
   }
