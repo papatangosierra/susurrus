@@ -126,7 +126,6 @@ const Dial: React.FC<DialProps> = ({ value, thisUser, users, owner, isOwner, isR
         owner={owner}
         pingingUserId={pingingUserId}
       />
-      {/* {console.log("[Dial] Rendering with pingingUserId:", pingingUserId)} */}
     </div>
   );
 };

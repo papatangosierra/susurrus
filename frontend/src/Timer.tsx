@@ -44,12 +44,18 @@ const Timer: React.FC<TimerProps> = ({
   const renderButton = () => {
     if (isOwner) {
       return (
-        <TimerControlButton
-          isRunning={isRunning}
+        <>
+          <TimerControlButton
+            isRunning={isRunning}
           onStart={handleStart}
           onReset={handleReset}
           disabled={false}
         />
+          <PingButton 
+        onPingClick={() => setAudioEnabled(true)}
+            user={currentUser || undefined}
+          />
+        </>
       );
     } else {
       return (
