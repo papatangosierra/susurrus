@@ -24,4 +24,4 @@ A ping is meant to send a signal of continuing presence—an "I'm still doing th
 
 Owing to the nature of web browser audio, you will not be able to hear any pings until you send a ping yourself. 
 
-Give feedback to Paul. If you're using Untitled Timer App right now, you either know how to contact him or you know someone who does.
+Give feedback to Paul. If you're using Untitled Timer App right now, you either know how to contact him or you know someone who does. Alternatively, you can submit feedback [here](https://airtable.com/app3oY6TYzHGhFoBj/shrtV749UvfGqgdim).
