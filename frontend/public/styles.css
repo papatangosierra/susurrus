@@ -5,6 +5,7 @@
   --reset-button: hsl(calc(180 - var(--hue)), 100%, 50%);
   --ping-button: hsl(calc(var(--hue)), 100%, 80%);
   --font-family: "Xanh Mono", monospace;
+  --alt-font-family: "Karla", sans-serif;
   --color-text: hsl(var(--hue), 100%, 92%);
   --color-background: hsl(var(--hue), 100%, 13%);
   --color-accent: hsl(var(--inverse-hue), 100%, 50%);
@@ -49,15 +50,17 @@ h1, h2 {
 
 #help-link {
   padding: 1rem;
+  background-color: var(--color-accent);
   position: fixed;
   color: var(--color-text);
-  font-size: 3rem;
   top: 0;
   right: 0;
 }
 
 #help-link a {
-  color: var(--color-text);
+  font-family: var(--alt-font-family);
+  font-weight: 600;
+  color: var(--color-background);
   text-decoration: none;
 }
 
@@ -391,6 +394,12 @@ h1, h2 {
     overflow: hidden;
   }
 
+  #help-link {
+    font-size: 4vh;
+    border: .5vh solid var(--color-accent);
+    border-radius: 0vh 0vh 0vh 1vh;
+  }
+
   h1 {
     font-size: 8vh;
     margin: 2vh;
@@ -477,6 +486,11 @@ h1, h2 {
 }
 
 @media (orientation: landscape) {
+  
+  #help-link {
+    font-size: 4vw;
+  }
+
   h1 {
     font-size: 8vw;
     padding: 2vw;

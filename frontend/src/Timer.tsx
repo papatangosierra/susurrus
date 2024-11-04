@@ -81,7 +81,7 @@ const Timer: React.FC<TimerProps> = ({
   return (
     <div className="app-container">
       <div id="help-link">
-        <a href="https://github.com/papatangosierra/susurrus/blob/main/README.md">?</a>
+        <a href="https://github.com/papatangosierra/susurrus/blob/main/README.md" target="_blank">?</a>
       </div>
       <div id="app-firsthalf">
         <TimerTitlebar name={name} isOwner={isOwner} onRename={handleRename} />
