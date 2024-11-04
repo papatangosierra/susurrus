@@ -486,9 +486,11 @@ h1, h2 {
 }
 
 @media (orientation: landscape) {
-  
+
   #help-link {
     font-size: 4vw;
+    border: .5vw solid var(--color-accent);
+    border-radius: 0vw 0vw 0vw 1vw;
   }
 
   h1 {

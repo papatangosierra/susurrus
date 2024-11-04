@@ -1,6 +1,6 @@
 # Untitled Timer App
 
-Untitled Timer App is a multiplayer countdown timer. It's designed to be a simple, low-investment tool that embodies some aspects of the [body doubling](https://en.wikipedia.org/wiki/Body_doubling) approach to doing work.
+Untitled Timer App is a multiplayer countdown timer. It's designed to be a simple, low-friction tool that embodies some aspects of the [body doubling](https://en.wikipedia.org/wiki/Body_doubling) approach to doing work.
 
 Visiting the base Untitled Timer App site will immediately redirect you to a new `/timer/` URL. That URL corresponds to a single timer instance, and will persist as long as at least one person is currently viewing the timer.
 
@@ -24,4 +24,4 @@ A ping is meant to send a signal of continuing presence—an "I'm still doing th
 
 Owing to the nature of web browser audio, you will not be able to hear any pings until you send a ping yourself. 
 
-Give feedback to Paul. If you're using Untitled Timer App right now, you know how to contact him.
+Give feedback to Paul. If you're using Untitled Timer App right now, you either know how to contact him or you know someone who does.
