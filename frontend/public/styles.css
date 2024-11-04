@@ -47,6 +47,20 @@ h1, h2 {
   overflow: hidden;
 }
 
+#help-link {
+  padding: 1rem;
+  position: fixed;
+  color: var(--color-text);
+  font-size: 3rem;
+  top: 0;
+  right: 0;
+}
+
+#help-link a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
 #app-firsthalf, #app-secondhalf {
   -webkit-user-select: none;
   user-select: none;

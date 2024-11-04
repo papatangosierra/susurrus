@@ -1,6 +1,6 @@
 # Untitled Timer App
 
-Untitled Timer App is a multiplayer countdown timer. It's designed to be an enjoyable tool that replicates some amount of the [body doubling](https://en.wikipedia.org/wiki/Body_doubling) approach to productivity.
+Untitled Timer App is a multiplayer countdown timer. It's designed to be a simple, low-investment tool that capitalizes on some of the benefits of the the [body doubling](https://en.wikipedia.org/wiki/Body_doubling) effect to doing work.
 
 Visiting the base Untitled Timer App site will immediately redirect you to a new `/timer/` URL. That URL corresponds to a single timer instance, and will persist as long as at least one person is currently viewing the timer.
 
