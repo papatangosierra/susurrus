@@ -2,11 +2,11 @@
 
 Untitled Timer App is a multiplayer countdown timer. It's designed to be a simple, low-friction tool that embodies some aspects of the [body doubling](https://en.wikipedia.org/wiki/Body_doubling) approach to doing work.
 
-Visiting the base Untitled Timer App site will immediately redirect you to a new `/timer/` URL. That URL corresponds to a single timer instance, and will persist as long as at least one person is currently viewing the timer.
+When you visit the base Untitled Timer App site, it immediately creates a new webpage for your timer and redirects you to the address for that page. The page is ephemeral and exists for only as long as you are using it.
 
-To invite other users to a timer, simply give them the URL of the timer you're currently in.
+The page’s URL functions as the invitation to join the timer. To invite someone to join, just send them the URL of your timer’s page. 
 
-Untitled Timer App requires no signup or login information. Each user gets a randomly generated name that lasts only as long as they are actively viewing the timer.
+Untitled Timer App requires no signup or login information. Upon connecting, each user gets a randomly generated name that lasts only as long as they are viewing the timer.
 
 Only a timer's owner can start, reset, and edit the timer. A timer's owner is initially set to the first user to join the timer. If the owner leaves the timer while other users are still present, owner status will be given to one of the remaining users.
 
