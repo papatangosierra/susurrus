@@ -34,7 +34,7 @@ const User: React.FC<UserProps> = ({ id, value, name, isThisUser, isOwner, rotat
 
   return (
     <li 
-      className={`user-container ${isThisUser ? "this-user" : ""} ${isOwner ? "owner" : ""}`}
+      className={`user-container ${isThisUser ? "this-user" : ""} ${isOwner && !isThisUser ? "owner" : ""}`}
       style={style}
     >
       <span className="user-name-line">
