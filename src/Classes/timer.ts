@@ -15,6 +15,7 @@ export class Timer implements TimerInterface {
   pingQueue: number[];
   private timerDb: Database;
   private futureOffset: number; // offset to account for network latency
+  
 
   constructor(db: Database, owner: UserInterface, id?: string) {
     this.name = "Countdown";

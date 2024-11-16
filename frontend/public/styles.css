@@ -279,11 +279,18 @@ h1, h2 {
   box-shadow: .5rex .5rex 0.5em black;
 }
 
-.user-container.this-user .user-name::after {
-  content: " ☚";
+.user-container.this-user .user-name::before {
+  background-color: black;
+  color: white;
+  border-radius: 1vh;
+  margin: .25vh;
+  content: "YOU";
+  font-size: 1.5vh;
+  padding: .25vh;
 }
 
-.user-container.owner .user-name::after {
+.user-container.owner .user-name::before {
+  margin: .25vh;
   content: " ♛";
 }
 
