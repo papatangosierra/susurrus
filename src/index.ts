@@ -77,6 +77,13 @@ const websocket = new Elysia({
     /* WEBSOCKET MESSAGE RECEIVED  */
     /* * * * * * * * * * * * * * * */
     message(ws, message) {
+      if (message.type === 'HEARTBEAT') {
+        wsManager.updateHeartbeat(ws);
+        console.log("got heartbeat");
+        ws.send(JSON.stringify({ type: 'HEARTBEAT_ACK' }));
+        return;
+      }
+
       console.log("got websocket message: " + JSON.stringify(message));
       if (message.type === 'START_TIMER') {
         const timerId = message.payload.timerId

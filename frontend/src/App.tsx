@@ -47,44 +47,63 @@ const App: React.FC = () => {
       ? `/ws?timerId=${timerId}`
       : '/ws';
     
-    const client = new WebSocket(wsUrl);
-    setWebSocket(client);  // Store the WebSocket in state
+    let heartbeatInterval: number;
+    
+    const setupWebSocket = () => {
+      const client = new WebSocket(wsUrl);
+      setWebSocket(client);
 
-    client.onopen = () => {
-      console.log('WebSocket Client Connected');
+      client.onopen = () => {
+        console.log('WebSocket Client Connected');
+        // Start heartbeat
+        heartbeatInterval = window.setInterval(() => {
+          if (client.readyState === WebSocket.OPEN) {
+            client.send(JSON.stringify({ type: 'HEARTBEAT' }));
+          }
+        }, 30000);
+      };
+
+      client.onclose = () => {
+        console.log('WebSocket Connection Closed');
+        clearInterval(heartbeatInterval);
+        // Attempt to reconnect after 5 seconds
+        setTimeout(setupWebSocket, 5000);
+      };
+
+      client.onmessage = (message) => {
+        const data = JSON.parse(message.data as string);
+        console.log("Received data: ", data);
+
+        // set timer URL in the browser
+        if (data.timer) {
+          console.log("Updating timer state: ", data.timer);
+          window.history.pushState(null, '', `/timers/${data.timer.id}`);
+          setTimer(data.timer);
+        }      
+        // Update user state only if new user data is received
+        if (data.user) {
+          setThisUser(data.user);
+        }
+
+        // handle a ping from another user
+        if (data.ping) {
+          console.log("[App] Received ping from:", data.ping.from.name, "with ID:", data.ping.from.id);
+          // generate a unique-ish pitch for the ping based on the user's ID
+          const factor = 22;
+          const numerator = Math.floor(parseFloat("0." + data.ping.from.id) * factor) + 1;
+          console.log("[App] numerator:", numerator, "factor:", factor);
+          const cents = (numerator / factor) * 1200; 
+          audioService.play('ping', cents);
+        
+          setPingingUserId(data.ping.from.id);
+        }
+      };
     };
 
-    client.onmessage = (message) => {
-      const data = JSON.parse(message.data as string);
-      console.log("Received data: ", data);
-
-      // set timer URL in the browser
-      if (data.timer) {
-        console.log("Updating timer state: ", data.timer);
-        window.history.pushState(null, '', `/timers/${data.timer.id}`);
-        setTimer(data.timer);
-      }      
-      // Update user state only if new user data is received
-      if (data.user) {
-        setThisUser(data.user);
-      }
-
-      // handle a ping from another user
-      if (data.ping) {
-        console.log("[App] Received ping from:", data.ping.from.name, "with ID:", data.ping.from.id);
-        // generate a unique-ish pitch for the ping based on the user's ID
-        const factor = 22;
-        const numerator = Math.floor(parseFloat("0." + data.ping.from.id) * factor) + 1;
-        console.log("[App] numerator:", numerator, "factor:", factor);
-        const cents = (numerator / factor) * 1200; 
-        audioService.play('ping', cents);
-      
-        setPingingUserId(data.ping.from.id);
-      }
-    };
+    setupWebSocket();
 
     return () => {
-      client.close();
+      clearInterval(heartbeatInterval);
     };
   }, []);
 
