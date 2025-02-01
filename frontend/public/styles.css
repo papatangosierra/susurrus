@@ -282,11 +282,7 @@ h1, h2 {
 .user-container.this-user .user-name::before {
   background-color: black;
   color: white;
-  border-radius: 1vh;
-  margin: .25vh;
   content: "YOU";
-  font-size: 1.5vh;
-  padding: .25vh;
 }
 
 .user-container.owner .user-name::before {
@@ -391,6 +387,9 @@ h1, h2 {
   animation: ping-pulse 0.5s ease-in-out;
 }
 
+/* * * * * * * * * * * * *
+ * PORTRAIT MEDIA QUERIES
+ */
 
 @media (orientation: portrait) {
   .app-container {
@@ -433,6 +432,15 @@ h1, h2 {
     max-height: 40vh;
     overflow: visible;
   } 
+
+  .user-container.this-user .user-name::before {
+    position: relative;
+    bottom: .125vh;
+    border-radius: 1vh;
+    margin: .25vh;
+    font-size: 1.5vh;
+    padding: .25vh;
+  }
 
   .start-button-container {
     order: 1;
@@ -492,6 +500,9 @@ h1, h2 {
 
 }
 
+/* * * * * * * * * * * * *
+ * LANDSCAPE MEDIA QUERIES
+ */
 @media (orientation: landscape) {
 
   #help-link {
@@ -547,6 +558,16 @@ h1, h2 {
     max-width: 40vw;
     overflow: visible;
   } 
+  
+  .user-container.this-user .user-name::before {
+    position: relative;
+    bottom: .125vw;
+    border-radius: 1vw;
+    margin: .25vw;
+    content: "YOU";
+    font-size: 1.5vw;
+    padding: .25vw;
+  }
 
   .start-button-container {
     justify-self: center;
