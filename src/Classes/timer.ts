@@ -30,7 +30,7 @@ export class Timer implements TimerInterface {
     this.futureOffset = 10;
     if (id) {
       this.id = id;
-      this.load(); // if we got an id, that means the timer already exists in the database
+      this.create(); // Create the timer in the database
     } else {
       this.id = this.createId();
       this.create(); // Create the timer in the database

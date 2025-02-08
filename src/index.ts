@@ -52,7 +52,8 @@ const websocket = new Elysia({
     /* * * * * * * * * * * * * * * */
     open(ws) {
       console.log("websocket connection opened with id: " + ws.id);
-      const providedTimerId = ws.data.query.timerId;
+      // get the first 100 characters of the timerId from the query string, if it exists
+      const providedTimerId = ws.data.query.timerId?.slice(0, 100);
       const user = ws.data.user;
       const timerManager = ws.data.timerManager;
       // If the timerId was provided in the URL, try tojoin the timer
@@ -61,7 +62,7 @@ const websocket = new Elysia({
         const timer = 
           timerManager.getTimer(providedTimerId) ? 
           timerManager.getTimer(providedTimerId) : 
-          timerManager.createTimer(user, ws);
+          timerManager.createTimer(user, ws, providedTimerId);
         // We can assert here because in either case, we've just created a timer
         if (user.id !== timer!.owner.id) { // if the user is not the owner, add them to the timer
           //handleUserJoinedStateUpdate(ws, timer, user);

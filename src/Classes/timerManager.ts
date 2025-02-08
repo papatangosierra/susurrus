@@ -17,8 +17,8 @@ export class TimerManager extends EventEmitter implements TimerManagerInterface 
     this.loadTimersFromDatabase();
   }
 
-  createTimer(owner: UserInterface, ws: ElysiaWS<any, any, any>): TimerInterface {
-    const timer = new Timer(this.timerDb, owner);
+  createTimer(owner: UserInterface, ws: ElysiaWS<any, any, any>, providedTimerId?: string): TimerInterface {
+    const timer = new Timer(this.timerDb, owner, providedTimerId);
     owner.timerId = timer.id;
     timer.setDuration(600000);
     this.timers.set(timer.id, timer);
