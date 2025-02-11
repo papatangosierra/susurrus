@@ -37,9 +37,11 @@ const User: React.FC<UserProps> = ({ id, value, name, isThisUser, isOwner, rotat
       className={`user-container ${isThisUser ? "this-user" : ""} ${isOwner && !isThisUser ? "owner" : ""}`}
       style={style}
     >
-      <span className="user-name-line">
-        <span ref={userNameRef} className="user-name">{name}</span>
-      </span>
+      <div className="user-name-line">
+        <span className={`user-name ${isPinging ? 'pinging' : ''}`}>
+          {name}
+        </span>
+      </div>
     </li>
   );
 };
