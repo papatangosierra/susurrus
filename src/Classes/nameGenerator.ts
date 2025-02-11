@@ -20,9 +20,12 @@ export class NameGenerator {
     const consonants = ['B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Z'];
     const vowels = ['A', 'E', 'I', 'O', 'U', 'Y'];
     let frequency = 0.5;
+    let scareQuotesFrequency = 0.1;
     // if the first letter is a consonant, change it to a different, random consonant
     if (consonants.includes(name[0]) && Math.random() < frequency) {
       return consonants[Math.floor(Math.random() * consonants.length)] + name.slice(1);
+    } else if (Math.random() < scareQuotesFrequency) { 
+      return `"${name}"`;
     }
     return name;
   }

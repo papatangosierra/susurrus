@@ -272,13 +272,13 @@ h1, h2 {
   pointer-events: none;
 }
 
-.user-container.this-user .user-name::before {
+.user-container.this-user .user-name::after {
   background-color: black;
   color: white;
   content: "YOU";
 }
 
-.user-container.owner .user-name::before {
+.user-container.owner .user-name::after {
   margin: .25vh;
   content: " ♛";
 }
@@ -474,9 +474,46 @@ h1, h2 {
     margin-top: 0;
   }
 
-  .user-container.this-user .user-name::before {
+  /* indent 6th through 10th users around the ping button   */
+  .user-container:nth-child(6)
+  {
+    margin-left: 4.5vh;
+  }
+
+  .user-container:nth-child(7)
+  {
+    margin-left: 6vh;
+  }
+
+  .user-container:nth-child(8)
+  {
+    margin-left: 7.5vh;
+  }
+
+  .user-container:nth-child(9)
+  {
+    margin-left: 7.75vh;
+  }
+
+  .user-container:nth-child(10)
+  {
+    margin-left: 7.5vh;
+  }
+
+  .user-container:nth-child(11)
+  {
+    margin-left: 7vh;
+  }
+
+  .user-container:nth-child(12)
+  {
+    margin-left: 5vh;
+  }
+
+  .user-container.this-user .user-name::after {
     position: relative;
     /* bottom: .125vh; */
+    border: 0.2vh solid var(--color-border);
     border-radius: 1vh;
     margin: .25vh;
     font-size: 1.5vh;
@@ -630,10 +667,42 @@ h1, h2 {
     max-width: 40vw;
     overflow: visible;
   } 
+
+  /* indent 6th through 10th users around the ping button   */
+  .user-container:nth-child(6)
+  {
+    margin-left: 5.5vw;
+  }
+
+  .user-container:nth-child(7)
+  {
+    margin-left: 7.5vw;
+  }
+
+  .user-container:nth-child(8)
+  {
+    margin-left: 8.5vw;
+  }
+
+  .user-container:nth-child(9)
+  {
+    margin-left: 8vw;
+  }
+
+  .user-container:nth-child(10)
+  {
+    margin-left: 7vw;
+  }
+
+  .user-container:nth-child(11)
+  {
+    margin-left: 4vw;
+  }
   
-  .user-container.this-user .user-name::before {
+  .user-container.this-user .user-name::after {
     position: relative;
     /* bottom: .125vw; */
+    border: 0.2vw solid var(--color-border);
     border-radius: 1vw;
     margin: .25vw;
     content: "YOU";
