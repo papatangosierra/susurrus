@@ -442,6 +442,37 @@ h1, h2 {
     overflow: visible;
   } 
 
+  #dial-userlist {
+    background-color: rgba(255, 0, 0, 0.5);        
+    transform-origin: center;
+    position: absolute;
+    /* Match the dial SVG's circle size and position */
+    top: 0%;  /* (100 - 90) / 2 to match circle position */
+    left: 0%;
+    width: 100%; /* Match the circle diameter (90%) */
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+
+  #dial-userlist ul {
+    position: relative;
+    left: calc(50% - 8vh);
+    top: calc(50% - 20vh);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    gap: 0.2rem;
+  }
+
+  #dial-userlist ul li {
+    align-self: flex-start;
+  }
+
   .user-container.this-user .user-name::before {
     position: relative;
     bottom: .125vh;

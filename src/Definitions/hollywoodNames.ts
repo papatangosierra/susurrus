@@ -693,7 +693,6 @@ export const firstNames = [
   "Michele",
   "Michelle",
   "Mickey",
-  "Mike",
   "Milburn",
   "Mildred",
   "Miles",
