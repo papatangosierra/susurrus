@@ -257,8 +257,8 @@ h1, h2 {
   background-color: white;
   color: black;
   border: 0.1vh solid var(--color-border);
-  border-radius: 0 1vh 1vh 0;
-  padding: 0.25rem 0.5rem;
+  border-radius: 1vh;
+  padding: 0rem 0.5rem;
   box-shadow: .5rex .5rex 0.5em black;
   display: inline-block;
 }
@@ -443,7 +443,8 @@ h1, h2 {
   } 
 
   #dial-userlist {
-    background-color: rgba(255, 0, 0, 0.5);        
+    /* diagnostic background */
+    /* background-color: rgba(255, 0, 0, 0.5);         */
     transform-origin: center;
     position: absolute;
     /* Match the dial SVG's circle size and position */
@@ -466,16 +467,16 @@ h1, h2 {
     padding: 0;
     margin: 0;
     list-style: none;
-    gap: 0.2rem;
   }
 
   #dial-userlist ul li {
     align-self: flex-start;
+    margin-top: 0;
   }
 
   .user-container.this-user .user-name::before {
     position: relative;
-    bottom: .125vh;
+    /* bottom: .125vh; */
     border-radius: 1vh;
     margin: .25vh;
     font-size: 1.5vh;
@@ -534,7 +535,7 @@ h1, h2 {
   }
 
   .user-container .user-name-line {
-    font-size: 2vh;
+    font-size: 1.5vh;
     padding-left: 8vh;
   }
 
@@ -593,7 +594,8 @@ h1, h2 {
   }
 
   #dial-userlist {
-    background-color: rgba(255, 0, 0, 0.5);        
+    /* diagnostic background */
+    /* background-color: rgba(255, 0, 0, 0.5);         */
     transform-origin: center;
     position: absolute;
     /* Match the dial SVG's circle size and position */
@@ -616,7 +618,6 @@ h1, h2 {
     padding: 0;
     margin: 0;
     list-style: none;
-    gap: 0.2rem;
   }
 
   #dial-userlist ul li {
@@ -632,7 +633,7 @@ h1, h2 {
   
   .user-container.this-user .user-name::before {
     position: relative;
-    bottom: .125vw;
+    /* bottom: .125vw; */
     border-radius: 1vw;
     margin: .25vw;
     content: "YOU";
@@ -672,7 +673,7 @@ h1, h2 {
   }
 
   .user-container .user-name-line {
-    font-size: 2vw;
+    font-size: 1.5vw;
     padding-left: 8vw;
   }
 }
