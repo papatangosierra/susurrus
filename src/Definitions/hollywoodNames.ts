@@ -1110,7 +1110,6 @@ export const lastNames = [
   "Bacall",
   "Backus",
   "Bacon",
-  "Baggot",
   "Bailey",
   "Bain",
   "Bainter",
