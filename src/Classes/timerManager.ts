@@ -9,11 +9,12 @@ import { Database } from "bun:sqlite";
 export class TimerManager extends EventEmitter implements TimerManagerInterface {
   private timers: Map<string, TimerInterface>;
   private timerDb: Database;
-
-  constructor(db: Database) {
+  private logDb: Database;
+  constructor(db: Database, logDb: Database) {
     super();
     this.timers = new Map();
     this.timerDb = db;
+    this.logDb = logDb;
     this.loadTimersFromDatabase();
   }
 
@@ -22,6 +23,8 @@ export class TimerManager extends EventEmitter implements TimerManagerInterface 
     owner.timerId = timer.id;
     timer.setDuration(600000);
     this.timers.set(timer.id, timer);
+
+    this.logTimerEvent('created', timer.id, owner.id, timer.duration, 1);
     this.emit("timerCreated", {timer, ws});
     return timer;
   }
@@ -33,6 +36,7 @@ export class TimerManager extends EventEmitter implements TimerManagerInterface 
   deleteTimer(id: string, ws: ElysiaWS<any, any, any>): void {
     const timer = this.getTimer(id);
     if (timer) {
+      this.logTimerEvent('deleted', timer.id, timer.owner.id, undefined, timer.users.length);
       timer.delete();
       this.timers.delete(id);
       this.emit("timerDeleted", {timer, ws});
@@ -45,6 +49,7 @@ export class TimerManager extends EventEmitter implements TimerManagerInterface 
     const timer = this.getTimer(id);
     if (timer) {
       timer.start();
+      this.logTimerEvent('started', timer.id, timer.owner.id, timer.duration, timer.users.length);
       this.emit("timerStarted", {timer, ws});
     } else {
       throw new Error("Timer not found");
@@ -55,6 +60,7 @@ export class TimerManager extends EventEmitter implements TimerManagerInterface 
     const timer = this.getTimer(id);
     if (timer) {
       timer.reset(duration);
+      this.logTimerEvent('reset', timer.id, timer.owner.id, duration, timer.users.length);
       this.emit("timerReset", {timer, ws});
     } else {
       throw new Error("Timer not found");
@@ -93,6 +99,7 @@ export class TimerManager extends EventEmitter implements TimerManagerInterface 
     const timer = this.getTimer(user.timerId);
     if (timer) {
       this.emit("timerPinged", {user,timer, ws});
+      this.logTimerEvent('pinged', timer.id, user.id, undefined, timer.users.length);
     } else {
       throw new Error("Timer not found");
     }
@@ -104,7 +111,7 @@ export class TimerManager extends EventEmitter implements TimerManagerInterface 
   // let deletedCount = 0;
   // for (const timer of this.timers) {
   //   if (timer.startTime < cutoff) {
-  //     console.log(`Purging stale timer ${timer.id}`);
+  //     // console.log(`Purging stale timer ${timer.id}`);
   //     this.deleteTimer(timer.id);
   //     deletedCount++;
   //   }
@@ -118,6 +125,7 @@ export class TimerManager extends EventEmitter implements TimerManagerInterface 
     if (timer) {
       timer.addUser(user);
       user.timerId = timerId;
+      this.logTimerEvent('user_joined', timer.id, user.id, undefined, timer.users.length);
       this.emit("userAddedToTimer", {user, timer, ws});
     } else {
       throw new Error("Timer not found");
@@ -126,16 +134,19 @@ export class TimerManager extends EventEmitter implements TimerManagerInterface 
 
   removeUserFromTimer(user: UserInterface, timerId: string, ws: ElysiaWS<any, any, any>): void {
     const timer = this.getTimer(timerId);
-    console.log("removing user from timer: ", timerId);
+    // console.log("removing user from timer: ", timerId);
     if (timer) {
+      // Log before removing the user to get accurate user count
+      this.logTimerEvent('user_left', timer.id, user.id, undefined, timer.users.length);
+      
       // if user is the last user in the timer, delete the timer
       if (timer.users.length === 1) {
         timer.removeUser(user);
-        // this.deleteTimer(timerId, ws);
         this.emit("lastUserRemovedFromTimer", {timer, ws});
       } else if (user.id === timer.owner.id) { // if user is owner of timer
         timer.removeUser(user);
         timer.setOwner(timer.users[0]) // set new owner to first user in user list
+        this.logTimerEvent('owner_changed', timer.id, timer.owner.id, undefined, timer.users.length);
         this.emit("userRemovedFromTimer", {timer, ws});
       } else {
         timer.removeUser(user);
@@ -148,10 +159,32 @@ export class TimerManager extends EventEmitter implements TimerManagerInterface 
 
   private loadTimersFromDatabase(): void {
     const timers = this.timerDb.query("SELECT * FROM timers").all();
-    // console.log(timers);
+    // // console.log(timers);
     for (const timer of timers as TimerInterface[]) {
       const newTimer = new Timer(this.timerDb, timer.owner, timer.id);
       this.timers.set(timer.id, newTimer);
     }
+  }
+
+  private logTimerEvent(eventType: string, timerId: string, userId?: string, duration?: number, concurrentUsers?: number): void {
+    console.log("logging timer event: ", eventType, timerId, userId, duration, concurrentUsers);
+    const eventId = crypto.randomUUID();
+    this.logDb.query(`
+        INSERT INTO timer_events (
+            id, 
+            event_type, 
+            timer_id, 
+            user_id, 
+            duration, 
+            concurrent_users
+        ) VALUES (?, ?, ?, ?, ?, ?);
+    `).run(
+        eventId,
+        eventType,
+        timerId,
+        userId || null,
+        duration || null,
+        concurrentUsers || null
+    );
   }
 }

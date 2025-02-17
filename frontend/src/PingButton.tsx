@@ -36,7 +36,7 @@ const PingButton: React.FC<PingButtonProps> = ({
           type: 'PING',
           payload: { user: user },
         }));
-        console.log('Sent PING message for user:', user);
+        // console.log('Sent PING message for user:', user);
       }
 
       onPingClick?.();
@@ -47,10 +47,10 @@ const PingButton: React.FC<PingButtonProps> = ({
     try {
       if ('wakeLock' in navigator) {
         wakeLockRef.current = await navigator.wakeLock?.request('screen');
-        console.log('Wake Lock is active');
+        // console.log('Wake Lock is active');
       }
     } catch (err) {
-      console.log(`Wake Lock request failed: ${err}`);
+      // console.log(`Wake Lock request failed: ${err}`);
     }
   };
 
@@ -59,9 +59,9 @@ const PingButton: React.FC<PingButtonProps> = ({
       try {
         await wakeLockRef.current.release();
         wakeLockRef.current = null;
-        console.log('Wake Lock released');
+        // console.log('Wake Lock released');
       } catch (err) {
-        console.log(`Wake Lock release failed: ${err}`);
+        // console.log(`Wake Lock release failed: ${err}`);
       }
     }
   };

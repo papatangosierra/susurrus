@@ -20,11 +20,11 @@ export class User implements UserInterface {
     // if we got an id, that mean the user already exists in the database, so load instead of create
     if (id) {
       this.id = id;
-      //console.log(`Loading user ${this.id} from database`);
+      //// console.log(`Loading user ${this.id} from database`);
       this.load();
     } else {
       this.id = this.hashUserId(this.name);
-      console.log(`Creating user ${this.name} with id: ${this.id} in database`);
+      // console.log(`Creating user ${this.name} with id: ${this.id} in database`);
       this.create();
     }
     this.id = this.hashUserId(this.name);
@@ -103,7 +103,7 @@ export class User implements UserInterface {
   }
 
   private remove(): void {
-    console.log(`purging user ${this.name} with id: ${this.id}`);
+    // console.log(`purging user ${this.name} with id: ${this.id}`);
     const query = this.userDb.query(`DELETE FROM users WHERE id = $id`);
     try {
       query.all({

@@ -23,10 +23,10 @@ export function useTimer({ duration, startTime, timerId, isOwner, audioEnabled }
       setIsRunning(true);
       const elapsedTime = Date.now() - startTime;
       const newRemainingTime = Math.max(0, duration - elapsedTime);
-      console.log('Setting remaining time to:', newRemainingTime);
+      // console.log('Setting remaining time to:', newRemainingTime);
       setRemainingTime(newRemainingTime);
     } else {
-      console.log('Timer not running, setting to duration:', duration);
+      // console.log('Timer not running, setting to duration:', duration);
       setIsRunning(false);
       setRemainingTime(duration);
     }
@@ -41,7 +41,7 @@ export function useTimer({ duration, startTime, timerId, isOwner, audioEnabled }
           const newRemainingTime = Math.max(0, duration - (Date.now() - startTime));
           // if we've reached 0, play the timer end sound
           if (newRemainingTime === 0) {
-            console.log('Timer ended, playing sound');
+            // console.log('Timer ended, playing sound');
             audioService.play('timerEnd');
           }
           return newRemainingTime;
@@ -82,7 +82,7 @@ export function useTimer({ duration, startTime, timerId, isOwner, audioEnabled }
   };
 
   const handleRename = (newName: string) => {
-    console.log("handleRename", newName);
+    // console.log("handleRename", newName);
     webSocket?.send(JSON.stringify({
       type: "RENAME_TIMER",
       payload: {

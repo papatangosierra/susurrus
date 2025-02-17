@@ -6,10 +6,11 @@ import { Database } from "bun:sqlite";
 export class UserManager implements UserManagerInterface {
   private users: Map<string, UserInterface>;
   private userDb: Database;
-
-  constructor(db: Database) {
+  private logDb: Database;
+  constructor(db: Database, logDb: Database) {
     this.users = new Map();
     this.userDb = db;
+    this.logDb = logDb;
     this.loadUsersFromDatabase();
   }
 
@@ -39,7 +40,7 @@ export class UserManager implements UserManagerInterface {
 
   private loadUsersFromDatabase(): void {
     const users = this.userDb.query("SELECT * FROM users").all();
-    // console.log(users);
+    // // console.log(users);
     for (const user of users as UserInterface[]) {
       const newUser = new User(this.userDb, user.id);
       this.users.set(user.id, newUser);

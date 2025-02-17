@@ -13,13 +13,16 @@ import { joinTimer } from "./handlers/joinTimer";
 import { getUser } from "./handlers/getUser";
 import { makeTimer } from "./handlers/makeTimer";
 import { StateUpdateService } from "./Classes/stateUpdateService";
+import { WebSocketMessage } from "./Classes/webSocketInterface";
 // SQLite Database
 import db from "./database";
+import { logDb } from "./database";
+// User class
 import { User } from "./Classes/user";
 
 // Instantiate the timer and user managers
-const timerManager = new TimerManager(db);
-const userManager = new UserManager(db);
+const timerManager = new TimerManager(db, logDb);
+const userManager = new UserManager(db, logDb);
 const wsManager = new WebSocketManager();
 // It may seem like we're not doing anything with the stateUpdateService, but we are.
 // We don't call its methods directly, but by instantiating it here, we ensure that its
@@ -51,7 +54,7 @@ const websocket = new Elysia({
     /* WEBSOCKET CONNECTION OPENED */
     /* * * * * * * * * * * * * * * */
     open(ws) {
-      console.log("websocket connection opened with id: " + ws.id);
+      // console.log("websocket connection opened with id: " + ws.id);
       // get the first 100 characters of the timerId from the query string, if it exists
       const providedTimerId = ws.data.query.timerId?.slice(0, 100);
       const user = ws.data.user;
@@ -70,7 +73,7 @@ const websocket = new Elysia({
         } 
       } else {
         // No timerId provided, so, create a new timer
-        console.log("creating new timer");
+        // console.log("creating new timer");
         timerManager.createTimer(user, ws);
       }
     },
@@ -80,12 +83,12 @@ const websocket = new Elysia({
     message(ws, message) {
       if (message.type === 'HEARTBEAT') {
         wsManager.updateHeartbeat(ws);
-        console.log("got heartbeat");
+        // console.log("got heartbeat");
         ws.send(JSON.stringify({ type: 'HEARTBEAT_ACK' }));
         return;
       }
 
-      console.log("got websocket message: " + JSON.stringify(message));
+      // console.log("got websocket message: " + JSON.stringify(message));
       if (message.type === 'START_TIMER') {
         const timerId = message.payload.timerId
         const timerManager = ws.data.timerManager;
@@ -119,10 +122,10 @@ const websocket = new Elysia({
     /* WEBSOCKET CONNECTION CLOSED */
     /* * * * * * * * * * * * * * * */
     close(ws) {
-      console.log("websocket connection closed");
+      // console.log("websocket connection closed");
       const user = ws.data.user;
       const timerId = user.timerId;
-      console.log("removing user: ", user.name);
+      // console.log("removing user: ", user.name);
       timerManager.removeUserFromTimer(user, timerId, ws);
       userManager.removeUser(user.id);
     }
@@ -142,23 +145,23 @@ const app = new Elysia({
     Anyone visiting the site gets the frontend
    */
   .get("/", () => {
-    //console.log("index.html requested");
+    //// console.log("index.html requested");
     return Bun.file("./frontend/dist/index.html");
   })
   .get("/js/App.js", () => {
-    //console.log("App.js requested");
+    //// console.log("App.js requested");
     return Bun.file("./frontend/public/js/App.js");
   })
   .get("/styles.css", () => {
-    //console.log("styles.css requested");
+    //// console.log("styles.css requested");
     return Bun.file("./frontend/public/styles.css");
   })
   .get("/sounds/chime.mp3", () => {
-    //console.log("styles.css requested");
+    //// console.log("styles.css requested");
     return Bun.file("./frontend/dist/audio/chime.mp3");
   })
   .get("/sounds/ping.mp3", () => {
-    //console.log("styles.css requested");
+    //// console.log("styles.css requested");
     return Bun.file("./frontend/dist/audio/ping.mp3");
   })
 
@@ -168,7 +171,7 @@ const app = new Elysia({
   /* When the client provides a timerId, we should join them to that timer, making a new user
   in the process */
   .get("/timers/:timerId", () => {
-    console.log("Timer Join requested");
+    // console.log("Timer Join requested");
     return Bun.file("./frontend/dist/index.html");
   }) 
   /* Use a websocket to send updates to the client about the timer */

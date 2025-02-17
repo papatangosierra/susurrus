@@ -40,7 +40,7 @@ export class AudioService {
       // Convert pitch multiplier to cents
   
       
-      console.log("[AudioService] pitch received. cents:", cents);
+      // console.log("[AudioService] pitch received. cents:", cents);
       
       source.detune.value = cents;
       

@@ -76,7 +76,7 @@ const Timer: React.FC<TimerProps> = ({
     handleDurationChange(validDuration);
   };
 
-  // console.log("[Timer] Rendering with pingingUserId:", pingingUserId);
+  // // console.log("[Timer] Rendering with pingingUserId:", pingingUserId);
 
   return (
     <div className="app-container">
