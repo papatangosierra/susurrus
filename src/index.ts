@@ -176,7 +176,10 @@ const app = new Elysia({
   }) 
   /* Use a websocket to send updates to the client about the timer */
   .use(websocket)
-  .listen(3000);
+  .listen({
+    hostname: "0.0.0.0",
+    port: 3000
+  });
 
 console.log(
   `🦊 Timer server is running at ${app.server?.hostname}:${app.server?.port}`,
