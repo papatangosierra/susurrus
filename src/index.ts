@@ -133,7 +133,7 @@ const websocket = new Elysia({
 
 const app = new Elysia({
   serve: {
-    tls: tlsConfig
+    // tls: tlsConfig // Uncomment this to enable HTTPS
   }
 })
   .use(swagger())
