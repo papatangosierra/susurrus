@@ -45,7 +45,7 @@ export class WebSocketManager {
     for (const [id, conn] of this.connections.entries()) {
       if (now - conn.lastPing > this.HEARTBEAT_TIMEOUT) {
         // Connection is stale, force close it
-        console.log(`Closing stale connection: ${id}`);
+        // console.log(`Closing stale connection: ${id}`);
         try {
           conn.ws.close();
         } catch (e) {
@@ -63,7 +63,7 @@ export class WebSocketManager {
   }
 
   broadcastToTimer(timerId: string, data: any, ws: ElysiaWS<any, any, any>) {
-    console.log("broadcasting to timer: ", timerId);
+    // console.log("broadcasting to timer: ", timerId);
     if (data) {
       ws.publish(timerId, data);
     }

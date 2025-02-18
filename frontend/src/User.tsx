@@ -16,7 +16,7 @@ const User: React.FC<UserProps> = ({ id, value, name, isThisUser, isOwner, rotat
   useEffect(() => {
     const element = userNameRef.current;
     if (element && isPinging) {
-      console.log("[User] Starting ping animation for:", name);
+      // console.log("[User] Starting ping animation for:", name);
       element.classList.add('pinging');
       const timer = setTimeout(() => {
         element.classList.remove('pinging');

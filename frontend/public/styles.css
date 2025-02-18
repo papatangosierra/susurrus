@@ -472,6 +472,7 @@ h1, h2 {
   #dial-userlist ul li {
     align-self: flex-start;
     margin-top: 0;
+    margin-bottom: .5vw;
   }
 
   /* indent 6th through 10th users around the ping button   */
@@ -659,6 +660,8 @@ h1, h2 {
 
   #dial-userlist ul li {
     align-self: flex-start;
+    margin-top: 0;
+    margin-bottom: .5vh;
   }
 
   .dial-svg {
