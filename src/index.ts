@@ -39,7 +39,11 @@ const tlsConfig = {
 // Instantiate the websocket
 const websocket = new Elysia({
   serve: {
-    // tls: tlsConfig // Uncomment this to enable HTTPS
+    /* 
+      If the DEPLOYMENT_TYPE is dev, we want to use our own HTTPS, so we pass in the tlsConfig.
+      If the DEPLOYMENT_TYPE is prod, we want to let the server (nginx) handle HTTPS, so we pass in undefined.
+    */
+    tls: process.env.DEPLOYMENT_TYPE === 'dev' ? tlsConfig : undefined
   }
 })
   .decorate("timerManager", timerManager)
@@ -133,7 +137,11 @@ const websocket = new Elysia({
 
 const app = new Elysia({
   serve: {
-    // tls: tlsConfig // Uncomment this to enable HTTPS
+    /* 
+      If the DEPLOYMENT_TYPE is dev, we want to use our own HTTPS, so we pass in the tlsConfig.
+      If the DEPLOYMENT_TYPE is prod, we want to let the server (nginx) handle HTTPS, so we pass in undefined.
+    */
+    tls: process.env.DEPLOYMENT_TYPE === 'dev' ? tlsConfig : undefined
   }
 })
   .use(swagger())
