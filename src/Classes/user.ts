@@ -20,7 +20,7 @@ export class User implements UserInterface {
     // if we got an id, that mean the user already exists in the database, so load instead of create
     if (id) {
       this.id = id;
-      //// console.log(`Loading user ${this.id} from database`);
+      // console.log(`Loading user ${this.id} from database`);
       this.load();
     } else {
       this.id = this.hashUserId(this.name);

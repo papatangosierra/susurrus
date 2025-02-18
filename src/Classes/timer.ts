@@ -135,7 +135,7 @@ export class Timer implements TimerInterface {
       $id: this.id,
     }) as Omit<TimerInterface, "users"> & { users: string }; // TypeScript is now satisfied that it's okay if users is a string (which it is, since it's the JSON stringified array of us)
     if (result) {
-      //// console.log(`loading timer ${this.id} from database`);
+      // console.log(`loading timer ${this.id} from database`);
       this.name = result.name;
       this.duration = result.duration;
       this.startTime = result.startTime || 0;

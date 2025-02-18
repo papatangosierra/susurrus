@@ -145,23 +145,23 @@ const app = new Elysia({
     Anyone visiting the site gets the frontend
    */
   .get("/", () => {
-    //// console.log("index.html requested");
+    // console.log("index.html requested");
     return Bun.file("./frontend/dist/index.html");
   })
   .get("/js/App.js", () => {
-    //// console.log("App.js requested");
+    // console.log("App.js requested");
     return Bun.file("./frontend/public/js/App.js");
   })
   .get("/styles.css", () => {
-    //// console.log("styles.css requested");
+    // console.log("styles.css requested");
     return Bun.file("./frontend/public/styles.css");
   })
   .get("/sounds/chime.mp3", () => {
-    //// console.log("styles.css requested");
+    // console.log("styles.css requested");
     return Bun.file("./frontend/dist/audio/chime.mp3");
   })
   .get("/sounds/ping.mp3", () => {
-    //// console.log("styles.css requested");
+    // console.log("styles.css requested");
     return Bun.file("./frontend/dist/audio/ping.mp3");
   })
 
@@ -176,9 +176,6 @@ const app = new Elysia({
   }) 
   /* Use a websocket to send updates to the client about the timer */
   .use(websocket)
-  // .get("/timers/:id/users", getUsersForTimer)
-  // .put("/timers/:id/start", startTimer)
-  // .put("/timers/:id/stop", stopTimer)
   .listen(3000);
 
 console.log(
