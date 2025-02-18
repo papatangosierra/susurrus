@@ -39,7 +39,7 @@ const tlsConfig = {
 // Instantiate the websocket
 const websocket = new Elysia({
   serve: {
-    tls: tlsConfig
+    // tls: tlsConfig // Uncomment this to enable HTTPS
   }
 })
   .decorate("timerManager", timerManager)
