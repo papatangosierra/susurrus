@@ -6,7 +6,8 @@
     "dev": "bun run --watch --inspect src/index.ts",
     "prod": "bun run src/index.ts",
     "build-watch": "bun build --watch ./frontend/src/App.tsx --outdir ./frontend/public/js --target bun --format esm --sourcemap",
-    "build": "bun build ./frontend/src/App.tsx --outdir ./frontend/public/js --target bun --format esm --minify"
+    "build": "bun build ./frontend/src/App.tsx --outdir ./frontend/public/js --target bun --format esm --minify",
+    "compile": "bun build ./frontend/src/App.tsx --outdir ./frontend/public/js --target bun --format esm --minify; bun build --compile --minify --sourcemap ./src/index.ts --outfile susurrus"
   },
   "dependencies": {
     "@elysiajs/swagger": "^1.1.1",
