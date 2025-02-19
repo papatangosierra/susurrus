@@ -4,6 +4,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun run --watch --inspect src/index.ts",
+    "prod": "bun run src/index.ts",
     "build-watch": "bun build --watch ./frontend/src/App.tsx --outdir ./frontend/public/js --target bun --format esm --sourcemap",
     "build": "bun build ./frontend/src/App.tsx --outdir ./frontend/public/js --target bun --format esm --minify"
   },
