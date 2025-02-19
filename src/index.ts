@@ -1,3 +1,16 @@
+// File Imports for Bun Executable Generation
+import chime_mp3 from "../frontend/dist/audio/chime.mp3" with { type: "file" };
+import ping_mp3 from "../frontend/dist/audio/ping.mp3" with { type: "file" };
+import susurrus_banner_png from "../frontend/dist/images/susurrus_banner.png" with {
+  type: "file",
+};
+import susurrus_square_png from "../frontend/dist/images/susurrus_square.png" with {
+  type: "file",
+};
+import styles_css from "../frontend/public/styles.css" with { type: "file" };
+import app_js from "../frontend/public/js/App.js" with { type: "file" };
+import index_html from "../frontend/dist/index.html" with { type: "file" };
+
 // Library Imports
 import { Elysia, t } from "elysia";
 import { ElysiaWS } from "elysia/dist/ws/index";
@@ -158,26 +171,26 @@ const app = new Elysia({
    */
   .get("/", () => {
     // console.log("index.html requested");
-    return Bun.file("./frontend/dist/index.html");
+    return Bun.file(index_html);
   })
   .get("/js/App.js", () => {
     // console.log("App.js requested");
-    return Bun.file("./frontend/public/js/App.js");
+    return Bun.file(app_js);
   })
   .get("/styles.css", () => {
-    return Bun.file("./frontend/public/styles.css");
+    return Bun.file(styles_css);
   })
   .get("/sounds/chime.mp3", () => {
-    return Bun.file("./frontend/dist/audio/chime.mp3");
+    return Bun.file(chime_mp3);
   })
   .get("/sounds/ping.mp3", () => {
-    return Bun.file("./frontend/dist/audio/ping.mp3");
+    return Bun.file(ping_mp3);
   })
   .get("/images/susurrus_banner.png", () => {
-    return Bun.file("./frontend/dist/images/susurrus_banner.png");
+    return Bun.file(susurrus_banner_png);
   })
   .get("/images/susurrus_square.png", () => {
-    return Bun.file("./frontend/dist/images/susurrus_square.png");
+    return Bun.file(susurrus_square_png);
   })
 
   /* When the client requests a user identity, we should give them one */
