@@ -26,14 +26,18 @@ const userManager = new UserManager(db, logDb);
 const wsManager = new WebSocketManager();
 // It may seem like we're not doing anything with the stateUpdateService, but we are.
 // We don't call its methods directly, but by instantiating it here, we ensure that its
-// constructor registeres all the event listeners it uses to dispatch state updates to 
+// constructor registeres all the event listeners it uses to dispatch state updates to
 // the clients.
-const stateUpdateService = new StateUpdateService(timerManager, userManager, wsManager);
+const stateUpdateService = new StateUpdateService(
+  timerManager,
+  userManager,
+  wsManager,
+);
 
 // TLS configuration for HTTPS
 const tlsConfig = {
   key: Bun.file(process.env.KEYPATH as string),
-  cert: Bun.file(process.env.CERTPATH as string)
+  cert: Bun.file(process.env.CERTPATH as string),
 };
 
 // Instantiate the websocket
@@ -43,15 +47,15 @@ const websocket = new Elysia({
       If the DEPLOYMENT_TYPE is dev, we want to use our own HTTPS, so we pass in the tlsConfig.
       If the DEPLOYMENT_TYPE is prod, we want to let the server (nginx) handle HTTPS, so we pass in undefined.
     */
-    tls: process.env.DEPLOYMENT_TYPE === 'dev' ? tlsConfig : undefined
-  }
+    tls: process.env.DEPLOYMENT_TYPE === "dev" ? tlsConfig : undefined,
+  },
 })
   .decorate("timerManager", timerManager)
   .decorate("userManager", userManager)
   // gives us a new user object to use in the websocket
-    // (accessible inside the methods as ws.data.user)
-  .derive( context => ({ 
-    "user": new User(db)
+  // (accessible inside the methods as ws.data.user)
+  .derive((context) => ({
+    user: new User(db),
   }))
   .ws("/ws", {
     /* * * * * * * * * * * *  * * * */
@@ -66,15 +70,15 @@ const websocket = new Elysia({
       // If the timerId was provided in the URL, try tojoin the timer
       if (providedTimerId) {
         // If the requested timer doesn't exist, create a new one
-        const timer = 
-          timerManager.getTimer(providedTimerId) ? 
-          timerManager.getTimer(providedTimerId) : 
-          timerManager.createTimer(user, ws, providedTimerId);
+        const timer = timerManager.getTimer(providedTimerId)
+          ? timerManager.getTimer(providedTimerId)
+          : timerManager.createTimer(user, ws, providedTimerId);
         // We can assert here because in either case, we've just created a timer
-        if (user.id !== timer!.owner.id) { // if the user is not the owner, add them to the timer
+        if (user.id !== timer!.owner.id) {
+          // if the user is not the owner, add them to the timer
           //handleUserJoinedStateUpdate(ws, timer, user);
           timerManager.addUserToTimer(user, providedTimerId, ws);
-        } 
+        }
       } else {
         // No timerId provided, so, create a new timer
         // console.log("creating new timer");
@@ -85,39 +89,39 @@ const websocket = new Elysia({
     /* WEBSOCKET MESSAGE RECEIVED  */
     /* * * * * * * * * * * * * * * */
     message(ws, message) {
-      if (message.type === 'HEARTBEAT') {
+      if (message.type === "HEARTBEAT") {
         wsManager.updateHeartbeat(ws);
         // console.log("got heartbeat");
-        ws.send(JSON.stringify({ type: 'HEARTBEAT_ACK' }));
+        ws.send(JSON.stringify({ type: "HEARTBEAT_ACK" }));
         return;
       }
 
       // console.log("got websocket message: " + JSON.stringify(message));
-      if (message.type === 'START_TIMER') {
-        const timerId = message.payload.timerId
+      if (message.type === "START_TIMER") {
+        const timerId = message.payload.timerId;
         const timerManager = ws.data.timerManager;
         timerManager.startTimer(timerId, ws);
       }
 
-      if (message.type === 'UPDATE_TIMER_DURATION') {
+      if (message.type === "UPDATE_TIMER_DURATION") {
         const timerId = message.payload.timerId;
         const duration = message.payload.duration;
         timerManager.resetTimer(timerId, duration, ws);
       }
 
-      if (message.type === 'RENAME_TIMER') {
+      if (message.type === "RENAME_TIMER") {
         const timerId = message.payload.timerId;
         const name = message.payload.name;
         timerManager.renameTimer(timerId, name, ws);
       }
 
-      if (message.type === 'RESET_TIMER') {
+      if (message.type === "RESET_TIMER") {
         const timerId = message.payload.timerId;
         const duration = message.payload.duration;
         timerManager.resetTimer(timerId, duration, ws);
       }
 
-      if (message.type === 'PING') {
+      if (message.type === "PING") {
         const user = message.payload.user;
         timerManager.pingTimerOfUser(user, ws);
       }
@@ -132,7 +136,7 @@ const websocket = new Elysia({
       // console.log("removing user: ", user.name);
       timerManager.removeUserFromTimer(user, timerId, ws);
       userManager.removeUser(user.id);
-    }
+    },
   });
 
 const app = new Elysia({
@@ -141,8 +145,8 @@ const app = new Elysia({
       If the DEPLOYMENT_TYPE is dev, we want to use our own HTTPS, so we pass in the tlsConfig.
       If the DEPLOYMENT_TYPE is prod, we want to let the server (nginx) handle HTTPS, so we pass in undefined.
     */
-    tls: process.env.DEPLOYMENT_TYPE === 'dev' ? tlsConfig : undefined
-  }
+    tls: process.env.DEPLOYMENT_TYPE === "dev" ? tlsConfig : undefined,
+  },
 })
   .use(swagger())
   // load the managers into the app state
@@ -161,16 +165,19 @@ const app = new Elysia({
     return Bun.file("./frontend/public/js/App.js");
   })
   .get("/styles.css", () => {
-    // console.log("styles.css requested");
     return Bun.file("./frontend/public/styles.css");
   })
   .get("/sounds/chime.mp3", () => {
-    // console.log("styles.css requested");
     return Bun.file("./frontend/dist/audio/chime.mp3");
   })
   .get("/sounds/ping.mp3", () => {
-    // console.log("styles.css requested");
     return Bun.file("./frontend/dist/audio/ping.mp3");
+  })
+  .get("/images/susurrus_banner.png", () => {
+    return Bun.file("./frontend/dist/images/susurrus_banner.png");
+  })
+  .get("/images/susurrus_square.png", () => {
+    return Bun.file("./frontend/dist/images/susurrus_square.png");
   })
 
   /* When the client requests a user identity, we should give them one */
@@ -181,13 +188,17 @@ const app = new Elysia({
   .get("/timers/:timerId", () => {
     // console.log("Timer Join requested");
     return Bun.file("./frontend/dist/index.html");
-  }) 
+  })
   /* Use a websocket to send updates to the client about the timer */
   .use(websocket)
-  .listen({
-    hostname: "0.0.0.0",
-    port: 3000
-  });
+  .listen(
+    process.env.DEPLOYMENT_TYPE === "dev"
+      ? 3000
+      : {
+          hostname: "0.0.0.0",
+          port: 3000,
+        },
+  );
 
 console.log(
   `🦊 Timer server is running at ${app.server?.hostname}:${app.server?.port}`,
