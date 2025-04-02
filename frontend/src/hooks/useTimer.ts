@@ -52,12 +52,10 @@ export function useTimer({ duration, startTime, timerId, isOwner, audioEnabled }
   }, [isRunning, remainingTime]);
 
   const handleStart = () => {
-    if (isOwner) {
-      webSocket?.send(JSON.stringify({
-        type: "START_TIMER",
-        payload: { timerId, startTime: Date.now() },
-      }));
-    }
+    webSocket?.send(JSON.stringify({
+      type: "START_TIMER",
+      payload: { timerId, startTime: Date.now() },
+    }));
   };
 
   const handleReset = () => {
@@ -73,12 +71,10 @@ export function useTimer({ duration, startTime, timerId, isOwner, audioEnabled }
   const handleDurationChange = (newDuration: number) => {
     setEditableDuration(newDuration);
     setRemainingTime(newDuration);
-    if (isOwner) {
-      webSocket?.send(JSON.stringify({
-        type: "UPDATE_TIMER_DURATION",
-        payload: { timerId, duration: newDuration },
-      }));  
-    }
+    webSocket?.send(JSON.stringify({
+      type: "UPDATE_TIMER_DURATION",
+      payload: { timerId, duration: newDuration },
+    }));
   };
 
   const handleRename = (newName: string) => {

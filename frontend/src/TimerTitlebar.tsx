@@ -2,13 +2,11 @@ import React, { useState, useEffect } from "react";
 
 interface TimerTitlebarProps {
   name: string;
-  isOwner: boolean;
   onRename: (newName: string) => void;
 }
 
 const TimerTitlebar: React.FC<TimerTitlebarProps> = ({
   name,
-  isOwner,
   onRename,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -26,7 +24,7 @@ const TimerTitlebar: React.FC<TimerTitlebarProps> = ({
     }
   };
 
-  if (isEditing && isOwner) {
+  if (isEditing) {
     return (
       <div className="timer-titlebar">
         <input
@@ -47,8 +45,8 @@ const TimerTitlebar: React.FC<TimerTitlebarProps> = ({
   return (
     <div className="timer-titlebar">
       <h1 onClick={() => {
-        // console.log("Title clicked, isOwner:", isOwner);
-        isOwner && setIsEditing(true);
+        // console.log("Title clicked");
+        setIsEditing(true);
       }}>
         {name}
       </h1>

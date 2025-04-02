@@ -7,7 +7,6 @@ import { UserInterface } from "../../src/Classes/userInterface";
 
 interface DialProps {
   value: number;
-  isOwner: boolean;
   thisUser: UserInterface | null;
   users: UserInterface[];
   owner: UserInterface;
@@ -16,7 +15,7 @@ interface DialProps {
   pingingUserId?: string;
 }
 
-const Dial: React.FC<DialProps> = ({ value, thisUser, users, owner, isOwner, isRunning, onValueChange, pingingUserId }) => {
+const Dial: React.FC<DialProps> = ({ value, thisUser, users, owner, isRunning, onValueChange, pingingUserId }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [lastAngle, setLastAngle] = useState(0);
   const [temporaryValue, setTemporaryValue] = useState(value);
@@ -48,12 +47,12 @@ const Dial: React.FC<DialProps> = ({ value, thisUser, users, owner, isOwner, isR
   }, [normalizeAngle]);
 
   const handleDragStart = useCallback((event: React.MouseEvent | React.TouchEvent) => {
-    if (!isOwner || isRunning) return;
-    
+    if (isRunning) return;
+
     event.preventDefault();
     setIsDragging(true);
     setLastAngle(getAngleFromEvent(event.nativeEvent));
-  }, [isOwner, isRunning, getAngleFromEvent]);
+  }, [isRunning, getAngleFromEvent]);
 
   const handleDragMove = useCallback((event: MouseEvent | TouchEvent) => {
     if (!isDragging) return;
@@ -113,7 +112,7 @@ const Dial: React.FC<DialProps> = ({ value, thisUser, users, owner, isOwner, isR
         preserveAspectRatio="xMidYMid meet"
         onMouseDown={handleDragStart}
         onTouchStart={handleDragStart}
-        style={{ cursor: (isOwner && !isRunning) ? 'grab' : 'default' }}
+        style={{ cursor: !isRunning ? 'grab' : 'default' }}
       >
         <circle id="dial-background" cx="50" cy="50" r="45" fill="var(--color-control)" />
         <DialRemainingSlice value={isDragging ? temporaryValue : value} />

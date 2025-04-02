@@ -42,29 +42,20 @@ const Timer: React.FC<TimerProps> = ({
   } = useTimer({ duration, startTime, timerId, isOwner, audioEnabled });
 
   const renderButton = () => {
-    if (isOwner) {
-      return (
-        <>
-          <TimerControlButton
-            isRunning={isRunning}
+    return (
+      <>
+        <TimerControlButton
+          isRunning={isRunning}
           onStart={handleStart}
           onReset={handleReset}
           disabled={false}
         />
-          <PingButton 
-        onPingClick={() => setAudioEnabled(true)}
-            user={currentUser || undefined}
-          />
-        </>
-      );
-    } else {
-      return (
-        <PingButton 
+        <PingButton
           onPingClick={() => setAudioEnabled(true)}
           user={currentUser || undefined}
         />
-      );
-    }
+      </>
+    );
   };
 
   const minutes = Math.floor(remainingTime / 60000);
@@ -84,13 +75,12 @@ const Timer: React.FC<TimerProps> = ({
         <a href="https://github.com/papatangosierra/susurrus/blob/main/README.md" target="_blank">?</a>
       </div>
       <div id="app-firsthalf">
-        <TimerTitlebar name={name} isOwner={isOwner} onRename={handleRename} />
+        <TimerTitlebar name={name} onRename={handleRename} />
         <div className="remaining-time-display">
           <TimeControls
             minutes={minutes}
             seconds={seconds}
             tenths={tenths}
-            isOwner={isOwner}
             isRunning={isRunning}
             onIncrementMinutes={() =>
               handleDurationUpdate(editableDuration + 60000)
@@ -111,12 +101,11 @@ const Timer: React.FC<TimerProps> = ({
       <div id="app-secondhalf">
         <Dial
           value={remainingTime}
-          isOwner={isOwner}
           thisUser={currentUser}
           users={users}
           owner={owner}
           isRunning={isRunning}
-          onValueChange={isOwner ? handleDurationUpdate : undefined}
+          onValueChange={handleDurationUpdate}
           pingingUserId={pingingUserId}
         />
         <div className="start-button-container">{renderButton()}</div>
