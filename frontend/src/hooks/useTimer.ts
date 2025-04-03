@@ -52,44 +52,43 @@ export function useTimer({ duration, startTime, timerId, isOwner, audioEnabled }
   }, [isRunning, remainingTime]);
 
   const handleStart = () => {
-    if (isOwner) {
-      webSocket?.send(JSON.stringify({
-        type: "START_TIMER",
-        payload: { timerId, startTime: Date.now() },
-      }));
-    }
+    webSocket?.send(JSON.stringify({
+      type: "START_TIMER",
+      payload: { timerId, startTime: Date.now() },
+    }));
   };
 
   const handleReset = () => {
     setIsRunning(false);
+    const durationToSend = editableDuration;
     setEditableDuration(duration);
     setRemainingTime(duration);
     webSocket?.send(JSON.stringify({
       type: "RESET_TIMER",
-      payload: { timerId, duration: editableDuration },
+      payload: { timerId, duration: durationToSend },
     }));
   };
 
   const handleDurationChange = (newDuration: number) => {
     setEditableDuration(newDuration);
     setRemainingTime(newDuration);
-    if (isOwner) {
-      webSocket?.send(JSON.stringify({
-        type: "UPDATE_TIMER_DURATION",
-        payload: { timerId, duration: newDuration },
-      }));  
-    }
+    webSocket?.send(JSON.stringify({
+      type: "UPDATE_TIMER_DURATION",
+      payload: { timerId, duration: newDuration },
+    }));
   };
 
   const handleRename = (newName: string) => {
-    // console.log("handleRename", newName);
-    webSocket?.send(JSON.stringify({
-      type: "RENAME_TIMER",
-      payload: {
-        timerId: timerId,
-        name: newName,
-      },
-    }));
+    if (isOwner) {
+      // console.log("handleRename", newName);
+      webSocket?.send(JSON.stringify({
+        type: "RENAME_TIMER",
+        payload: {
+          timerId: timerId,
+          name: newName,
+        },
+      }));
+    }
   };
 
   return {

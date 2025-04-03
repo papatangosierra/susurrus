@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ReactDOM from "react-dom/client";
 import Timer from "./Timer";
 import { UserInterface } from "../../src/Classes/userInterface";
@@ -35,6 +35,7 @@ const App: React.FC = () => {
   const [timer, setTimer] = useState<TimerInterface | null>(null);
   const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
   const [pingingUserId, setPingingUserId] = useState<string | undefined>(undefined);
+  const thisUserInitialized = useRef(false);
 
   useEffect(() => { 
     const audioService = AudioService.getInstance();
@@ -68,6 +69,7 @@ const App: React.FC = () => {
         clearInterval(heartbeatInterval);
         // Attempt to reconnect after 5 seconds
         setTimeout(setupWebSocket, 5000);
+        thisUserInitialized.current = false;
       };
 
       client.onmessage = (message) => {
@@ -80,9 +82,10 @@ const App: React.FC = () => {
           window.history.pushState(null, '', `/timers/${data.timer.id}`);
           setTimer(data.timer);
         }      
-        // Update user state only if new user data is received
-        if (data.user) {
+        // Update user state ONLY if it hasn't been initialized yet
+        if (data.user && !thisUserInitialized.current) {
           setThisUser(data.user);
+          thisUserInitialized.current = true;
         }
 
         // handle a ping from another user

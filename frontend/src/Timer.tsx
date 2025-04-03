@@ -41,30 +41,21 @@ const Timer: React.FC<TimerProps> = ({
     handleRename,
   } = useTimer({ duration, startTime, timerId, isOwner, audioEnabled });
 
-  const renderButton = () => {
-    if (isOwner) {
-      return (
-        <>
-          <TimerControlButton
-            isRunning={isRunning}
+  const renderButtons = () => {
+    return (
+      <>
+        <TimerControlButton
+          isRunning={isRunning}
           onStart={handleStart}
           onReset={handleReset}
           disabled={false}
         />
-          <PingButton 
-        onPingClick={() => setAudioEnabled(true)}
-            user={currentUser || undefined}
-          />
-        </>
-      );
-    } else {
-      return (
-        <PingButton 
+        <PingButton
           onPingClick={() => setAudioEnabled(true)}
           user={currentUser || undefined}
         />
-      );
-    }
+      </>
+    );
   };
 
   const minutes = Math.floor(remainingTime / 60000);
@@ -93,16 +84,16 @@ const Timer: React.FC<TimerProps> = ({
             isOwner={isOwner}
             isRunning={isRunning}
             onIncrementMinutes={() =>
-              handleDurationUpdate(editableDuration + 60000)
+              !isRunning && handleDurationUpdate(editableDuration + 60000)
             }
             onDecrementMinutes={() =>
-              handleDurationUpdate(editableDuration - 60000)
+              !isRunning && handleDurationUpdate(editableDuration - 60000)
             }
             onIncrementSeconds={() =>
-              handleDurationUpdate(editableDuration + 1000)
+              !isRunning && handleDurationUpdate(editableDuration + 1000)
             }
             onDecrementSeconds={() =>
-              handleDurationUpdate(editableDuration - 1000)
+              !isRunning && handleDurationUpdate(editableDuration - 1000)
             }
           />
         </div>
@@ -116,10 +107,10 @@ const Timer: React.FC<TimerProps> = ({
           users={users}
           owner={owner}
           isRunning={isRunning}
-          onValueChange={isOwner ? handleDurationUpdate : undefined}
+          onValueChange={!isRunning ? handleDurationUpdate : undefined}
           pingingUserId={pingingUserId}
         />
-        <div className="start-button-container">{renderButton()}</div>
+        <div className="start-button-container">{renderButtons()}</div>
       </div>
     </div>
   );
