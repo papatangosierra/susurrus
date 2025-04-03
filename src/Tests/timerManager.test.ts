@@ -4,6 +4,7 @@ import { User } from "../Classes/user";
 import { ElysiaWS } from "elysia/dist/ws";
 import { expect, test, describe, beforeEach, beforeAll } from "bun:test";
 import testDb from "../databaseTest";
+import { logDb } from "../databaseTest";    
 
 describe("TimerManager", () => {
   let timerManager: TimerManager;
@@ -15,7 +16,7 @@ describe("TimerManager", () => {
   // but we need to pass it in to the TimerManager methods)
   
   beforeAll(() => {
-    timerManager = new TimerManager(testDb);
+    timerManager = new TimerManager(testDb, logDb);
     owner = new User(testDb);
     user = new User(testDb);
   });
