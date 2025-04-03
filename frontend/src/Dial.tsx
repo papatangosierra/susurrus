@@ -7,6 +7,7 @@ import { UserInterface } from "../../src/Classes/userInterface";
 
 interface DialProps {
   value: number;
+  isOwner: boolean;
   thisUser: UserInterface | null;
   users: UserInterface[];
   owner: UserInterface;
@@ -15,7 +16,7 @@ interface DialProps {
   pingingUserId?: string;
 }
 
-const Dial: React.FC<DialProps> = ({ value, thisUser, users, owner, isRunning, onValueChange, pingingUserId }) => {
+const Dial: React.FC<DialProps> = ({ value, thisUser, users, owner, isOwner, isRunning, onValueChange, pingingUserId }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [lastAngle, setLastAngle] = useState(0);
   const [temporaryValue, setTemporaryValue] = useState(value);
@@ -47,8 +48,9 @@ const Dial: React.FC<DialProps> = ({ value, thisUser, users, owner, isRunning, o
   }, [normalizeAngle]);
 
   const handleDragStart = useCallback((event: React.MouseEvent | React.TouchEvent) => {
+    // Allow drag if timer is not running, regardless of ownership
     if (isRunning) return;
-
+    
     event.preventDefault();
     setIsDragging(true);
     setLastAngle(getAngleFromEvent(event.nativeEvent));

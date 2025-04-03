@@ -41,7 +41,7 @@ const Timer: React.FC<TimerProps> = ({
     handleRename,
   } = useTimer({ duration, startTime, timerId, isOwner, audioEnabled });
 
-  const renderButton = () => {
+  const renderButtons = () => {
     return (
       <>
         <TimerControlButton
@@ -75,24 +75,25 @@ const Timer: React.FC<TimerProps> = ({
         <a href="https://github.com/papatangosierra/susurrus/blob/main/README.md" target="_blank">?</a>
       </div>
       <div id="app-firsthalf">
-        <TimerTitlebar name={name} onRename={handleRename} />
+        <TimerTitlebar name={name} isOwner={isOwner} onRename={handleRename} />
         <div className="remaining-time-display">
           <TimeControls
             minutes={minutes}
             seconds={seconds}
             tenths={tenths}
+            isOwner={isOwner}
             isRunning={isRunning}
             onIncrementMinutes={() =>
-              handleDurationUpdate(editableDuration + 60000)
+              !isRunning && handleDurationUpdate(editableDuration + 60000)
             }
             onDecrementMinutes={() =>
-              handleDurationUpdate(editableDuration - 60000)
+              !isRunning && handleDurationUpdate(editableDuration - 60000)
             }
             onIncrementSeconds={() =>
-              handleDurationUpdate(editableDuration + 1000)
+              !isRunning && handleDurationUpdate(editableDuration + 1000)
             }
             onDecrementSeconds={() =>
-              handleDurationUpdate(editableDuration - 1000)
+              !isRunning && handleDurationUpdate(editableDuration - 1000)
             }
           />
         </div>
@@ -101,14 +102,15 @@ const Timer: React.FC<TimerProps> = ({
       <div id="app-secondhalf">
         <Dial
           value={remainingTime}
+          isOwner={isOwner}
           thisUser={currentUser}
           users={users}
           owner={owner}
           isRunning={isRunning}
-          onValueChange={handleDurationUpdate}
+          onValueChange={!isRunning ? handleDurationUpdate : undefined}
           pingingUserId={pingingUserId}
         />
-        <div className="start-button-container">{renderButton()}</div>
+        <div className="start-button-container">{renderButtons()}</div>
       </div>
     </div>
   );

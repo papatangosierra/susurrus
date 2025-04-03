@@ -60,11 +60,12 @@ export function useTimer({ duration, startTime, timerId, isOwner, audioEnabled }
 
   const handleReset = () => {
     setIsRunning(false);
+    const durationToSend = editableDuration;
     setEditableDuration(duration);
     setRemainingTime(duration);
     webSocket?.send(JSON.stringify({
       type: "RESET_TIMER",
-      payload: { timerId, duration: editableDuration },
+      payload: { timerId, duration: durationToSend },
     }));
   };
 
@@ -78,14 +79,16 @@ export function useTimer({ duration, startTime, timerId, isOwner, audioEnabled }
   };
 
   const handleRename = (newName: string) => {
-    // console.log("handleRename", newName);
-    webSocket?.send(JSON.stringify({
-      type: "RENAME_TIMER",
-      payload: {
-        timerId: timerId,
-        name: newName,
-      },
-    }));
+    if (isOwner) {
+      // console.log("handleRename", newName);
+      webSocket?.send(JSON.stringify({
+        type: "RENAME_TIMER",
+        payload: {
+          timerId: timerId,
+          name: newName,
+        },
+      }));
+    }
   };
 
   return {
