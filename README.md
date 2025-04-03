@@ -26,4 +26,4 @@ Owing to the nature of web browser audio, you will not be able to hear any pings
 
 As a reward for reading to the end of this file, here's an easter egg: If you're on a computer with a physical keyboard, try holding down the `j` or `k` keys for several seconds.
 
-Give feedback to Paul. If you're using Susurrus right now, you either know how to contact him or you know someone who does. Alternatively, you can submit feedback [here](https://airtable.com/app3oY6TYzHGhFoBj/shrtV749UvfGqgdim).
+Give feedback to Paul. He's [pts.bsky.social](https://bsky.app/profile/pts.bsky.social) on BlueSky, and [pts](http://twitter.com/pts) on twitter. Alternatively, you can submit feedback [here](https://airtable.com/app3oY6TYzHGhFoBj/shrtV749UvfGqgdim).
