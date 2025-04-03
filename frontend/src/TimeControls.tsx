@@ -6,10 +6,10 @@ interface TimeControlsProps {
   tenths: number;
   isOwner: boolean;
   isRunning: boolean;
-  onIncrementMinutes: () => void;
-  onDecrementMinutes: () => void;
-  onIncrementSeconds: () => void;
-  onDecrementSeconds: () => void;
+  onIncrementMinutes: (() => void) | undefined;
+  onDecrementMinutes: (() => void) | undefined;
+  onIncrementSeconds: (() => void) | undefined;
+  onDecrementSeconds: (() => void) | undefined;
 }
 
 export const TimeControls: React.FC<TimeControlsProps> = ({
@@ -29,15 +29,15 @@ export const TimeControls: React.FC<TimeControlsProps> = ({
   return (
     <div className="countdown">
       <div className="time-control">
-        {isOwner && !isRunning && <button onClick={onIncrementMinutes}>▲</button>}
+        {!isRunning && onIncrementMinutes && <button onClick={onIncrementMinutes}>▲</button>}
         <div id="countdown-minutes">{minutes}</div>
-        {isOwner && !isRunning && <button onClick={onDecrementMinutes}>▼</button>}
+        {!isRunning && onDecrementMinutes && <button onClick={onDecrementMinutes}>▼</button>}
       </div>
       <div id="countdown-separator">:</div>
       <div className="time-control">
-        {isOwner && !isRunning && <button onClick={onIncrementSeconds}>▲</button>}
+        {!isRunning && onIncrementSeconds && <button onClick={onIncrementSeconds}>▲</button>}
         <div id="countdown-seconds">{paddedSeconds}</div>
-        {isOwner && !isRunning && <button onClick={onDecrementSeconds}>▼</button>}
+        {!isRunning && onDecrementSeconds && <button onClick={onDecrementSeconds}>▼</button>}
       </div>
       <div id="countdown-tenths">{paddedTenths}</div>
     </div>
